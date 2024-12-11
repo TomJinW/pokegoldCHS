@@ -1,5 +1,7 @@
 # Delete these rules if you don't care about matching.
 
+gfx/trainers/%.lz.bin: 
+
 %.lz: LZFLAGS = --compressor multipass
 
 gfx/battle_anims/%.lz: LZFLAGS += --method 2 --align 4

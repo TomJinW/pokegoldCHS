@@ -1,4 +1,4 @@
-DoSpriteAnimFrame:
+DoAnimFrame:
 	ld hl, SPRITEANIMSTRUCT_ANIM_SEQ_ID
 	add hl, bc
 	ld e, [hl]
@@ -12,8 +12,8 @@ DoSpriteAnimFrame:
 	jp hl
 
 .Jumptable:
-; entries correspond to SPRITE_ANIM_FUNC_* constants (see constants/sprite_anim_constants.asm)
-	table_width 2, DoSpriteAnimFrame.Jumptable
+; entries correspond to SPRITE_ANIM_SEQ_* constants (see constants/sprite_anim_constants.asm)
+	table_width 2, DoAnimFrame.Jumptable
 	dw AnimSeq_Null
 	dw AnimSeq_PartyMon
 	dw AnimSeq_PartyMonSwitch
@@ -56,7 +56,7 @@ DoSpriteAnimFrame:
 	dw AnimSeq_FlyLeaf
 	dw AnimSeq_FlyTo
 	dw AnimSeq_GSIntroHoOhLugia
-	assert_table_length NUM_SPRITE_ANIM_FUNCS
+	assert_table_length NUM_SPRITE_ANIM_SEQS
 
 AnimSeq_Null:
 	ret
@@ -838,6 +838,7 @@ ENDC
 	ret
 
 AnimSeq_UnusedPikachu:
+	ret
 	push bc
 	farcall AnimateUnusedPikachu
 	pop bc
@@ -852,7 +853,7 @@ AnimSeq_UnusedPikachu:
 	add hl, de
 	ld a, [hl]
 	call _ReinitSpriteAnimFrame
-	ret
+	; ret
 
 .pikachu_framesets:
 	db SPRITE_ANIM_FRAMESET_UNUSED_PIKACHU
@@ -1111,7 +1112,7 @@ AnimSeq_SlotsChanseyEgg:
 	ret
 
 AnimSeq_UnusedCursor:
-	callfar UnusedCursor_InterpretJoypad_AnimateCursor
+	; callfar UnusedCursor_InterpretJoypad_AnimateCursor
 	ret
 
 AnimSeq_PokegearArrow:

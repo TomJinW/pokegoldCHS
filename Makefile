@@ -1,8 +1,30 @@
+
+# debugonly := \
+# 	pokegold_debug.gbc \
+# 	pokesilver_debug.gbc 
+
+
+
+# allroms := \
+# 	pokegold_debug.gbc \
+# 	pokesilver_debug.gbc \
+# 	pokegold.gbc \
+# 	pokesilver.gbc \
+# 	pokegold.patch \
+# 	pokesilver.patch \
+
+
 roms := \
-	pokegold.gbc \
-	pokesilver.gbc \
-	pokegold_debug.gbc \
-	pokesilver_debug.gbc
+	gold_64 \
+	silver_64 \
+	gold_debug_32 \
+	silver_debug_32 \
+	pokegold.patch \
+	pokesilver.patch
+
+	
+
+
 patches := \
 	pokegold.patch \
 	pokesilver.patch
@@ -33,6 +55,8 @@ gold_debug_excl_obj   := $(addsuffix _gold_debug.o,$(gs_excl_asm))
 silver_debug_excl_obj := $(addsuffix _silver_debug.o,$(gs_excl_asm))
 gold_vc_excl_obj      := $(addsuffix _gold_vc.o,$(gs_excl_asm))
 silver_vc_excl_obj    := $(addsuffix _silver_vc.o,$(gs_excl_asm))
+# gold_64KB_excl_obj     := $(addsuffix _gold_64KB.o,$(gs_excl_asm))
+# silver_64KB_excl_obj   := $(addsuffix _silver_64KB.o,$(gs_excl_asm))
 
 pokegold_obj          := $(rom_obj:.o=_gold.o) $(gold_excl_obj)
 pokesilver_obj        := $(rom_obj:.o=_silver.o) $(silver_excl_obj)
@@ -40,6 +64,8 @@ pokegold_debug_obj    := $(rom_obj:.o=_gold_debug.o) $(gold_debug_excl_obj)
 pokesilver_debug_obj  := $(rom_obj:.o=_silver_debug.o) $(silver_debug_excl_obj)
 pokegold_vc_obj       := $(rom_obj:.o=_gold_vc.o) $(gold_vc_excl_obj)
 pokesilver_vc_obj     := $(rom_obj:.o=_silver_vc.o) $(silver_vc_excl_obj)
+# pokegold_64KB_obj      := $(rom_obj:.o=_gold_64KB.o) $(gold_64KB_excl_obj)
+# pokesilver_64KB_obj    := $(rom_obj:.o=_silver_64KB.o) $(silver_64KB_excl_obj)
 
 
 ### Build tools
@@ -60,10 +86,12 @@ RGBLINK ?= $(RGBDS)rgblink
 ### Build targets
 
 .SUFFIXES:
-.PHONY: all gold silver gold_debug silver_debug clean tidy compare tools
+.PHONY: all gold silver gold_debug silver_debug gold_64 silver_64 clean tidy compare tools
 .SECONDEXPANSION:
 .PRECIOUS:
 .SECONDARY:
+
+# debugonly: $(debugonly)
 
 all: $(roms)
 gold:         pokegold.gbc
@@ -73,10 +101,29 @@ silver_debug: pokesilver_debug.gbc
 gold_vc:      pokegold.patch
 silver_vc:    pokesilver.patch
 
+
+gold_64: pokegold.gbc
+	cp $< pokegold_64KB.gbc && rgbfix -r 5 -fh pokegold_64KB.gbc
+	cp pokegold.sym pokegold_64KB.sym
+silver_64: pokesilver.gbc
+	cp $< pokesilver_64KB.gbc && rgbfix -r 5 -fh pokesilver_64KB.gbc
+	cp pokesilver.sym pokesilver_64KB.sym
+gold_debug_32: pokegold_debug.gbc
+	cp $< pokegold_debug_32KB.gbc && rgbfix -r 3 -fh pokegold_debug_32KB.gbc
+	cp pokegold_debug.sym pokegold_debug_32KB.sym
+silver_debug_32: pokesilver_debug.gbc
+	cp $< pokesilver_debug_32KB.gbc && rgbfix -r 3 -fh pokesilver_debug_32KB.gbc
+	cp pokesilver_debug.sym pokesilver_debug_32KB.sym
+
+
+# gold_64KB:   pokegold_64KB.gbc
+# silver_64KB: pokesilver_64KB.gbc
+
 clean: tidy
 	find gfx \
 	     \( -name "*.[12]bpp" \
 	        -o -name "*.lz" \
+			-o -name "*.lz.bin" \
 	        -o -name "*.gbcpal" \
 	        -o -name "*.dimensions" \
 	        -o -name "*.sgb.tilemap" \) \
@@ -113,12 +160,14 @@ ifeq ($(DEBUG),1)
 RGBASMFLAGS += -E
 endif
 
-$(pokegold_obj):         RGBASMFLAGS += -D _GOLD
-$(pokesilver_obj):       RGBASMFLAGS += -D _SILVER
-$(pokegold_debug_obj):   RGBASMFLAGS += -D _GOLD -D _DEBUG
-$(pokesilver_debug_obj): RGBASMFLAGS += -D _SILVER -D _DEBUG
-$(pokegold_vc_obj):      RGBASMFLAGS += -D _GOLD -D _GOLD_VC
-$(pokesilver_vc_obj):    RGBASMFLAGS += -D _SILVER -D _GOLD_VC
+$(pokegold_obj):         RGBASMFLAGS += -D _GOLD -D _32KB
+$(pokesilver_obj):       RGBASMFLAGS += -D _SILVER -D _32KB
+$(pokegold_debug_obj):   RGBASMFLAGS += -D _GOLD -D _DEBUG -D _64KB
+$(pokesilver_debug_obj): RGBASMFLAGS += -D _SILVER -D _DEBUG -D _64KB
+$(pokegold_vc_obj):      RGBASMFLAGS += -D _GOLD -D _GOLD_VC -D _32KB
+$(pokesilver_vc_obj):    RGBASMFLAGS += -D _SILVER -D _GOLD_VC -D _32KB
+# $(pokegold_64KB_obj):     RGBASMFLAGS += -D _GOLD -D _64KB
+# $(pokesilver_64KB_obj):   RGBASMFLAGS += -D _SILVER -D _64KB
 
 %.patch: vc/%.constants.sym %_vc.gbc %.gbc vc/%.patch.template
 	tools/make_patch $*_vc.sym $^ $@
@@ -155,6 +204,11 @@ $(foreach obj, $(filter-out $(gold_vc_excl_obj), $(pokegold_vc_obj)), \
 $(foreach obj, $(filter-out $(silver_vc_excl_obj), $(pokesilver_vc_obj)), \
 	$(eval $(call DEP,$(obj),$(obj:_silver_vc.o=.asm))))
 
+# $(foreach obj, $(filter-out $(gold_64KB_excl_obj), $(pokegold_64KB_obj)), \
+# 	$(eval $(call DEP,$(obj),$(obj:_gold_64KB.o=.asm))))
+# $(foreach obj, $(filter-out $(silver_64KB_excl_obj), $(pokesilver_64KB_obj)), \
+# 	$(eval $(call DEP,$(obj),$(obj:_silver_64KB.o=.asm))))
+
 # Dependencies for game-exclusive objects (keep _gold and _silver in asm file basenames)
 $(foreach obj, $(gold_excl_obj) $(silver_excl_obj), \
 	$(eval $(call DEP,$(obj),$(obj:.o=.asm))))
@@ -167,6 +221,11 @@ $(foreach obj, $(gold_vc_excl_obj), \
 $(foreach obj, $(silver_vc_excl_obj), \
 	$(eval $(call DEP,$(obj),$(obj:_silver_vc.o=_silver.asm))))
 
+# $(foreach obj, $(gold_64KB_excl_obj), \
+# 	$(eval $(call DEP,$(obj),$(obj:_gold_64KB.o=_gold.asm))))
+# $(foreach obj, $(silver_64KB_excl_obj), \
+# 	$(eval $(call DEP,$(obj),$(obj:_silver_64KB.o=_silver.asm))))
+
 # Dependencies for VC files that need to run scan_includes
 %.constants.sym: %.constants.asm $(shell tools/scan_includes %.constants.asm) $(preinclude_deps) | rgbdscheck.o
 	$(RGBASM) $(RGBASMFLAGS) $< > $@
@@ -176,10 +235,13 @@ endif
 
 pokegold_opt         = -cjsv -t POKEMON_GLD -i AAUE -k 01 -l 0x33 -m 0x10 -r 3 -p 0
 pokesilver_opt       = -cjsv -t POKEMON_SLV -i AAXE -k 01 -l 0x33 -m 0x10 -r 3 -p 0
-pokegold_debug_opt   = -cjsv -t POKEMON_GLD -i AAUE -k 01 -l 0x33 -m 0x10 -r 3 -p 0
-pokesilver_debug_opt = -cjsv -t POKEMON_SLV -i AAXE -k 01 -l 0x33 -m 0x10 -r 3 -p 0
+pokegold_debug_opt   = -cjsv -t POKEMON_GLD -i AAUE -k 01 -l 0x33 -m 0x10 -r 5 -p 0
+pokesilver_debug_opt = -cjsv -t POKEMON_SLV -i AAXE -k 01 -l 0x33 -m 0x10 -r 5 -p 0
 pokegold_vc_opt      = -cjsv -t POKEMON_GLD -i AAUE -k 01 -l 0x33 -m 0x10 -r 3 -p 0
 pokesilver_vc_opt    = -cjsv -t POKEMON_SLV -i AAXE -k 01 -l 0x33 -m 0x10 -r 3 -p 0
+
+# pokegold_64KB_opt     = -cjsv -t POKEMON_GLD -i AAUE -k 01 -l 0x33 -m 0x10 -r 5 -p 0
+# pokesilver_64KB_opt   = -cjsv -t POKEMON_SLV -i AAXE -k 01 -l 0x33 -m 0x10 -r 5 -p 0
 
 %.gbc: $$(%_obj) layout.link
 	$(RGBLINK) -n $*.sym -m $*.map -l layout.link -o $@ $(filter %.o,$^)
@@ -195,16 +257,18 @@ include gfx/lz.mk
 %.lz: %
 	tools/lzcomp $(LZFLAGS) -- $< $@
 
+%.lz.bin: %
+	tools/lzcomp $(LZFLAGS) -- $< $@
 
 ### Misc file-specific graphics rules
 
-gfx/pokemon/%/front.2bpp: rgbgfx += --columns --colors embedded
-gfx/pokemon/%/front_gold.2bpp: rgbgfx += --columns --colors embedded
-gfx/pokemon/%/front_silver.2bpp: rgbgfx += --columns --colors embedded
+gfx/pokemon/%/front.2bpp: rgbgfx += -Z -c embedded
+gfx/pokemon/%/front_gold.2bpp: rgbgfx += -Z -c embedded
+gfx/pokemon/%/front_silver.2bpp: rgbgfx += -Z -c embedded
 
-gfx/pokemon/%/back.2bpp: rgbgfx += --columns --colors embedded
-gfx/pokemon/%/back_gold.2bpp: rgbgfx += --columns --colors embedded
-gfx/pokemon/%/back_silver.2bpp: rgbgfx += --columns --colors embedded
+gfx/pokemon/%/back.2bpp: rgbgfx += -Z -c embedded
+gfx/pokemon/%/back_gold.2bpp: rgbgfx += -Z -c embedded
+gfx/pokemon/%/back_silver.2bpp: rgbgfx += -Z -c embedded
 
 gfx/pokemon/%/back_gold.2bpp: gfx/pokemon/%/back.png
 	$(RGBGFX) $(rgbgfx) -o $@ $<
@@ -216,15 +280,15 @@ gfx/pokemon/%/back_silver.2bpp: gfx/pokemon/%/back.png
 	$(if $(tools/gfx),\
 		tools/gfx $(tools/gfx) -o $@ $@)
 
-gfx/trainers/%.2bpp: rgbgfx += --columns --colors embedded
+gfx/trainers/%.2bpp: rgbgfx += -Z -c embedded
 
 gfx/intro/fire.2bpp: tools/gfx += --remove-whitespace
 gfx/intro/fire1.2bpp: gfx/intro/charizard1.2bpp gfx/intro/charizard2_top.2bpp gfx/intro/space.2bpp ; cat $^ > $@
 gfx/intro/fire2.2bpp: gfx/intro/charizard2_bottom.2bpp gfx/intro/charizard3.2bpp ; cat $^ > $@
 gfx/intro/fire3.2bpp: gfx/intro/fire.2bpp gfx/intro/unused_blastoise_venusaur.2bpp ; cat $^ > $@
 
-gfx/new_game/shrink1.2bpp: rgbgfx += --columns
-gfx/new_game/shrink2.2bpp: rgbgfx += --columns
+gfx/new_game/shrink1.2bpp: rgbgfx += -Z
+gfx/new_game/shrink2.2bpp: rgbgfx += -Z
 
 gfx/mail/dragonite.1bpp: tools/gfx += --remove-whitespace
 gfx/mail/large_note.1bpp: tools/gfx += --remove-whitespace
@@ -234,10 +298,10 @@ gfx/mail/litebluemail_border.1bpp: tools/gfx += --remove-whitespace
 
 gfx/pokedex/pokedex.2bpp: tools/gfx += --trim-whitespace
 gfx/pokedex/pokedex_sgb.2bpp: tools/gfx += --trim-whitespace
-gfx/pokedex/question_mark.2bpp: rgbgfx += --columns
+gfx/pokedex/question_mark.2bpp: rgbgfx += -Z
 gfx/pokedex/slowpoke.2bpp: tools/gfx += --trim-whitespace
 
-gfx/pokegear/pokegear.2bpp: rgbgfx += --trim-end 2
+gfx/pokegear/pokegear.2bpp: rgbgfx += -x2
 gfx/pokegear/pokegear_sprites.2bpp: tools/gfx += --trim-whitespace
 
 gfx/mystery_gift/mystery_gift.2bpp: tools/gfx += --remove-whitespace
@@ -278,8 +342,8 @@ gfx/battle_anims/rocks.2bpp: tools/gfx += --remove-whitespace
 gfx/battle_anims/skyattack.2bpp: tools/gfx += --remove-whitespace
 gfx/battle_anims/status.2bpp: tools/gfx += --remove-whitespace
 
-gfx/player/chris.2bpp: rgbgfx += --columns
-gfx/player/chris_back.2bpp: rgbgfx += --columns
+gfx/player/chris.2bpp: rgbgfx += -Z
+gfx/player/chris_back.2bpp: rgbgfx += -Z
 
 gfx/trainer_card/leaders.2bpp: tools/gfx += --trim-whitespace
 
@@ -287,7 +351,7 @@ gfx/overworld/chris_fish.2bpp: tools/gfx += --trim-whitespace
 
 gfx/sprites/big_onix.2bpp: tools/gfx += --remove-whitespace --remove-xflip
 
-gfx/battle/dude.2bpp: rgbgfx += --columns
+gfx/battle/dude.2bpp: rgbgfx += -Z
 
 gfx/font/unused_bold_font.1bpp: tools/gfx += --trim-whitespace
 
@@ -305,12 +369,12 @@ gfx/sgb/silver_border.sgb.tilemap: gfx/sgb/silver_border.bin ; tr < $< -d '\000'
 		tools/gfx $(tools/gfx) -o $@ $@)
 
 %.1bpp: %.png
-	$(RGBGFX) $(rgbgfx) --depth 1 -o $@ $<
+	$(RGBGFX) $(rgbgfx) -d1 -o $@ $<
 	$(if $(tools/gfx),\
-		tools/gfx $(tools/gfx) --depth 1 -o $@ $@)
+		tools/gfx $(tools/gfx) -d1 -o $@ $@)
 
 %.gbcpal: %.png
-	$(RGBGFX) --colors embedded -p $@ $<
+	$(RGBGFX) -c embedded -p $@ $<
 
 %.dimensions: %.png
 	tools/png_dimensions $< $@

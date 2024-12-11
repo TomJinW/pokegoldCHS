@@ -101,17 +101,33 @@ CheckAnyOtherAliveMonsForTrade:
 	ret
 
 PlaceTradePartnerNamesAndParty:
-	hlcoord 2, 0
-	ld de, wPlayerName
-	call PlaceString
-	hlcoord 2, 8
-	ld de, wOTPlayerName
-	call PlaceString
-	hlcoord 7, 1
+
+	hlcoord 2, 3 ;hlcoord 7, 9
 	ld de, wPartySpecies
 	call .PlaceSpeciesNames
-	hlcoord 7, 9
+
+	ld a, $0
+	lb bc, 12, 6
+	coord hl, 2, 2
+	call DFSStaticize
+	
+	hlcoord 12, 3 ;hlcoord 7, 1
 	ld de, wOTPartySpecies
+	call .PlaceSpeciesNames
+
+	ld a, $48
+	lb bc, 7, 6
+	coord hl, 12, 3
+	call DFSStaticize
+
+	hlcoord 2, 1 ;hlcoord 2, 0
+	ld de, wPlayerName
+	call PlaceString
+	hlcoord 12, 1 ;hlcoord 2, 8
+	ld de, wOTPlayerName
+	call PlaceString
+
+	ret
 .PlaceSpeciesNames:
 	ld c, 0
 .loop
@@ -131,7 +147,7 @@ PlaceTradePartnerNamesAndParty:
 	pop de
 	inc de
 	pop hl
-	ld bc, SCREEN_WIDTH
+	ld bc, SCREEN_WIDTH * 2
 	add hl, bc
 	pop bc
 	inc c

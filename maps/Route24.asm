@@ -26,11 +26,11 @@ Route24RocketScript:
 	writetext Route24RocketDisappearsText
 	waitbutton
 	closetext
-	special FadeOutToBlack
+	special FadeBlackQuickly
 	special ReloadSpritesNoPalettes
 	disappear ROUTE24_ROCKET
 	pause 25
-	special FadeInFromBlack
+	special FadeInQuickly
 	playmapmusic
 	end
 

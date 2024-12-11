@@ -78,7 +78,7 @@ DoBattleBGEffectFunction:
 	jp hl
 
 BattleBGEffects:
-; entries correspond to BATTLE_BG_EFFECT_* constants
+; entries correspond to ANIM_BG_* constants
 	dw BattleBGEffect_End
 	dw BattleBGEffect_FlashInverted
 	dw BattleBGEffect_FlashWhite
@@ -424,13 +424,13 @@ BattleBGEffect_BattlerObj_1Row:
 	push bc
 	call BGEffect_CheckBattleTurn
 	jr nz, .player_side
-	ld a, BATTLE_ANIM_OBJ_ENEMYFEET_1ROW
+	ld a, ANIM_OBJ_ENEMYFEET_1ROW
 	ld [wBattleObjectTempID], a
 	ld a, 16 * TILE_WIDTH + 4
 	jr .okay
 
 .player_side
-	ld a, BATTLE_ANIM_OBJ_PLAYERHEAD_1ROW
+	ld a, ANIM_OBJ_PLAYERHEAD_1ROW
 	ld [wBattleObjectTempID], a
 	ld a, 6 * TILE_WIDTH
 .okay
@@ -491,13 +491,13 @@ BattleBGEffect_BattlerObj_2Row:
 	push bc
 	call BGEffect_CheckBattleTurn
 	jr nz, .player_side
-	ld a, BATTLE_ANIM_OBJ_ENEMYFEET_2ROW
+	ld a, ANIM_OBJ_ENEMYFEET_2ROW
 	ld [wBattleObjectTempID], a
 	ld a, 16 * TILE_WIDTH + 4
 	jr .okay
 
 .player_side
-	ld a, BATTLE_ANIM_OBJ_PLAYERHEAD_2ROW
+	ld a, ANIM_OBJ_PLAYERHEAD_2ROW
 	ld [wBattleObjectTempID], a
 	ld a, 6 * TILE_WIDTH
 .okay
@@ -2037,10 +2037,10 @@ BattleBGEffect_FadeMonsToBlackRepeating:
 	add hl, de
 	ld a, [hli]
 	push hl
-	call BGEffects_LoadEnemyPals
+	call BGEffects_LoadBGPal1_OBPal0
 	pop hl
 	ld a, [hl]
-	call BGEffects_LoadPlayerPals
+	call BGEffects_LoadBGPal0_OBPal1
 	ret
 
 .player_2
@@ -2048,17 +2048,17 @@ BattleBGEffect_FadeMonsToBlackRepeating:
 	add hl, de
 	ld a, [hli]
 	push hl
-	call BGEffects_LoadPlayerPals
+	call BGEffects_LoadBGPal0_OBPal1
 	pop hl
 	ld a, [hl]
-	call BGEffects_LoadEnemyPals
+	call BGEffects_LoadBGPal1_OBPal0
 	ret
 
 .cgb_two
 	ld a, $e4
-	call BGEffects_LoadPlayerPals
+	call BGEffects_LoadBGPal0_OBPal1
 	ld a, $e4
-	call BGEffects_LoadEnemyPals
+	call BGEffects_LoadBGPal1_OBPal0
 	call EndBattleBGEffect
 	ret
 
@@ -2468,7 +2468,7 @@ BGEffect_RapidCyclePals:
 	ld [hl], a
 	call BattleBGEffect_GetFirstDMGPal
 	jr c, .okay_2_cgb
-	call BGEffects_LoadPlayerPals
+	call BGEffects_LoadBGPal0_OBPal1
 	ret
 
 .okay_2_cgb
@@ -2479,7 +2479,7 @@ BGEffect_RapidCyclePals:
 
 .two_cgb
 	ld a, $e4
-	call BGEffects_LoadPlayerPals
+	call BGEffects_LoadBGPal0_OBPal1
 	call EndBattleBGEffect
 	ret
 
@@ -2499,7 +2499,7 @@ BGEffect_RapidCyclePals:
 	ld [hl], a
 	call BattleBGEffect_GetFirstDMGPal
 	jr c, .okay_4_cgb
-	call BGEffects_LoadEnemyPals
+	call BGEffects_LoadBGPal1_OBPal0
 	ret
 
 .okay_4_cgb
@@ -2510,20 +2510,20 @@ BGEffect_RapidCyclePals:
 
 .four_cgb
 	ld a, $e4
-	call BGEffects_LoadEnemyPals
+	call BGEffects_LoadBGPal1_OBPal0
 	call EndBattleBGEffect
 	ret
 
-BGEffects_LoadPlayerPals:
+BGEffects_LoadBGPal0_OBPal1:
 	push bc
 	push af
-	ld hl, wBGPals2 palette PAL_BATTLE_BG_PLAYER
-	ld de, wBGPals1 palette PAL_BATTLE_BG_PLAYER
+	ld hl, wBGPals2
+	ld de, wBGPals1
 	ld b, a
 	ld c, $1
 	call CopyPals
-	ld hl, wOBPals2 palette PAL_BATTLE_OB_PLAYER
-	ld de, wOBPals1 palette PAL_BATTLE_OB_PLAYER
+	ld hl, wOBPals2 palette 1
+	ld de, wOBPals1 palette 1
 	pop af
 	ld b, a
 	ld c, $1
@@ -2533,16 +2533,16 @@ BGEffects_LoadPlayerPals:
 	ldh [hCGBPalUpdate], a
 	ret
 
-BGEffects_LoadEnemyPals:
+BGEffects_LoadBGPal1_OBPal0:
 	push bc
 	push af
-	ld hl, wBGPals2 palette PAL_BATTLE_BG_ENEMY
-	ld de, wBGPals1 palette PAL_BATTLE_BG_ENEMY
+	ld hl, wBGPals2 palette 1
+	ld de, wBGPals1 palette 1
 	ld b, a
 	ld c, $1
 	call CopyPals
-	ld hl, wOBPals2 palette PAL_BATTLE_OB_ENEMY
-	ld de, wOBPals1 palette PAL_BATTLE_OB_ENEMY
+	ld hl, wOBPals2
+	ld de, wOBPals1
 	pop af
 	ld b, a
 	ld c, $1

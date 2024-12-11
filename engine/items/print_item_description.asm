@@ -1,6 +1,9 @@
 PrintItemDescription:
 ; Print the description for item [wCurSpecies] at de.
 
+	; ld a, 1
+	; ldh [rKEY1], a
+
 	ld a, [wCurSpecies]
 	cp TM01
 	jr c, .not_a_tm
@@ -11,7 +14,20 @@ PrintItemDescription:
 	pop hl
 	ld a, [wTempTMHM]
 	ld [wCurSpecies], a
+
+	push af
+	call SetupDFSNomanagementNoDelay
+	pop af
+
 	call PrintMoveDescription
+
+	push af
+	call DisableDFSNoManagement
+
+	; xor a
+	; ldh [rKEY1], a
+
+	pop af
 	ret
 
 .not_a_tm
@@ -29,4 +45,12 @@ PrintItemDescription:
 	ld e, l
 	pop hl
 	ld a, BANK(ItemDescriptions)
-	jp PlaceFarString
+	push af
+	call SetupDFSNomanagementNoDelay
+	pop af
+	call PlaceFarString
+	call DisableDFSNoManagement
+
+	xor a
+	ldh [rKEY1], a
+	ret

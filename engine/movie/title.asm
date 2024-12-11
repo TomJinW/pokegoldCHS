@@ -22,6 +22,18 @@ TitleScreen:
 	call ByteFill
 	farcall ClearSpriteAnims
 
+	ld a, [Rom0End]
+	cp $A0
+	jr z, .BKMVer
+
+.JLBKMVer
+	ld hl, TitleScreenGFXALL
+	ld de, vTiles2
+	ld a, BANK(TitleScreenGFXALL)
+	call FarDecompress
+	jr .finish
+
+.BKMVer
 ; Decompress lower part of title screen
 	ld hl, TitleScreenGFX1
 	ld de, vTiles2
@@ -34,6 +46,7 @@ TitleScreen:
 	ld a, BANK(TitleScreenGFX2)
 	call FarDecompress
 
+.finish
 ; Decompress Ho-Oh/Lugia sprite
 	ld hl, TitleScreenGFX4
 	ld de, vTiles0
@@ -69,7 +82,7 @@ TitleScreen:
 	ld [hl], a  ; wTitleScreenTimer + 1
 
 	depixel 12, 11
-	ld a, SPRITE_ANIM_OBJ_GS_INTRO_HO_OH_LUGIA
+	ld a, SPRITE_ANIM_INDEX_GS_INTRO_HO_OH_LUGIA
 	call InitSpriteAnimStruct
 	ld hl, wSpriteAnim1
 	ld de, wSpriteAnim10
@@ -144,20 +157,53 @@ FillTitleScreenPals:
 	ldh a, [hCGB]
 	and a
 	ret z
+
+	ld a, [Rom0End]
+	cp $A0
+	jr z, .BKMVer
+
+.JLBKMVer
 	ld a, 1
 	ldh [rVBK], a
 	hlbgcoord 0, 0
 	ld bc, 18 * BG_MAP_WIDTH
 	xor a
 	call ByteFill
+
+	hlbgcoord 0, 1, vBGMap2
+	lb bc, 4, SCREEN_WIDTH - 4
+	ld a, 1
+	call DrawTitleGraphic
+
+	hlbgcoord 15, 1, vBGMap2
+	lb bc, 4, 4
+	ld a, 3
+	call DrawTitleGraphic
+
+	hlbgcoord 0, 5, vBGMap2
+	lb bc, 1, SCREEN_WIDTH
+	ld a, 2
+	call DrawTitleGraphic
+	jr .done
+.BKMVer
+	ld a, 1
+	ldh [rVBK], a
+
+	hlbgcoord 0, 0
+	ld bc, 18 * BG_MAP_WIDTH
+	xor a
+	call ByteFill
+
 	hlbgcoord 0, 0, vBGMap2
 	lb bc, 7, SCREEN_WIDTH
 	ld a, 1
 	call DrawTitleGraphic
+
 	hlbgcoord 5, 6, vBGMap2
 	lb bc, 1, 10
 	ld a, 3
 	call DrawTitleGraphic
+.done
 	hlbgcoord 0, 12, vBGMap2
 	ld bc, 5 * BG_MAP_WIDTH
 	ld a, 4
@@ -183,7 +229,12 @@ DrawTitleGraphic:
 	ret
 
 LoadTitleScreenTilemap:
+	ld a, [Rom0End]
+	cp $A0
+	ld hl, TitleScreenTilemap2
+	jr z, .BKMVer
 	ld hl, TitleScreenTilemap
+.BKMVer
 	debgcoord 0, 0
 .loop
 	ld a, BANK(TitleScreenTilemap)
@@ -201,6 +252,11 @@ LoadTitleScreenTilemap:
 	ret nz
 	hlbgcoord 0, 11
 	ld bc, BG_MAP_WIDTH
+	ld a, [Rom0End]
+	cp $A0
 	ld a, "@"
+	jr z, .BKMVer2
+	ld a, $0e
+.BKMVer2
 	call ByteFill
 	ret

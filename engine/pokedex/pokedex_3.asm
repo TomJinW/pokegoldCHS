@@ -109,17 +109,20 @@ DrawPokedexSearchResultsWindow:
 	hlcoord 0, 12
 	lb bc, 5, 11
 	call ClearBox
-	ld de, .esults_D
-	hlcoord 0, 12
+	ld de, .results
+	hlcoord 0, 16
 	call PlaceString
 	ret
 
-.esults_D
-; (SEARCH R)
-	db   "ESULTS"
-	next ""
-; (### FOUN)
-	next "D!@"
+.results
+	db_w "个结果！@"
+
+; .esults_D
+; ; (SEARCH R)
+; 	db_w "ESULTS"
+; 	next ""
+; ; (### FOUN)
+; 	next "D!@"
 
 DrawDexEntryScreenRightEdge:
 	ldh a, [hBGMapAddress]
@@ -140,7 +143,7 @@ DrawDexEntryScreenRightEdge:
 	call Pokedex_FillColumn2
 	ld [hl], $68
 	hlcoord 19, 17
-	ld [hl], $3c
+	ld [hl], $32 ;ld [hl], $3c
 	xor a
 	ld b, SCREEN_HEIGHT
 	hlcoord 19, 0, wAttrmap

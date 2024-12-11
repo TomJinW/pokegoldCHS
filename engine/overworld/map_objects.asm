@@ -195,14 +195,14 @@ CopyCoordsTileToLastCoordsTile:
 	ld hl, OBJECT_LAST_MAP_Y
 	add hl, bc
 	ld [hl], a
-	ld hl, OBJECT_TILE_COLLISION
+	ld hl, OBJECT_TILE
 	add hl, bc
 	ld a, [hl]
 	ld hl, OBJECT_LAST_TILE
 	add hl, bc
 	ld [hl], a
 	call SetTallGrassFlags
-	ld hl, OBJECT_TILE_COLLISION
+	ld hl, OBJECT_TILE
 	add hl, bc
 	ld a, [hl]
 	call UselessAndA
@@ -228,12 +228,12 @@ UpdateTallGrassFlags:
 	add hl, bc
 	bit OVERHEAD_F, [hl]
 	jr z, .ok
-	ld hl, OBJECT_TILE_COLLISION
+	ld hl, OBJECT_TILE
 	add hl, bc
 	ld a, [hl]
 	call SetTallGrassFlags
 .ok
-	ld hl, OBJECT_TILE_COLLISION
+	ld hl, OBJECT_TILE
 	add hl, bc
 	ld a, [hl]
 	call UselessAndA
@@ -321,9 +321,9 @@ GetNextTile:
 	ld [hl], a
 	ld e, a
 	push bc
-	call GetCoordTileCollision
+	call GetCoordTile
 	pop bc
-	ld hl, OBJECT_TILE_COLLISION
+	ld hl, OBJECT_TILE
 	add hl, bc
 	ld [hl], a
 	ret
@@ -502,9 +502,9 @@ StepFunction_Reset:
 	add hl, bc
 	ld e, [hl]
 	push bc
-	call GetCoordTileCollision
+	call GetCoordTile
 	pop bc
-	ld hl, OBJECT_TILE_COLLISION
+	ld hl, OBJECT_TILE
 	add hl, bc
 	ld [hl], a
 	call CopyCoordsTileToLastCoordsTile
@@ -656,7 +656,7 @@ MovementFunction_Strength:
 	dw .stop
 
 .start:
-	ld hl, OBJECT_TILE_COLLISION
+	ld hl, OBJECT_TILE
 	add hl, bc
 	ld a, [hl]
 	call CheckPitTile
@@ -1925,7 +1925,7 @@ ApplyMovementToFollower:
 	ret z
 	cp movement_step_end
 	ret z
-	cp movement_step_stop
+	cp movement_step_4b
 	ret z
 	cp movement_step_bump
 	ret z
@@ -2135,8 +2135,8 @@ CopyTempObjectData:
 	ret
 
 UpdateAllObjectsFrozen::
-	ld a, [wStateFlags]
-	bit SPRITE_UPDATES_DISABLED_F, a
+	ld a, [wVramState]
+	bit 0, a
 	ret z
 	ld bc, wObjectStructs
 	xor a
@@ -2239,9 +2239,9 @@ UpdateObjectTile:
 	ld hl, OBJECT_MAP_Y
 	add hl, bc
 	ld e, [hl]
-	call GetCoordTileCollision
+	call GetCoordTile
 	pop bc
-	ld hl, OBJECT_TILE_COLLISION
+	ld hl, OBJECT_TILE
 	add hl, bc
 	ld [hl], a
 	farcall UpdateTallGrassFlags ; no need to farcall
@@ -2668,8 +2668,8 @@ ResetObject::
 	db SPRITEMOVEDATA_STANDING_RIGHT
 
 _UpdateSprites::
-	ld a, [wStateFlags]
-	bit SPRITE_UPDATES_DISABLED_F, a
+	ld a, [wVramState]
+	bit 0, a
 	ret z
 	xor a
 	ldh [hUsedSpriteIndex], a
@@ -2692,7 +2692,7 @@ _UpdateSprites::
 	ld h, HIGH(wShadowOAM)
 	ld de, SPRITEOAMSTRUCT_LENGTH
 	ld a, b
-	ld c, OAM_YCOORD_HIDDEN
+	ld c, SCREEN_HEIGHT_PX + 2 * TILE_WIDTH
 .loop
 	ld [hl], c ; y
 	add hl, de

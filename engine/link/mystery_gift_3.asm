@@ -139,7 +139,7 @@ InitMysteryGiftLayout:
 	call WaitBGMap
 	ld b, SCGB_MYSTERY_GIFT
 	call GetSGBLayout
-	jp SetDefaultBGPAndOBP
+	jp SetPalettes
 
 .Load3GFX:
 	ld b, 3

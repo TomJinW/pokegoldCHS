@@ -64,7 +64,7 @@ _UnownPrinter:
 
 	ld b, SCGB_TRAINER_OR_MON_FRONTPIC_PALS
 	call GetSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 
 .joy_loop
 	call JoyTextDelay
@@ -90,10 +90,20 @@ endc
 .pressed_a
 	ld a, [wJumptableIndex]
 	push af
+
+	hlcoord 1, 6
+	lb bc, 7, 7
+	call ClearBox
+	call DelayFrame
+	call DelayFrame
+	call DelayFrame
+
 	farcall PrintUnownStamp
+	
 	call RestartMapMusic
 	pop af
 	ld [wJumptableIndex], a
+	call .UpdateUnownFrontpic
 	jr .joy_loop
 
 .pressed_b

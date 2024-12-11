@@ -108,12 +108,12 @@ MrPokemonsHouse_OakScript:
 	writetext MrPokemonsHouse_MrPokemonHealText
 	waitbutton
 	closetext
-	special FadeOutToBlack
+	special FadeBlackQuickly
 	special ReloadSpritesNoPalettes
 	playmusic MUSIC_HEAL
 	special HealParty
 	pause 60
-	special FadeInFromBlack
+	special FadeInQuickly
 	special RestartMapMusic
 	opentext
 	writetext MrPokemonText_ImDependingOnYou

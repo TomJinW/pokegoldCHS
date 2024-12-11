@@ -10,14 +10,14 @@ PlayWhirlpoolSound:
 	ret
 
 BlindingFlash:
-	farcall FadeOutToWhite
+	farcall FadeOutPalettes
 	ld hl, wStatusFlags
 	set STATUSFLAGS_FLASH_F, [hl]
 	farcall ReplaceTimeOfDayPals
 	farcall UpdateTimeOfDayPal
 	ld b, SCGB_MAPPALS
 	call GetSGBLayout
-	farcall FadeInFromWhite
+	farcall FadeInPalettes
 	ret
 
 ShakeHeadbuttTree:
@@ -31,7 +31,7 @@ ShakeHeadbuttTree:
 	lb bc, BANK(HeadbuttTreeGFX), 8
 	call Request2bpp
 	call Cut_Headbutt_GetPixelFacing
-	ld a, SPRITE_ANIM_OBJ_HEADBUTT
+	ld a, SPRITE_ANIM_INDEX_HEADBUTT
 	call InitSpriteAnimStruct
 	ld hl, SPRITEANIMSTRUCT_TILE_ID
 	add hl, bc
@@ -58,7 +58,7 @@ ShakeHeadbuttTree:
 	jr .loop
 
 .done
-	call LoadOverworldTilemapAndAttrmapPals
+	call OverworldTextModeSwitch
 	call WaitBGMap
 	xor a
 	ldh [hBGMapMode], a
@@ -159,7 +159,7 @@ OWCutJumptable:
 
 Cut_SpawnAnimateTree:
 	call Cut_Headbutt_GetPixelFacing
-	ld a, SPRITE_ANIM_OBJ_CUT_TREE ; cut tree
+	ld a, SPRITE_ANIM_INDEX_CUT_TREE ; cut tree
 	call InitSpriteAnimStruct
 	ld hl, SPRITEANIMSTRUCT_TILE_ID
 	add hl, bc
@@ -212,7 +212,7 @@ Cut_WaitAnimSFX:
 Cut_SpawnLeaf:
 	push de
 	push af
-	ld a, SPRITE_ANIM_OBJ_LEAF ; leaf
+	ld a, SPRITE_ANIM_INDEX_LEAF ; leaf
 	call InitSpriteAnimStruct
 	ld hl, SPRITEANIMSTRUCT_TILE_ID
 	add hl, bc
@@ -293,20 +293,20 @@ Cut_Headbutt_GetPixelFacing:
 
 FlyFromAnim:
 	call DelayFrame
-	ld a, [wStateFlags]
+	ld a, [wVramState]
 	push af
 	xor a
-	ld [wStateFlags], a
+	ld [wVramState], a
 	call FlyFunction_InitGFX
 	depixel 10, 10, 4, 0
-	ld a, SPRITE_ANIM_OBJ_RED_WALK
+	ld a, SPRITE_ANIM_INDEX_RED_WALK
 	call InitSpriteAnimStruct
 	ld hl, SPRITEANIMSTRUCT_TILE_ID
 	add hl, bc
 	ld [hl], FIELDMOVE_FLY
 	ld hl, SPRITEANIMSTRUCT_ANIM_SEQ_ID
 	add hl, bc
-	ld [hl], SPRITE_ANIM_FUNC_FLY_FROM
+	ld [hl], SPRITE_ANIM_SEQ_FLY_FROM
 	ld a, 128
 	ld [wFrameCounter], a
 .loop
@@ -322,25 +322,25 @@ FlyFromAnim:
 
 .exit
 	pop af
-	ld [wStateFlags], a
+	ld [wVramState], a
 	ret
 
 FlyToAnim:
 	call DelayFrame
-	ld a, [wStateFlags]
+	ld a, [wVramState]
 	push af
 	xor a
-	ld [wStateFlags], a
+	ld [wVramState], a
 	call FlyFunction_InitGFX
 	depixel 31, 10, 4, 0
-	ld a, SPRITE_ANIM_OBJ_RED_WALK
+	ld a, SPRITE_ANIM_INDEX_RED_WALK
 	call InitSpriteAnimStruct
 	ld hl, SPRITEANIMSTRUCT_TILE_ID
 	add hl, bc
 	ld [hl], FIELDMOVE_FLY
 	ld hl, SPRITEANIMSTRUCT_ANIM_SEQ_ID
 	add hl, bc
-	ld [hl], SPRITE_ANIM_FUNC_FLY_TO
+	ld [hl], SPRITE_ANIM_SEQ_FLY_TO
 	ld hl, SPRITEANIMSTRUCT_VAR4
 	add hl, bc
 	ld [hl], 11 * TILE_WIDTH
@@ -359,7 +359,7 @@ FlyToAnim:
 
 .exit
 	pop af
-	ld [wStateFlags], a
+	ld [wVramState], a
 	call .RestorePlayerSprite_DespawnLeaves
 	ret
 
@@ -432,7 +432,7 @@ FlyFunction_FrameTimer:
 	add 8 * 8 ; gives a number in [$40, $50, $60, $70]
 	ld d, a
 	ld e, 0
-	ld a, SPRITE_ANIM_OBJ_FLY_LEAF
+	ld a, SPRITE_ANIM_INDEX_FLY_LEAF
 	call InitSpriteAnimStruct
 	ld hl, SPRITEANIMSTRUCT_TILE_ID
 	add hl, bc

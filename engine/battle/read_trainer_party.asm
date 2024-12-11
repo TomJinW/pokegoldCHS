@@ -371,4 +371,9 @@ CopyTrainerName:
 	pop de
 	ret
 
+IF DEF(_DEBUG)
+; INCLUDE "data/trainers/parties_autodebug.asm"
 INCLUDE "data/trainers/parties.asm"
+ELSE
+INCLUDE "data/trainers/parties.asm"
+ENDC

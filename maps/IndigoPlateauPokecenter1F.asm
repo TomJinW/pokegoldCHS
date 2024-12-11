@@ -156,7 +156,7 @@ TeleportGuyScript:
 	waitbutton
 	closetext
 	playsound SFX_WARP_TO
-	special FadeOutToWhite
+	special FadeOutPalettes
 	waitsfx
 	warp NEW_BARK_TOWN, 13, 6
 	end

@@ -214,6 +214,10 @@ PokeBallEffect:
 	dec a
 	jp nz, UseBallInTrainerBattle
 
+	ld a, [wBattleType] ; FIXED 已修复，小哥捕捉教学在队伍和盒子都满的时候失败的Bug
+	cp BATTLETYPE_TUTORIAL ;
+	jr z, .room_in_party ;
+	
 	ld a, [wPartyCount]
 	cp PARTY_LENGTH
 	jr nz, .room_in_party
@@ -344,7 +348,7 @@ PokeBallEffect:
 	and 1 << FRZ | SLP_MASK
 	ld c, 10
 	jr nz, .addstatus
-	; ld a, [wEnemyMonStatus]
+	ld a, [wEnemyMonStatus] ; FIXED
 	and a
 	ld c, 5
 	jr nz, .addstatus
@@ -362,7 +366,7 @@ PokeBallEffect:
 	ld d, a
 	push de
 	ld a, [wBattleMonItem]
-	; ld b, a
+	ld b, a ; FIXED
 	farcall GetItemHeldEffect
 	ld a, b
 	cp HELD_CATCH_CHANCE
@@ -448,18 +452,18 @@ PokeBallEffect:
 
 ; This code is buggy. Any wild Pokémon that has Transformed will be
 ; caught as a Ditto, even if it was something else like Mew.
-; To fix, do not set [wTempEnemyMonSpecies] to DITTO.
+; To fix, do not set [wTempEnemyMonSpecies] to DITTO. ;FIXED
 	bit SUBSTATUS_TRANSFORMED, a
-	jr nz, .ditto
-	jr .not_ditto
+	jr nz, .load_data ; FIXED - jr nz, .ditto
+	; jr .not_ditto
 
 .ditto
-	ld a, DITTO
-	ld [wTempEnemyMonSpecies], a
-	jr .load_data
+	; ld a, DITTO
+	; ld [wTempEnemyMonSpecies], a
+	; jr .load_data
 
 .not_ditto
-	set SUBSTATUS_TRANSFORMED, [hl]
+	; set SUBSTATUS_TRANSFORMED, [hl]
 	ld hl, wEnemyBackupDVs
 	ld a, [wEnemyMonDVs]
 	ld [hli], a
@@ -777,45 +781,46 @@ HeavyBallMultiplier:
 	jr nz, .SkipText
 
 	ld a, d
-	push bc
-	inc hl
+	; push bc
+	; inc hl
 	inc hl
 	call GetFarWord
 
-	srl h
-	rr l
-	ld b, h
-	ld c, l
+; 	srl h
+; 	rr l
+; 	ld b, h
+; 	ld c, l
 
-rept 4
-	srl b
-	rr c
-endr
-	call .subbc
+; rept 4
+; 	srl b
+; 	rr c
+; endr
+; 	call .subbc
 
-	srl b
-	rr c
-	call .subbc
+; 	srl b
+; 	rr c
+; 	call .subbc
 
+; 	ld a, h
+; 	pop bc
+; 	jr .compare
+
+; .subbc
+; 	; subtract bc from hl
+; 	push bc
+; 	ld a, b
+; 	cpl
+; 	ld b, a
+; 	ld a, c
+; 	cpl
+; 	ld c, a
+; 	inc bc
+; 	add hl, bc
+; 	pop bc
+; 	ret
+
+; .compare
 	ld a, h
-	pop bc
-	jr .compare
-
-.subbc
-	; subtract bc from hl
-	push bc
-	ld a, b
-	cpl
-	ld b, a
-	ld a, c
-	cpl
-	ld c, a
-	inc bc
-	add hl, bc
-	pop bc
-	ret
-
-.compare
 	ld c, a
 	cp HIGH(1024) ; 102.4 kg
 	jr c, .lightmon
@@ -904,7 +909,8 @@ MoonBallMultiplier:
 	push bc
 	ld a, BANK("Evolutions and Attacks")
 	call GetFarByte
-	cp MOON_STONE_RED ; BURN_HEAL
+	; cp MOON_STONE_RED ; BURN_HEAL
+	cp MOON_STONE ; 已修复
 	pop bc
 	ret nz
 
@@ -963,7 +969,7 @@ LoveBallMultiplier:
 	pop de
 	cp d
 	pop bc
-	ret nz ; for the intended effect, this should be "ret z"
+	ret z ; for the intended effect, this should be "ret z" ; fixed
 
 	sla b
 	jr c, .max
@@ -1001,7 +1007,7 @@ FastBallMultiplier:
 	cp -1
 	jr z, .next
 	cp c
-	jr nz, .next ; for the intended effect, this should be "jr nz, .loop"
+	jr nz, .loop ; for the intended effect, this should be "jr nz, .loop" ;FIXED
 	sla b
 	jr c, .max
 
@@ -1335,11 +1341,22 @@ RareCandyEffect:
 	ld c, 9
 	call Textbox
 
-	hlcoord 11, 1
+	hlcoord 11, 2 ;hlcoord 11, 1
 	ld bc, 4
 	predef PrintTempMonStats
 
 	call WaitPressAorB_BlinkCursor
+
+	ld a, $6e
+	lb bc, 2, 3
+	hlcoord 11, 3
+	call DFSStaticize
+
+	ld a, $60
+	lb bc, 4, 3
+	hlcoord 11, 7
+	call DFSStaticize
+
 
 	xor a ; PARTYMON
 	ld [wMonType], a
@@ -1673,7 +1690,7 @@ HealHP_SFX_GFX:
 	call WaitPlaySFX
 	pop de
 	ld a, [wCurPartyMon]
-	hlcoord 11, 0
+	hlcoord 13, 0 ;hlcoord 11, 0
 	ld bc, SCREEN_WIDTH * 2
 	call AddNTimes
 	ld a, $2
@@ -1714,9 +1731,9 @@ ChooseMonToUseItemOn:
 	farcall InitPartyMenuWithCancel
 	farcall InitPartyMenuGFX
 	farcall WritePartyMenuTilemap
-	farcall PlacePartyMenuText
+	farcall PrintPartyMenuText
 	call WaitBGMap
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	call DelayFrame
 	farcall PartyMenuSelect
 	ret
@@ -1733,7 +1750,7 @@ ItemActionText:
 	farcall WritePartyMenuTilemap
 	farcall PrintPartyMenuActionText
 	call WaitBGMap
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	call DelayFrame
 	pop bc
 	pop de
@@ -2065,8 +2082,12 @@ UseRepel:
 	ld a, [wRepelEffect]
 	and a
 	ld hl, RepelUsedEarlierIsStillInEffectText
-	jp nz, PrintText
-
+	jr z, .useitem
+	call SetupDFSNomanagementNoDelay
+	call PrintText
+	call DisableDFSNoManagement
+	ret
+.useitem
 	ld a, b
 	ld [wRepelEffect], a
 	jp UseItemText
@@ -2114,6 +2135,7 @@ DireHitEffect:
 XItemEffect:
 	call UseItemText
 
+	call SetupDFSNomanagementNoDelay
 	ld a, [wCurItem]
 	ld hl, XItemStats
 
@@ -2137,6 +2159,7 @@ XItemEffect:
 	farcall BattleCommand_StatUpMessage
 	farcall BattleCommand_StatUpFailText
 
+	call DisableDFSNoManagement
 	ld a, [wCurBattleMon]
 	ld [wCurPartyMon], a
 	ld c, HAPPINESS_USEDXITEM
@@ -2544,9 +2567,12 @@ GorgeousBoxEffect:
 	ld c, DECOFLAG_GOLD_TROPHY_DOLL
 OpenBox:
 	farcall SetSpecificDecorationFlag
-
+ 
 	ld hl, .SentTrophyHomeText
+
+	call SetupDFSNomanagementNoDelay
 	call PrintText
+	call DisableDFSNoManagement
 
 	jp UseDisposableItem
 

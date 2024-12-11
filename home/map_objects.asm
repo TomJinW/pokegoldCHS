@@ -71,34 +71,34 @@ DoesSpriteHaveFacings::
 	pop de
 	ret
 
-GetPlayerTilePermission::
-	ld a, [wPlayerTileCollision]
-	call GetTilePermission
+GetPlayerTile::
+	ld a, [wPlayerTile]
+	call GetTileCollision
 	ld b, a
 	ret
 
 CheckOnWater::
-	ld a, [wPlayerTileCollision]
-	call GetTilePermission
+	ld a, [wPlayerTile]
+	call GetTileCollision
 	sub WATER_TILE
 	ret z
 	and a
 	ret
 
-GetTilePermission::
-; Get the permission of tile collision a.
+GetTileCollision::
+; Get the collision type of tile a.
 
 	push de
 	push hl
 
-	ld hl, CollisionPermissionTable
+	ld hl, TileCollisionTable
 	ld e, a
 	ld d, 0
 	add hl, de
 
 	ldh a, [hROMBank]
 	push af
-	ld a, BANK(CollisionPermissionTable)
+	ld a, BANK(TileCollisionTable)
 	rst Bankswitch
 	ld e, [hl]
 	pop af
@@ -189,7 +189,7 @@ CheckWaterfallTile::
 	ret
 
 CheckStandingOnEntrance::
-	ld a, [wPlayerTileCollision]
+	ld a, [wPlayerTile]
 	cp COLL_DOOR
 	ret z
 	cp COLL_DOOR_79
@@ -300,11 +300,11 @@ CheckObjectTime::
 	scf
 	ret
 
-CopyMapObjectStruct:: ; unreferenced
-	ldh [hMapObjectIndex], a
-	call GetMapObject
-	call CopyObjectStruct
-	ret
+; CopyMapObjectStruct:: ; unreferenced
+; 	ldh [hMapObjectIndex], a
+; 	call GetMapObject
+; 	call CopyObjectStruct
+; 	ret
 
 UnmaskCopyMapObjectStruct::
 	ldh [hMapObjectIndex], a
@@ -362,34 +362,34 @@ CopyPlayerObjectTemplate::
 	call CopyBytes
 	ret
 
-DeleteFollowerMapObject: ; unreferenced
-	call GetMapObject
-	ld hl, MAPOBJECT_OBJECT_STRUCT_ID
-	add hl, bc
-	ld a, [hl]
-	push af
-	ld [hl], -1
-	inc hl
-	ld bc, MAPOBJECT_LENGTH - 1
-	xor a
-	call ByteFill
-	pop af
-	cp -1
-	ret z
-	cp NUM_OBJECT_STRUCTS
-	ret nc
-	ld b, a
-	ld a, [wObjectFollow_Leader]
-	cp b
-	jr nz, .ok
-	ld a, -1
-	ld [wObjectFollow_Leader], a
+; DeleteFollowerMapObject: ; unreferenced
+; 	call GetMapObject
+; 	ld hl, MAPOBJECT_OBJECT_STRUCT_ID
+; 	add hl, bc
+; 	ld a, [hl]
+; 	push af
+; 	ld [hl], -1
+; 	inc hl
+; 	ld bc, MAPOBJECT_LENGTH - 1
+; 	xor a
+; 	call ByteFill
+; 	pop af
+; 	cp -1
+; 	ret z
+; 	cp NUM_OBJECT_STRUCTS
+; 	ret nc
+; 	ld b, a
+; 	ld a, [wObjectFollow_Leader]
+; 	cp b
+; 	jr nz, .ok
+; 	ld a, -1
+; 	ld [wObjectFollow_Leader], a
 
-.ok
-	ld a, b
-	call GetObjectStruct
-	farcall DeleteMapObject
-	ret
+; .ok
+; 	ld a, b
+; 	call GetObjectStruct
+; 	farcall DeleteMapObject
+; 	ret
 
 LoadMovementDataPointer::
 ; Load the movement data pointer for object a.
@@ -412,8 +412,8 @@ LoadMovementDataPointer::
 	add hl, bc
 	ld [hl], STEP_TYPE_RESET
 
-	ld hl, wStateFlags
-	set SCRIPTED_MOVEMENT_STATE_F, [hl]
+	ld hl, wVramState
+	set 7, [hl]
 	and a
 	ret
 
@@ -574,19 +574,19 @@ _GetMovementIndex::
 	ld a, h
 	ret
 
-SetVramState_SpriteUpdatesDisabled:: ; unreferenced
-	ld hl, wStateFlags
-	set SPRITE_UPDATES_DISABLED_F, [hl]
+SetVramState_Bit0:: ; unreferenced
+	ld hl, wVramState
+	set 0, [hl]
 	ret
 
-ResetVramState_SpriteUpdatesDisabled:: ; unreferenced
-	ld hl, wStateFlags
-	res SPRITE_UPDATES_DISABLED_F, [hl]
+ResetVramState_Bit0:: ; unreferenced
+	ld hl, wVramState
+	res 0, [hl]
 	ret
 
 UpdateSprites::
-	ld a, [wStateFlags]
-	bit SPRITE_UPDATES_DISABLED_F, a
+	ld a, [wVramState]
+	bit 0, a
 	ret z
 
 	farcall UpdateAllObjectsFrozen

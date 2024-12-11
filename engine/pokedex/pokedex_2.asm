@@ -85,11 +85,21 @@ DisplayDexEntry:
 	call GetDexEntryPointer
 	ld a, b
 	push af
+	call IncreaseDFSStack
 	hlcoord 9, 5
 	call PlaceFarString ; dex species
 	ld h, b
 	ld l, c
 	push de
+
+	ld a, [wEngPKMNNameMark]
+	cp 1
+	ld de, POKeString
+	jr nz, .CHS
+	ld de, POKeStringENG
+.CHS
+	call PlaceString
+	call DecreaseDFSStack
 ; Print dex number
 	hlcoord 2, 8
 	ld a, $5c ; No
@@ -112,28 +122,34 @@ DisplayDexEntry:
 	inc hl
 	ld a, b
 	push af
-	push hl
-	call GetFarWord
-	ld d, l
-	ld e, h
-	pop hl
+	; push hl
+	; call GetFarWord
+	; ld d, l
+	; ld e, h
+	; pop hl
+	call GetFarByte
+	; inc hl
 	inc hl
-	inc hl
-	ld a, d
-	or e
+	; ld a, d
+	; or e
+	and a
 	jr z, .skip_height
 	push hl
-	push de
+	push af
+	; push de
 ; Print the height, with two of the four digits in front of the decimal point
-	ld hl, sp+0
+	; ld hl, sp+0
+	ld hl, sp+1
 	ld d, h
 	ld e, l
-	hlcoord 12, 7
-	lb bc, 2, (2 << 4) | 4
+	; hlcoord 12, 7
+	; lb bc, 2, (2 << 4) | 4
+	hlcoord 13, 7
+	lb bc, 1, (2 << 4) | 3
 	call PrintNum
 ; Replace the decimal point with a ft symbol
-	hlcoord 14, 7
-	ld [hl], $5e
+	; hlcoord 14, 7
+	; ld [hl], $5e
 	pop af
 	pop hl
 
@@ -154,8 +170,10 @@ DisplayDexEntry:
 	ld hl, sp+0
 	ld d, h
 	ld e, l
-	hlcoord 11, 9
-	lb bc, 2, (4 << 4) | 5
+	; hlcoord 11, 9
+	; lb bc, 2, (4 << 4) | 5
+	hlcoord 12, 9
+	lb bc, 2, (3 << 4) | 4
 	call PrintNum
 	pop de
 
@@ -180,7 +198,7 @@ DisplayDexEntry:
 	pop de
 	inc de
 	pop af
-	hlcoord 2, 11
+	hlcoord 2, 12 ;hlcoord 2, 11
 	push af
 	call PlaceFarString
 	pop bc
@@ -210,12 +228,15 @@ DisplayDexEntry:
 	pop de
 	inc de
 	pop af
-	hlcoord 2, 11
+	hlcoord 2, 12 ;hlcoord 2, 11
 	call PlaceFarString
 	ret
+	
 
 POKeString: ; unreferenced
 	db "#@"
+POKeStringENG: ; unreferenced
+	db "@"
 
 GetDexEntryPointer:
 ; return dex entry pointer b:de
@@ -251,7 +272,7 @@ GetDexEntryPagePointer:
 	cp "@"
 	jr nz, .loop1
 ; skip height and weight
-rept 4
+rept 4;
 	inc hl
 endr
 ; if c != 1: skip entry

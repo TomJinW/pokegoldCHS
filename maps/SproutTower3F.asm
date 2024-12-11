@@ -52,11 +52,11 @@ SproutTower3FRivalScene:
 	pause 15
 	closetext
 	playsound SFX_WARP_TO
-	special FadeOutToBlack
+	special FadeBlackQuickly
 	special ReloadSpritesNoPalettes
 	disappear SPROUTTOWER3F_RIVAL
 	waitsfx
-	special FadeInFromBlack
+	special FadeInQuickly
 	setscene SCENE_SPROUTTOWER3F_NOOP
 	special RestartMapMusic
 	end

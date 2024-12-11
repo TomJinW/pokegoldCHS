@@ -230,6 +230,16 @@ BattleText_EnemyIsAboutToUseWillPlayerChangeMon:
 	line "change #MON?"
 	done
 
+BattleText_EnemyIsAboutToUseWillPlayerChangeMonENG:
+	text "<ENEMY>"
+	line "正准备派出@"
+	text_ram wEnemyMonNickname
+	text ""
+
+	para "<PLAYER>"
+	line "要替换宝可梦吗？"
+	done
+
 BattleText_EnemySentOut:
 	text "<ENEMY>"
 	line "sent out"

@@ -143,7 +143,7 @@ CardKeySlotScript::
 	playsound SFX_ENTER_DOOR
 	changeblock 14, 2, $2a ; open shutter
 	changeblock 14, 4, $01 ; floor
-	refreshmap
+	reloadmappart
 	closetext
 	waitsfx
 	end

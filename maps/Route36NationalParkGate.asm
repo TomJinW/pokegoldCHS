@@ -73,14 +73,14 @@ Route36NationalParkGateLeavingContestEarlyScript:
 	writetext Route36NationalParkGateOfficer1WaitHereForAnnouncementText
 	waitbutton
 	closetext
-	special FadeOutToBlack
+	special FadeBlackQuickly
 	special ReloadSpritesNoPalettes
 	scall .CopyContestants
 	disappear ROUTE36NATIONALPARKGATE_OFFICER1
 	appear ROUTE36NATIONALPARKGATE_OFFICER2
 	applymovement PLAYER, Route36NationalParkGatePlayerWaitWithContestantsMovement
 	pause 15
-	special FadeInFromBlack
+	special FadeInQuickly
 	jumpstd BugContestResultsScript
 
 .GoBackToContest:
@@ -89,7 +89,7 @@ Route36NationalParkGateLeavingContestEarlyScript:
 	closetext
 	turnobject PLAYER, LEFT
 	playsound SFX_EXIT_BUILDING
-	special FadeOutToWhite
+	special FadeOutPalettes
 	waitsfx
 	warp NATIONAL_PARK_BUG_CONTEST, 33, 18
 	end
@@ -172,7 +172,7 @@ Route36OfficerScriptContest:
 	special GiveParkBalls
 	turnobject PLAYER, LEFT
 	playsound SFX_EXIT_BUILDING
-	special FadeOutToWhite
+	special FadeOutPalettes
 	waitsfx
 	special SelectRandomBugContestContestants
 	warp NATIONAL_PARK_BUG_CONTEST, 33, 18

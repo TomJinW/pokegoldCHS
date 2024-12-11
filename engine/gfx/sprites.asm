@@ -43,7 +43,7 @@ DoNextFrameForAllSprites:
 	ld b, h
 	push hl
 	push de
-	call DoSpriteAnimFrame ; Uses a massive dw
+	call DoAnimFrame ; Uses a massive dw
 	call UpdateAnimFrame
 	pop de
 	pop hl
@@ -82,7 +82,7 @@ DoNextFrameForFirst16Sprites:
 	ld b, h
 	push hl
 	push de
-	call DoSpriteAnimFrame ; Uses a massive dw
+	call DoAnimFrame ; Uses a massive dw
 	call UpdateAnimFrame
 	pop de
 	pop hl
@@ -145,11 +145,11 @@ _InitSpriteAnimStruct::
 	inc [hl]
 .nonzero
 
-; Get row a of SpriteAnimObjects, copy the pointer into de
+; Get row a of SpriteAnimSeqData, copy the pointer into de
 	pop af
 	ld e, a
 	ld d, 0
-	ld hl, SpriteAnimObjects
+	ld hl, SpriteAnimSeqData
 	add hl, de
 	add hl, de
 	add hl, de
@@ -513,9 +513,9 @@ UnusedLoadSpriteAnimGFX: ; unreferenced
 	pop bc
 	ret
 
-INCLUDE "data/sprite_anims/objects.asm"
+INCLUDE "data/sprite_anims/sequences.asm"
 
-INCLUDE "engine/sprite_anims/functions.asm"
+INCLUDE "engine/gfx/sprite_anims.asm"
 
 INCLUDE "data/sprite_anims/framesets.asm"
 

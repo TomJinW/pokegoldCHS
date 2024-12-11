@@ -575,7 +575,8 @@ CGB_ApplyPartyMenuHPPals:
 	ld a, [de]
 	inc a
 	ld e, a
-	hlcoord 11, 2, wAttrmap
+	hlcoord 13, 1, wAttrmap
+	; hlcoord 11, 2, wAttrmap
 	ld bc, 2 * SCREEN_WIDTH
 	ld a, [wSGBPals]
 .loop
@@ -656,7 +657,7 @@ CGBCopyBattleObjectPals: ; unreferenced
 	dec c
 	jr nz, .loop
 	ld hl, BattleObjectPals
-	ld de, wOBPals1 palette PAL_BATTLE_OB_GRAY
+	ld de, wOBPals1 palette 2
 	ld bc, 2 palettes
 	call CopyBytes
 	ret
@@ -1126,7 +1127,7 @@ INCLUDE "data/trainers/palettes.asm"
 LoadMapPals:
 	; Which palette group is based on whether we're outside or inside
 	ld a, [wEnvironment]
-	maskbits NUM_ENVIRONMENTS + 1
+	and 7
 	ld e, a
 	ld d, 0
 	ld hl, EnvironmentColorsPointers
@@ -1231,11 +1232,17 @@ INCLUDE "gfx/stats/party_menu_ob.pal"
 UnusedBattleObjectPals: ; unreferenced
 INCLUDE "gfx/battle_anims/unused_battle_anims.pal"
 
-GSTitleBGPals:
+
 IF DEF(_GOLD)
+GSTitleBGPals:
 INCLUDE "gfx/title/title_bg_gold.pal"
+GSTitleBGPals2:
+INCLUDE "gfx/title/title_bg_goldBKM.pal"
 ELIF DEF(_SILVER)
+GSTitleBGPals:
 INCLUDE "gfx/title/title_bg_silver.pal"
+GSTitleBGPals2:
+INCLUDE "gfx/title/title_bg_silverBKM.pal"
 ENDC
 
 GSTitleOBPals:

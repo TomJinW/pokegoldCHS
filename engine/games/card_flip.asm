@@ -8,8 +8,8 @@ MemoryGameGFX:
 ; Graphics for an unused Game Corner
 ; game were meant to be here.
 
-UnusedCursor_InterpretJoypad_AnimateCursor:
-	ret
+; UnusedCursor_InterpretJoypad_AnimateCursor:
+; 	ret
 
 _CardFlip:
 	ld hl, wOptions
@@ -486,10 +486,11 @@ CardFlip_UpdateCoinBalanceDisplay:
 	ret
 
 CardFlip_PrintCoinBalance:
-	hlcoord 9, 15
-	lb bc, 1, 9
+	hlcoord 11, 14
+	ld b, 2
+	ld c, 7
 	call Textbox
-	hlcoord 10, 16
+	hlcoord 12, 16
 	ld de, .CoinStr
 	call PlaceString
 	hlcoord 15, 16
@@ -578,18 +579,18 @@ CardFlip_CopyOAM:
 	jr nz, .loop
 	ret
 
-CardFlip_ShiftDigitsUpOnePixel: ; unreferenced
-; The top rows of digits 1-9 become the bottom rows of 0-8,
-; so this routine relies on the top rows being blank.
-	ld de, vTiles0 tile "0"
-	ld hl, vTiles0 tile "0" + 2
-	ld bc, 10 tiles - 2
-	call CopyBytes
-	ld hl, vTiles0 tile "9" + 1 tiles - 2
-	xor a
-	ld [hli], a
-	ld [hl], a
-	ret
+; CardFlip_ShiftDigitsUpOnePixel: ; unreferenced
+; ; The top rows of digits 1-9 become the bottom rows of 0-8,
+; ; so this routine relies on the top rows being blank.
+; 	ld de, vTiles0 tile "0"
+; 	ld hl, vTiles0 tile "0" + 2
+; 	ld bc, 10 tiles - 2
+; 	call CopyBytes
+; 	ld hl, vTiles0 tile "9" + 1 tiles - 2
+; 	xor a
+; 	ld [hli], a
+; 	ld [hl], a
+; 	ret
 
 CardFlip_BlankDiscardedCardSlot:
 	xor a

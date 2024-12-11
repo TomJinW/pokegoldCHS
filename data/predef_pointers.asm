@@ -76,4 +76,6 @@ PredefPointers::
 	add_predef NewPokedexEntry
 	add_predef UnusedFrontpicPredef
 	add_predef UpdateTimePredef
+	add_predef PlaceLargeStatusString
+	add_predef ComputeShortHPBarPixels
 	dbw -1, DummyEndPredef ; pointless

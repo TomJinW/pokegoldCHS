@@ -116,17 +116,22 @@ GoldenrodGameCornerPrizeVendor_NoCoinCaseScript:
 
 GoldenrodGameCornerTMVendorMenuHeader:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 0, 2, 15, TEXTBOX_Y - 1
+	menu_coords 0, 3, 15, TEXTBOX_Y ;menu_coords 0, 2, 15, TEXTBOX_Y - 1
 	dw .MenuData
 	db 1 ; default option
 
 .MenuData:
 	db STATICMENU_CURSOR ; flags
 	db 4 ; items
+	; db_w "招式学习器25 5500@"
+	; db_w "招式学习器14 5500@"
+	; db_w "招式学习器38 5500@"
+	; db_w "取消@"
 	db "TM25    5500@"
 	db "TM14    5500@"
 	db "TM38    5500@"
-	db "CANCEL@"
+	; db "CANCEL@"
+	db_w "取消  @"
 
 GoldenrodGameCornerPrizeMonVendorScript:
 	faceplayer
@@ -205,7 +210,7 @@ GoldenrodGameCornerPrizeMonVendorScript:
 
 .Gold_MenuHeader:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 0, 2, 17, TEXTBOX_Y - 1
+	menu_coords 0, 3, 14, TEXTBOX_Y ;menu_coords 0, 2, 17, TEXTBOX_Y - 1
 	dw .Gold_MenuData
 	db 1 ; default option
 
@@ -216,6 +221,8 @@ GoldenrodGameCornerPrizeMonVendorScript:
 	db "EKANS       700@"
 	db "DRATINI    2100@"
 	db "CANCEL@"
+
+
 
 .Silver_Loop:
 	writetext GoldenrodGameCornerPrizeVendorWhichPrizeText
@@ -284,7 +291,7 @@ GoldenrodGameCornerPrizeMonVendorScript:
 
 .Silver_MenuHeader:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 0, 2, 17, TEXTBOX_Y - 1
+	menu_coords 0, 3, 14, TEXTBOX_Y ;menu_coords 0, 2, 17, TEXTBOX_Y - 1
 	dw .Silver_MenuData
 	db 1 ; default option
 
@@ -350,21 +357,21 @@ GoldenrodGameCornerPokefanM2Script:
 GoldenrodGameCornerSlotsMachineScript:
 	random 6
 	ifequal 0, GoldenrodGameCornerLuckySlotsMachineScript
-	reanchormap
+	refreshscreen
 	setval FALSE
 	special SlotMachine
 	closetext
 	end
 
 GoldenrodGameCornerLuckySlotsMachineScript:
-	reanchormap
+	refreshscreen
 	setval TRUE
 	special SlotMachine
 	closetext
 	end
 
 GoldenrodGameCornerCardFlipMachineScript:
-	reanchormap
+	refreshscreen
 	special CardFlip
 	closetext
 	end

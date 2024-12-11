@@ -65,7 +65,7 @@ _AnimateHPBar:
 	ld a, [hli]
 	ld b, a
 	pop hl
-	call ComputeHPBarPixels
+	call WhichComputeHPBarPixels ;call ComputeHPBarPixels
 	ld a, e
 	ld [wCurHPBarPixels], a
 
@@ -77,7 +77,7 @@ _AnimateHPBar:
 	ld e, a
 	ld a, [wCurHPAnimMaxHP + 1]
 	ld d, a
-	call ComputeHPBarPixels
+	call WhichComputeHPBarPixels ;call ComputeHPBarPixels
 	ld a, e
 	ld [wNewHPBarPixels], a
 
@@ -138,7 +138,14 @@ ShortAnim_UpdateVariables:
 	ld a, c
 	add [hl]
 	ld [hl], a
+	ld a, [wWhichHPBar]
+	cp $2
+	jr z, .partymon
 	call ShortHPBar_CalcPixelFrame
+	and a
+	ret
+.partymon
+	call ShortShortHPBar_CalcPixelFrame
 	and a
 	ret
 
@@ -180,11 +187,12 @@ LongAnim_UpdateVariables:
 	ld a, [hli]
 	ld b, a
 ; BUG: HP bar animation is slow for high HP (see docs/bugs_and_glitches.md)
-	call ComputeHPBarPixels
+	call WhichComputeHPBarPixels
+	ld a, e
 	pop bc
 	pop de
 	pop hl
-	ld a, e
+
 	ld hl, wCurHPBarPixels
 	cp [hl]
 	jr z, .loop
@@ -217,7 +225,7 @@ LongHPBarAnim_UpdateTiles:
 	ld e, a
 	ld a, [wCurHPAnimMaxHP + 1]
 	ld d, a
-	call ComputeHPBarPixels
+	call WhichComputeHPBarPixels
 	ld c, e
 	ld d, HP_BAR_LENGTH
 	ld a, [wWhichHPBar]
@@ -233,12 +241,13 @@ HPBarAnim_RedrawHPBar:
 	ld a, [wWhichHPBar]
 	cp $2
 	jr nz, .skip
-	ld a, 2 * SCREEN_WIDTH
+	ld a, SCREEN_WIDTH ; * 2
 	add l
 	ld l, a
 	ld a, 0
 	adc h
 	ld h, a
+	ld d, $4
 .skip
 	call DrawBattleHPBar
 	ret
@@ -249,7 +258,7 @@ HPBarAnim_UpdateHPRemaining:
 	ret z
 	cp $1
 	jr z, .load_15
-	ld de, SCREEN_WIDTH + 2
+	ld de, 0; SCREEN_WIDTH + 2 ld de, SCREEN_WIDTH + 2
 	jr .loaded_de
 
 .load_15
@@ -277,7 +286,14 @@ HPBarAnim_PaletteUpdate:
 	and a
 	ret z
 	ld hl, wCurHPAnimPal
+	ld a, [wWhichHPBar]
+	cp $2
+	jr nz, .normal
+	call SetShortHPPal
+	jr .next
+.normal
 	call SetHPPal
+.next
 	ld a, [wCurHPAnimPal]
 	ld c, a
 	farcall ApplyHPBarPals
@@ -377,6 +393,7 @@ ShortHPBar_CalcPixelFrame:
 	ld a, h
 	sbc $0
 	ld h, a
+	jr z, .done ; FIXED
 	jr c, .done
 	inc b
 	jr .loop
@@ -388,6 +405,66 @@ ShortHPBar_CalcPixelFrame:
 	pop bc
 	ld a, l
 	sub HP_BAR_LENGTH_PX
+	ld l, a
+	ld a, h
+	sbc $0
+	ld h, a
+	jr c, .no_carry
+	inc b
+.no_carry
+	ld a, [wCurHPAnimLowHP]
+	cp b
+	jr nc, .finish
+	ld a, [wCurHPAnimHighHP]
+	cp b
+	jr c, .finish
+	ld a, b
+.finish
+	ld [wCurHPAnimOldHP], a
+	ret
+
+.return_zero
+	xor a
+	ld [wCurHPAnimOldHP], a
+	ret
+
+.return_max
+	ld a, [wCurHPAnimMaxHP]
+	ld [wCurHPAnimOldHP], a
+	ret
+
+ShortShortHPBar_CalcPixelFrame: ; d839
+	ld a, [wCurHPAnimMaxHP]
+	ld c, a
+	ld b, 0
+	ld hl, 0
+	ld a, [wCurHPBarPixels]
+	cp HP_BAR_SHORT_LENGTH_PX
+	jr nc, .return_max
+	and a
+	jr z, .return_zero
+	call AddNTimes
+
+	ld b, 0
+.loop
+	ld a, l
+	sub HP_BAR_SHORT_LENGTH_PX
+	ld l, a
+	ld a, h
+	sbc $0
+	ld h, a
+	jr z, .done
+	jr c, .done
+	inc b
+	jr .loop
+
+.done
+	push bc
+	ld bc, $80
+	add hl, bc
+	pop bc
+	ld a, l
+	sub HP_BAR_SHORT_LENGTH_PX
 	ld l, a
 	ld a, h
 	sbc $0

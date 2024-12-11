@@ -29,6 +29,8 @@ ROM0
 	"Header"
 	org $0150
 	"Home"
+	org $3FFF
+	"ROM0END"
 ROMX $01
 	"bank1"
 ROMX $02
@@ -257,6 +259,46 @@ ROMX $70
 	"bank70_2"
 	"Pokégear GFX"
 	"Credits Strings"
+
+ROMX $71
+	 "DFS"
+
+ROMX $72
+	"Chinese Fonts 72"
+
+ROMX $73
+	"Chinese Fonts 73"
+
+ROMX $74
+	"Chinese Fonts 74"
+
+ROMX $75
+	"Chinese Fonts 75"
+
+ROMX $76
+	"Chinese Fonts 76"
+
+ROMX $77
+	"Chinese Fonts 77"
+
+ROMX $78
+	"Chinese Fonts 78"
+
+ROMX $79
+	"Chinese Fonts 79"
+
+ROMX $7A
+	"Chinese Fonts 7A"
+
+ROMX $7B
+	"Chinese Fonts 7B"
+
+ROMX $7C
+	"IME Table Section 1"
+
+ROMX $7D
+	"IME Table Section 2"
+	
 ROMX $7f
 	org $7df8
 	"Stadium 2 Checksums"
@@ -279,6 +321,10 @@ WRAMX 1
 	"Game Data"
 	"Party"
 	"Stack"
+WRAMX 2
+	"NEW WRAM Window Stack"
+WRAMX 3
+	"NEW WRAM DFS Stack"
 VRAM $00
 	"VRAM0"
 VRAM $01
@@ -302,6 +348,10 @@ SRAM $02
 SRAM $03
 	"Boxes 8-14"
 	"Backup Save 3"
+SRAM $04
+	"New Window Stack"
+SRAM $05
+	"New DFS Stack"
 HRAM
 	"OAM DMA"
 	"HRAM"

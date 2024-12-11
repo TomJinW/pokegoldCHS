@@ -86,29 +86,30 @@ GetNthString::
 	pop bc
 	ret
 
+; GetBasePokemonName::
+; ; Discards gender (Nidoran).
+
+; 	push hl
+; 	call GetPokemonName
+
+; 	ld hl, wStringBuffer1
+; .loop
+; 	ld a, [hl]
+; 	cp "@"
+; 	jr z, .quit
+; 	cp "♂"
+; 	jr z, .end
+; 	cp "♀"
+; 	jr z, .end
+; 	inc hl
+; 	jr .loop
+; .end
+; 	ld [hl], "@"
+; .quit
+; 	pop hl
+; 	ret
+
 GetBasePokemonName::
-; Discards gender (Nidoran).
-
-	push hl
-	call GetPokemonName
-
-	ld hl, wStringBuffer1
-.loop
-	ld a, [hl]
-	cp "@"
-	jr z, .quit
-	cp "♂"
-	jr z, .end
-	cp "♀"
-	jr z, .end
-	inc hl
-	jr .loop
-.end
-	ld [hl], "@"
-.quit
-	pop hl
-	ret
-
 GetPokemonName::
 ; Get Pokemon name for wNamedObjectIndex.
 
@@ -119,12 +120,23 @@ GetPokemonName::
 	rst Bankswitch
 
 ; Each name is ten characters
+	ld a, [wEngPKMNNameMark]
+	cp 1
+	jr nz, .CHS
+.ENG
+	ld a, [wNamedObjectIndex]
+	dec a
+	ld hl, PokemonNamesENG
+	ld e, a
+	ld d, 0
+	jr .end
+.CHS
 	ld a, [wNamedObjectIndex]
 	dec a
 	ld hl, PokemonNames
 	ld e, a
 	ld d, 0
-
+.end
 rept MON_NAME_LENGTH - 1
 	add hl, de
 endr

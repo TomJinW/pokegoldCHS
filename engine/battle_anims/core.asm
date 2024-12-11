@@ -1,6 +1,6 @@
 QueueBattleAnimation:
 	ld hl, wActiveAnimObjects
-	ld e, NUM_BATTLE_ANIM_STRUCTS
+	ld e, NUM_ANIM_OBJECTS
 .loop
 	ld a, [hl]
 	and a

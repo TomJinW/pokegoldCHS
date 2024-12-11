@@ -9,10 +9,10 @@
 	const TRAINERCARDSTATE_QUIT          ; 6
 
 TrainerCard:
-	ld a, [wStateFlags]
+	ld a, [wVramState]
 	push af
 	xor a
-	ld [wStateFlags], a
+	ld [wVramState], a
 	ld hl, wOptions
 	ld a, [hl]
 	push af
@@ -35,7 +35,7 @@ TrainerCard:
 	pop af
 	ld [wOptions], a
 	pop af
-	ld [wStateFlags], a
+	ld [wVramState], a
 	ret
 
 .InitRAM:
@@ -66,7 +66,7 @@ TrainerCard:
 	call WaitBGMap
 	ld b, SCGB_TRAINER_CARD
 	call GetSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	call WaitBGMap
 	ld hl, wJumptableIndex
 	xor a ; TRAINERCARDSTATE_PAGE1_LOADGFX
@@ -232,7 +232,7 @@ TrainerCard_PrintTopHalfOfCard:
 	hlcoord 2, 4
 	ld de, .ID_No
 	call TrainerCardSetup_PlaceTilemapString
-	hlcoord 7, 2
+	hlcoord 6, 2 ;hlcoord 7, 2
 	ld de, wPlayerName
 	call PlaceString
 	hlcoord 5, 4
@@ -278,34 +278,54 @@ TrainerCard_PrintTopHalfOfCard:
 	db $25, $25, $25, $25, $25, $25, $25, $25, $25, $25, $25, $25, $26, -1 ; ____________>
 
 TrainerCard_Page1_PrintDexCaught_GameTime:
+
+	ld a, [wStatusFlags]
+	bit STATUSFLAGS_POKEDEX_F, a
+	jr z, .skip
 	hlcoord 2, 10
-	ld de, .Dex_PlayTime
+	; ld de, .Dex_PlayTime
+	ld de, .Dex
 	call PlaceString
-	hlcoord 12, 15
-	ld de, .Badges
-	call PlaceString
+	; hlcoord 10, 15
+	; ld de, .Badges
+	; call PlaceString
 	ld hl, wPokedexCaught
 	ld b, wEndPokedexCaught - wPokedexCaught
 	call CountSetBits
 	ld de, wNumSetBits
-	hlcoord 15, 10
+	hlcoord 13, 10
 	lb bc, 1, 3
 	call PrintNum
+	hlcoord 16, 10
+	ld de, .Unused
+	call PlaceString
+.skip
+	hlcoord 2, 12
+	ld de, .PlayTime
+	call PlaceString
+	hlcoord 15, 15
+	ld de, .Badges
+	call PlaceString
 	call TrainerCard_Page1_PrintGameTime
 	hlcoord 2, 8
 	ld de, .StatusTilemap
 	call TrainerCardSetup_PlaceTilemapString
-	ld a, [wStatusFlags]
-	bit STATUSFLAGS_POKEDEX_F, a
-	ret nz
-	hlcoord 1, 9
-	lb bc, 2, 17
-	call ClearBox
+	; ld a, [wStatusFlags]
+	; bit STATUSFLAGS_POKEDEX_F, a
+	; ret nz
+	; hlcoord 1, 9
+	; lb bc, 2, 17
+	; call ClearBox
 	ret
 
-.Dex_PlayTime:
-	db   "#DEX"
-	next "PLAY TIME@"
+.Dex
+    db "#DEX@"
+.PlayTime:
+	db "PLAY TIME@"
+
+; .Dex_PlayTime:
+; 	db   "#DEX"
+; 	next "PLAY TIME@"
 
 .Unused: ; unreferenced
 	db "@"

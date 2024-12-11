@@ -7,20 +7,39 @@ INCBIN "gfx/pokemon/egg/front.2bpp.lz"
 SECTION "Title Screen", ROMX
 
 IF DEF(_GOLD)
+
 TitleScreenGFX1::
-INCBIN "gfx/title/logo_bottom_gold.2bpp.lz"
+INCBIN "gfx/title/logo_bottom_gold.2bpp.lz.bin"
 TitleScreenGFX2::
-INCBIN "gfx/title/logo_top_gold.2bpp.lz"
+INCBIN "gfx/title/logo_top_gold.2bpp.lz.bin"
+
+TitleScreenGFXALL::
+INCBIN "gfx/title/logo_all_gold.2bpp.lz.bin"
 
 ELIF DEF(_SILVER)
+
 TitleScreenGFX1::
-INCBIN "gfx/title/logo_bottom_silver.2bpp.lz"
+INCBIN "gfx/title/logo_bottom_silver.2bpp.lz.bin"
 TitleScreenGFX2::
-INCBIN "gfx/title/logo_top_silver.2bpp.lz"
+INCBIN "gfx/title/logo_top_silver.2bpp.lz.bin"
+
+TitleScreenGFXALL::
+INCBIN "gfx/title/logo_all_silver.2bpp.lz.bin"
 ENDC
 
+
+
+IF DEF(_GOLD)
 TitleScreenTilemap::
 INCBIN "gfx/title/logo.tilemap"
+TitleScreenTilemap2::
+INCBIN "gfx/title/logoBKM.tilemap"
+ELIF DEF(_SILVER)
+TitleScreenTilemap::
+INCBIN "gfx/title/logo.tilemap"
+TitleScreenTilemap2::
+INCBIN "gfx/title/logoBKM.tilemap"
+ENDC
 
 
 SECTION "The End", ROMX

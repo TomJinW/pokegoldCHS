@@ -8,7 +8,7 @@ InitClock:
 	ld a, $1
 	ldh [hInMenu], a
 
-	ld a, FALSE
+	ld a, $0
 	ld [wSpriteUpdatesEnabled], a
 	ld a, $10
 	ld [wMusicFade], a
@@ -51,14 +51,22 @@ InitClock:
 .loop
 	ld hl, OakTimeWhatTimeIsItText
 	call PrintText
-	hlcoord 3, 7
-	lb bc, 2, 15
+	; hlcoord 3, 7
+	; lb bc, 2, 15
+	; call Textbox
+	; hlcoord 11, 7
+	; ld [hl], $1
+	; hlcoord 11, 10
+	; ld [hl], $2
+	; hlcoord 4, 9
+	hlcoord 10, 7
+	lb bc, 2, 8
 	call Textbox
-	hlcoord 11, 7
+	hlcoord 15, 7
 	ld [hl], $1
-	hlcoord 11, 10
+	hlcoord 15, 10
 	ld [hl], $2
-	hlcoord 4, 9
+	hlcoord 11, 9
 	call DisplayHourOClock
 	ld c, 10
 	call DelayFrames
@@ -81,14 +89,22 @@ InitClock:
 .HourIsSet:
 	ld hl, OakTimeHowManyMinutesText
 	call PrintText
-	hlcoord 11, 7
-	lb bc, 2, 7
+	; hlcoord 11, 7
+	; lb bc, 2, 7
+	; call Textbox
+	; hlcoord 15, 7
+	; ld [hl], $1
+	; hlcoord 15, 10
+	; ld [hl], $2
+	; hlcoord 12, 9
+	hlcoord 13, 7
+	lb bc, 2, 5
 	call Textbox
-	hlcoord 15, 7
+	hlcoord 16, 7
 	ld [hl], $1
-	hlcoord 15, 10
+	hlcoord 16, 10
 	ld [hl], $2
-	hlcoord 12, 9
+	hlcoord 15, 9
 	call DisplayMinutesWithMinString
 	ld c, 10
 	call DelayFrames
@@ -166,11 +182,15 @@ SetHour:
 	ld [hl], a
 
 .okay
-	hlcoord 4, 9
-	ld a, " "
-	ld bc, 15
-	call ByteFill
-	hlcoord 4, 9
+	; hlcoord 4, 9
+	; ld a, " "
+	; ld bc, 15
+	; call ByteFill
+	; hlcoord 4, 9
+	hlcoord 11, 8
+	lb bc, 2, 8
+	call ClearBox
+	hlcoord 11, 9
 	call DisplayHourOClock
 	call WaitBGMap
 	and a
@@ -187,37 +207,37 @@ DisplayHourOClock:
 	ld e, l
 	ld d, h
 	call PrintHour
-	inc hl
+	; inc hl
 	ld de, String_oclock
 	call PlaceString
 	pop hl
 	ret
 
-DisplayHoursMinutesWithMinString: ; unreferenced
-	ld h, d
-	ld l, e
-	push hl
-	call DisplayHourOClock
-	pop de
-	inc de
-	inc de
-	ld a, ":"
-	ld [de], a
-	inc de
-	push de
-	ld hl, 3
-	add hl, de
-	ld a, [de]
-	inc de
-	ld [hli], a
-	ld a, [de]
-	ld [hl], a
-	pop hl
-	call DisplayMinutesWithMinString
-	inc hl
-	inc hl
-	inc hl
-	ret
+; DisplayHoursMinutesWithMinString: ; unreferenced
+; 	ld h, d
+; 	ld l, e
+; 	push hl
+; 	call DisplayHourOClock
+; 	pop de
+; 	inc de
+; 	inc de
+; 	ld a, $76 ;ld a, ":" ; CHS_Fix Time
+; 	ld [de], a
+; 	inc de
+; 	push de
+; 	ld hl, 3
+; 	add hl, de
+; 	ld a, [de]
+; 	inc de
+; 	ld [hli], a
+; 	ld a, [de]
+; 	ld [hl], a
+; 	pop hl
+; 	call DisplayMinutesWithMinString
+; 	inc hl
+; 	inc hl
+; 	inc hl
+; 	ret
 
 SetMinutes:
 	ldh a, [hJoyPressed]
@@ -255,11 +275,15 @@ SetMinutes:
 	inc a
 	ld [hl], a
 .finish_dpad
-	hlcoord 12, 9
-	ld a, " "
-	ld bc, 7
-	call ByteFill
-	hlcoord 12, 9
+	; hlcoord 12, 9
+	; ld a, " "
+	; ld bc, 7
+	; call ByteFill
+	; hlcoord 12, 9
+	hlcoord 14, 8
+	lb bc, 2, 5
+	call ClearBox
+	hlcoord 15, 9
 	call DisplayMinutesWithMinString
 	call WaitBGMap
 	and a
@@ -271,7 +295,7 @@ SetMinutes:
 DisplayMinutesWithMinString:
 	ld de, wInitMinuteBuffer
 	call PrintTwoDigitNumberLeftAlign
-	inc hl
+	; inc hl
 	ld de, String_min
 	call PlaceString
 	ret
@@ -282,7 +306,8 @@ PrintTwoDigitNumberLeftAlign:
 	ld [hli], a
 	ld [hl], a
 	pop hl
-	lb bc, PRINTNUM_LEFTALIGN | 1, 2
+	; lb bc, PRINTNUM_LEFTALIGN | 1, 2
+	lb bc, 1, 2
 	call PrintNum
 	ret
 
@@ -336,13 +361,19 @@ OakText_ResponseToSetTime:
 	ld a, [wInitHourBuffer]
 	ld c, a
 	call PrintHour
-	ld [hl], ":"
-	inc hl
+	; ld [hl], $76 ;ld [hl], ":" ; CHS_Fix Time
+	; inc hl
+	ld de, String_oclock
+	call PlaceString
+	ld h, b
+	ld l, c
 	ld de, wInitMinuteBuffer
 	lb bc, PRINTNUM_LEADINGZEROS | 1, 2
 	call PrintNum
-	ld b, h
-	ld c, l
+	ld de, String_min
+	call PlaceString
+	; ld b, h
+	; ld c, l
 	ld a, [wInitHourBuffer]
 	cp MORN_HOUR
 	jr c, .nite
@@ -401,14 +432,23 @@ SetDayOfWeek:
 	call LoadStandardMenuHeader
 	ld hl, .OakTimeWhatDayIsItText
 	call PrintText
-	hlcoord 9, 3
-	lb bc, 2, 9
+	; hlcoord 9, 3
+	; lb bc, 2, 9
+	; call Textbox
+	; hlcoord 14, 3
+	; ld [hl], TIMESET_UP_ARROW
+	; hlcoord 14, 6
+	; ld [hl], TIMESET_DOWN_ARROW
+	; hlcoord 10, 5
+	hlcoord 13, 7
+	ld b, 2
+	ld c, 5
 	call Textbox
-	hlcoord 14, 3
+	hlcoord 16, 7
 	ld [hl], TIMESET_UP_ARROW
-	hlcoord 14, 6
+	hlcoord 16, 10
 	ld [hl], TIMESET_DOWN_ARROW
-	hlcoord 10, 5
+	hlcoord 14, 9
 	call .PlaceWeekdayString
 	call ApplyTilemap
 	ld c, 10
@@ -426,7 +466,7 @@ SetDayOfWeek:
 	ld a, [wTempDayOfWeek]
 	ld [wStringBuffer2], a
 	call InitDayOfWeek
-	call LoadStandardFont
+	; call LoadStandardFont
 	pop af
 	ldh [hInMenu], a
 	ret
@@ -476,10 +516,15 @@ SetDayOfWeek:
 .finish_dpad
 	xor a
 	ldh [hBGMapMode], a
-	hlcoord 10, 4
-	lb bc, 2, 9
+	; hlcoord 10, 4
+	; lb bc, 2, 9
+	; call ClearBox
+	; hlcoord 10, 5
+	hlcoord 14, 8
+	ld b, 2
+	ld c, 5
 	call ClearBox
-	hlcoord 10, 5
+	hlcoord 14, 9
 	call .PlaceWeekdayString
 	call WaitBGMap
 	and a
@@ -501,7 +546,7 @@ SetDayOfWeek:
 	ret
 
 .WeekdayStrings:
-; entries correspond to wCurDay constants (see constants/ram_constants.asm)
+; entries correspond to wCurDay constants (see constants/wram_constants.asm)
 	dw .Sunday
 	dw .Monday
 	dw .Tuesday
@@ -539,11 +584,13 @@ InitialSetDSTFlag:
 	set 7, a
 	ld [wDST], a
 	predef UpdateTimePredef
-	hlcoord 1, 14
-	lb bc, 3, 18
+	; hlcoord 1, 14
+	; lb bc, 3, 18
+	hlcoord 1, 13
+	lb bc, 4, 18
 	call ClearBox
 	ld hl, .Text
-	call PrintTextboxTextAt
+	call PlaceHLTextAtBC
 	ret
 
 .Text:
@@ -567,11 +614,13 @@ InitialClearDSTFlag:
 	res 7, a
 	ld [wDST], a
 	predef UpdateTimePredef
-	hlcoord 1, 14
-	lb bc, 3, 18
+	; hlcoord 1, 14
+	; lb bc, 3, 18
+	hlcoord 1, 13
+	lb bc, 4, 18
 	call ClearBox
 	ld hl, .Text
-	call PrintTextboxTextAt
+	call PlaceHLTextAtBC
 	ret
 
 .Text:
@@ -595,7 +644,7 @@ MrChrono:
 	lb bc, 3, SCREEN_WIDTH - 2
 	call ClearBox
 	ld hl, .Text
-	call PrintTextboxTextAt
+	call PlaceHLTextAtBC
 	ret
 
 .Text:
@@ -662,7 +711,7 @@ MrChrono:
 	inc de
 	lb bc, PRINTNUM_LEADINGZEROS | 1, 2
 	call PrintNum
-	ld [hl], ":"
+	ld [hl], $76 ;ld [hl], ":" ; CHS_Fix Time
 	inc hl
 	inc de
 	lb bc, PRINTNUM_LEADINGZEROS | 1, 2

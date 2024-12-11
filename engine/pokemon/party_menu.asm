@@ -5,7 +5,7 @@ SelectMonFromParty:
 	call ClearBGPalettes
 	call InitPartyMenuLayout
 	call WaitBGMap
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	call DelayFrame
 	call PartyMenuSelect
 	call ReturnToMapWithSpeechTextbox
@@ -20,7 +20,7 @@ SelectTradeOrDayCareMon:
 	call WaitBGMap
 	ld b, SCGB_PARTY_MENU
 	call GetSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	call DelayFrame
 	call PartyMenuSelect
 	call ReturnToMapWithSpeechTextbox
@@ -31,7 +31,7 @@ InitPartyMenuLayout:
 	call InitPartyMenuWithCancel
 	call InitPartyMenuGFX
 	call WritePartyMenuTilemap
-	call PlacePartyMenuText
+	call PrintPartyMenuText
 	ret
 
 LoadPartyMenuGFX:
@@ -51,6 +51,7 @@ WritePartyMenuTilemap:
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
 	ld a, " "
 	call ByteFill ; blank the tilemap
+	;call ClearFullVramNo
 	call GetPartyMenuQualityIndexes
 .loop
 	ld a, [hli]
@@ -78,7 +79,18 @@ WritePartyMenuTilemap:
 	dw PlacePartyMonGender
 
 PlacePartyNicknames:
-	hlcoord 3, 1
+
+	; CGB 超频模式启动
+	; ld a, [hCGB] ;
+	; and a ;
+	; jr z, .NOTCGB ;
+
+	; ld a, 1 ;
+	; ldh [rKEY1], a ;
+	; stop ;
+.NOTCGB ;
+
+	hlcoord 3, 1 ;hlcoord 3, 1
 	ld a, [wPartyCount]
 	and a
 	jr z, .end
@@ -91,8 +103,61 @@ PlacePartyNicknames:
 	ld hl, wPartyMonNicknames
 	ld a, b
 	call GetNickname
+	lb bc, 15, 1
+	farcall FixStrLength
 	pop hl
+	call IncreaseDFSStack
+	
+	; push hl
+	; push de
+	; dec hl
+	; dec hl
+	; ld de, .FullSpaceText
+	; call PlaceString
+	; ld [hl], " "
+	; ld bc, -SCREEN_WIDTH
+	; add hl, bc
+	; ld [hl], " "
+	; pop de
+	; pop hl
+	; ld a, $0
+    ; ld [wDFSNoManagementStartTile], a
+    ; ld a, $5F
+    ; ld [wDFSNoManagementEndTile], a
+    ; ld a, 0
+    ; ld [wDFSNoManagementPrintDelay], a
+	; ld a, 1
+    ; ld [wDFSNoManagementEnabled], a
+	; ld a, 1
+    ; ld [wDFSNoManagementCombineCode], a
+
+	call NewDFSRightAlign
+
+
+
 	call PlaceString
+
+	; ld a, 0
+    ; ld [wDFSNoManagementEnabled], a
+
+	call DecreaseDFSStack
+
+	pop hl ;
+	pop bc
+	push bc
+	push hl ;
+	ld a, c ;
+	dec a
+	sla a
+	sla a
+	sla a
+	sla a
+
+	lb bc, 2, 8
+	ld de, - SCREEN_WIDTH - 1
+	add hl, de
+	call DFSStaticize ;
+
 	pop hl
 	ld de, 2 * SCREEN_WIDTH
 	add hl, de
@@ -102,11 +167,35 @@ PlacePartyNicknames:
 	jr nz, .loop
 
 .end
-	dec hl
+
+
+
+	; dec hl
+	
+	; push hl ;
+	; ld a, 0 ;
+	; lb bc, 12, 8 ;
+	; hlcoord 2, 0 ;
+	; call DFSStaticize ;
+	; pop hl ;
+
 	dec hl
 	ld de, .CancelString
 	call PlaceString
+
+	; CGB 超频模式关闭
+	; ld a, [hCGB] ;
+	; and a ;
+	; jr z, .NOTCGB2 ;
+
+	; ld a, 1 ;
+	; ldh [rKEY1], a ;
+	; stop ;
+.NOTCGB2
 	ret
+.FullSpaceText
+	db $01,$01,$50
+
 
 .CancelString:
 	db "CANCEL@"
@@ -119,7 +208,7 @@ PlacePartyHPBar:
 	ret z
 	ld c, a
 	ld b, 0
-	hlcoord 11, 2
+	hlcoord 13, 1 ;hlcoord 11, 2
 .loop
 	push bc
 	push hl
@@ -128,7 +217,7 @@ PlacePartyHPBar:
 	push hl
 	call PlacePartymonHPBar
 	pop hl
-	ld d, $6
+	ld d, $4 ;ld d, $6
 	ld b, $0
 	call DrawBattleHPBar
 	ld hl, wHPPals
@@ -136,7 +225,7 @@ PlacePartyHPBar:
 	ld c, a
 	ld b, 0
 	add hl, bc
-	call SetHPPal
+	call SetShortHPPal ;call SetHPPal
 	ld b, SCGB_PARTY_MENU_HP_BARS
 	call GetSGBLayout
 .skip
@@ -176,7 +265,7 @@ PlacePartymonHPBar:
 	ld d, a
 	ld a, [hli]
 	ld e, a
-	predef ComputeHPBarPixels
+	predef ComputeShortHPBarPixels ;predef ComputeHPBarPixels
 	ret
 
 PlacePartyMenuHPDigits:
@@ -185,7 +274,7 @@ PlacePartyMenuHPDigits:
 	ret z
 	ld c, a
 	ld b, 0
-	hlcoord 13, 1
+	hlcoord 13, 0 ;hlcoord 13, 1
 .loop
 	push bc
 	push hl
@@ -226,7 +315,7 @@ PlacePartyMonLevel:
 	ret z
 	ld c, a
 	ld b, 0
-	hlcoord 8, 2
+	hlcoord 10, 1 ;hlcoord 8, 2
 .loop
 	push bc
 	push hl
@@ -268,7 +357,8 @@ PlacePartyMonStatus:
 	ret z
 	ld c, a
 	ld b, 0
-	hlcoord 5, 2
+	; hlcoord 5, 2
+	hlcoord 10, 0
 .loop
 	push bc
 	push hl
@@ -295,12 +385,15 @@ PlacePartyMonStatus:
 	ret
 
 PlacePartyMonTMHMCompatibility:
+	ld a, 1
+	ld [wPartyMonLearnMark], a
+
 	ld a, [wPartyCount]
 	and a
 	ret z
 	ld c, a
 	ld b, 0
-	hlcoord 12, 2
+	hlcoord 13, 1 ;hlcoord 12, 2
 .loop
 	push bc
 	push hl
@@ -316,7 +409,7 @@ PlacePartyMonTMHMCompatibility:
 	predef CanLearnTMHMMove
 	pop hl
 	call .PlaceAbleNotAble
-	call PlaceString
+	; call PlaceString
 
 .next
 	pop hl
@@ -332,18 +425,54 @@ PlacePartyMonTMHMCompatibility:
 	ld a, c
 	and a
 	jr nz, .able
+
+.not_able
 	ld de, .string_not_able
-	ret
+	call PlaceString
+
+	ld a, [wPartyMonLearnMark]
+	cp 1
+	jr nz, .AlreadyHasIntialValueNotAble
+	ld a, 0
+	ld [wPartyMonLearnMark], a
+.AlreadyHasIntialValueNotAble
+	ld a, [wPartyMonLearnMark]
+	cpl
+	or 0
+	ret nz
+	jr SaveDFSTiles
+
 
 .able
 	ld de, .string_able
-	ret
+	call PlaceString
+
+	ld a, [wPartyMonLearnMark]
+	cp 1
+	jr nz, .AlreadyHasIntialValueAble
+	ld a, $FF
+	ld [wPartyMonLearnMark], a
+.AlreadyHasIntialValueAble
+	ld a, [wPartyMonLearnMark]
+	or 0
+	ret nz
+	jr SaveDFSTiles
 
 .string_able
-	db "ABLE@"
+	db_w "能学习！@" ;db "ABLE@"
 
 .string_not_able
-	db "NOT ABLE@"
+	db_w "不能学@" ;db "NOT ABLE@"
+
+SaveDFSTiles:
+	push hl
+	ld bc, -SCREEN_WIDTH
+	add hl, bc
+	ld a, $60
+	lb bc, 2, 6
+	call DFSStaticize 
+	pop hl
+	ret 
 
 PlacePartyMonEvoStoneCompatibility:
 	ld a, [wPartyCount]
@@ -351,7 +480,7 @@ PlacePartyMonEvoStoneCompatibility:
 	ret z
 	ld c, a
 	ld b, 0
-	hlcoord 12, 2
+	hlcoord 13, 1 ;hlcoord 12, 2
 .loop
 	push bc
 	push hl
@@ -422,9 +551,9 @@ PlacePartyMonEvoStoneCompatibility:
 	ret
 
 .string_able
-	db "ABLE@"
+	db_w "能使用@" ;db "ABLE@"
 .string_not_able
-	db "NOT ABLE@"
+	db_w "不能用@" ;db "NOT ABLE@"
 
 PlacePartyMonGender:
 	ld a, [wPartyCount]
@@ -432,7 +561,7 @@ PlacePartyMonGender:
 	ret z
 	ld c, a
 	ld b, 0
-	hlcoord 12, 2
+	hlcoord 13, 1 ;hlcoord 12, 2
 .loop
 	push bc
 	push hl
@@ -625,7 +754,7 @@ PartyMenuSelect:
 	scf
 	ret
 
-PlacePartyMenuText:
+PrintPartyMenuText:
 	hlcoord 0, 14
 	lb bc, 2, 18
 	call Textbox

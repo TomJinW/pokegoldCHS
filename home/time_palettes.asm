@@ -3,14 +3,14 @@ UpdateTimeAndPals::
 
 ; rtc enabled?
 	ld a, [wSpriteUpdatesEnabled]
-	cp FALSE
+	cp 0
 	ret z
 
 	call UpdateTime
 
 ; obj update on?
-	ld a, [wStateFlags]
-	bit SPRITE_UPDATES_DISABLED_F, a ; obj update
+	ld a, [wVramState]
+	bit 0, a ; obj update
 	ret z
 
 TimeOfDayPals::

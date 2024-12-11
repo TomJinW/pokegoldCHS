@@ -1,30 +1,30 @@
 DEF TILES_PER_CYCLE EQU 8
 
-FarDecompressBufferedPic:: ; unreferenced
-	ld b, a
-	ldh a, [hROMBank]
-	push af
-	ld a, b
-	rst Bankswitch
+; FarDecompressBufferedPic:: ; unreferenced
+; 	ld b, a
+; 	ldh a, [hROMBank]
+; 	push af
+; 	ld a, b
+; 	rst Bankswitch
 
-	ld a, BANK(sDecompressBuffer)
-	call OpenSRAM
-	ld hl, sDecompressBuffer
-	ld bc, 7 * 7 tiles
-	xor a
-	call ByteFill
+; 	ld a, BANK(sDecompressBuffer)
+; 	call OpenSRAM
+; 	ld hl, sDecompressBuffer
+; 	ld bc, 7 * 7 tiles
+; 	xor a
+; 	call ByteFill
 
-	ld hl, wFarDecompressPicPointer
-	ld a, [hli]
-	ld h, [hl]
-	ld l, a
-	ld de, sDecompressBuffer
-	call Decompress
+; 	ld hl, wFarDecompressPicPointer
+; 	ld a, [hli]
+; 	ld h, [hl]
+; 	ld l, a
+; 	ld de, sDecompressBuffer
+; 	call Decompress
 
-	call CloseSRAM
-	pop af
-	rst Bankswitch
-	ret
+; 	call CloseSRAM
+; 	pop af
+; 	rst Bankswitch
+; 	ret
 
 UpdatePlayerSprite::
 	farcall _UpdatePlayerSprite
@@ -32,6 +32,10 @@ UpdatePlayerSprite::
 
 LoadStandardFont::
 	farcall _LoadStandardFont
+	ret
+
+LoadDexMenuOptionFont::
+	farcall _LoadDexMenuOptionFont
 	ret
 
 LoadFontsBattleExtra::
@@ -256,27 +260,27 @@ Get1bpp::
 	pop hl
 	jp FarCopyBytesDouble
 
-DuplicateGet2bpp:: ; unreferenced
-	ldh a, [rLCDC]
-	add a
-	jp c, Request2bpp
+; DuplicateGet2bpp:: ; unreferenced
+; 	ldh a, [rLCDC]
+; 	add a
+; 	jp c, Request2bpp
 
-	push de
-	push hl
+; 	push de
+; 	push hl
 
-; bank
-	ld a, b
+; ; bank
+; 	ld a, b
 
-; bc = c * LEN_2BPP_TILE
-	ld h, 0
-	ld l, c
-	add hl, hl
-	add hl, hl
-	add hl, hl
-	add hl, hl
-	ld b, h
-	ld c, l
+; ; bc = c * LEN_2BPP_TILE
+; 	ld h, 0
+; 	ld l, c
+; 	add hl, hl
+; 	add hl, hl
+; 	add hl, hl
+; 	add hl, hl
+; 	ld b, h
+; 	ld c, l
 
-	pop de
-	pop hl
-	jp FarCopyBytes
+; 	pop de
+; 	pop hl
+; 	jp FarCopyBytes

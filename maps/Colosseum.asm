@@ -51,6 +51,7 @@ CableClubFriendScript:
 	line "ready."
 	done
 
+
 Colosseum_MapEvents:
 	db 0, 0 ; filler
 

@@ -148,7 +148,7 @@ CheckPokeMail::
 	pop bc
 
 ; Compare the mail message, byte for byte, with the expected message.
-	ld a, MAIL_MSG_LENGTH
+	ld a, MAIL_MSG_LENGTH + 1 ;ld a, MAIL_MSG_LENGTH
 	ld [wTempByteValue], a
 .loop
 	ld a, [de]
@@ -488,9 +488,9 @@ MailboxPC:
 	farcall InitPartyMenuWithCancel
 	farcall InitPartyMenuGFX
 	farcall WritePartyMenuTilemap
-	farcall PlacePartyMenuText
+	farcall PrintPartyMenuText
 	call WaitBGMap
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	call DelayFrame
 	farcall PartyMenuSelect
 	jr c, .exit2
@@ -539,7 +539,7 @@ MailboxPC:
 
 .TopMenuHeader:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 8, 1, SCREEN_WIDTH - 2, 10
+	menu_coords 1, 1, 14, 10 ;menu_coords 8, 1, SCREEN_WIDTH - 2, 10
 	dw .TopMenuData
 	db 1 ; default option
 
@@ -554,7 +554,7 @@ MailboxPC:
 
 .SubMenuHeader:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 0, 0, 13, 9
+	menu_coords 11, 0, 19, 9 ; menu_coords 0, 0, 13, 9
 	dw .SubMenuData
 	db 1 ; default option
 

@@ -35,6 +35,24 @@ ENDM
 	wraparound_time wRestartClockHour, 24, 12
 	wraparound_time wRestartClockMin,  60, 15
 
+; WeekDayText:
+; 	db_w "星期@"
+
+; WeekDay1:
+; 	db_w "一@"
+; WeekDay2:
+; 	db_w "二@"
+; WeekDay3:
+; 	db_w "三@"
+; WeekDay4:
+; 	db_w "四@"
+; WeekDay5:
+; 	db_w "五@"
+; WeekDay6:
+; 	db_w "六@"
+; WeekDay7:
+; 	db_w "日@"
+
 RestartClock:
 ; If we're here, we had an RTC overflow.
 	ld hl, .ClockTimeMayBeWrongText
@@ -47,6 +65,77 @@ RestartClock:
 	call ClearTilemap
 	ld hl, .ClockSetWithControlPadText
 	call PrintText
+
+	; hlcoord 2, 9
+	; ld de, WeekDayText
+	; call PlaceString
+
+	; ld de, WeekDay1
+	; hlcoord 3, 9
+	; call PlaceString
+
+
+
+	; hlcoord 2, 9
+	; ld de, WeekDayText
+	; call PlaceString
+
+	; ld de, WeekDay2
+	; hlcoord 3, 9
+	; call PlaceString
+
+
+
+	; hlcoord 2, 9
+	; ld de, WeekDayText
+	; call PlaceString
+
+	; ld de, WeekDay3
+	; hlcoord 3, 9
+	; call PlaceString
+
+
+
+	; hlcoord 2, 9
+	; ld de, WeekDayText
+	; call PlaceString
+
+	; ld de, WeekDay4
+	; hlcoord 3, 9
+	; call PlaceString
+
+
+
+	; hlcoord 2, 9
+	; ld de, WeekDayText
+	; call PlaceString
+
+	; ld de, WeekDay5
+	; hlcoord 3, 9
+	; call PlaceString
+
+
+
+	; hlcoord 2, 9
+	; ld de, WeekDayText
+	; call PlaceString
+
+	; ld de, WeekDay6
+	; hlcoord 3, 9
+	; call PlaceString
+
+
+
+	; hlcoord 2, 9
+	; ld de, WeekDayText
+	; call PlaceString
+
+	; ld de, WeekDay7
+	; hlcoord 3, 9
+	; call PlaceString
+
+
+
 	call .SetClock
 	call ExitMenu
 	pop bc
@@ -76,6 +165,10 @@ RestartClock:
 	ld [wRestartClockHour], a
 	ldh a, [hMinutes]
 	ld [wRestartClockMin], a
+	hlcoord 0, 6
+	ld b, 4
+	ld c, 18
+	call Textbox
 
 .loop
 	call .joy_loop
@@ -190,11 +283,7 @@ RestartClock:
 	ret
 
 .PrintTime:
-	hlcoord 0, 5
-	ld b, 5
-	ld c, 18
-	call Textbox
-	decoord 1, 8
+	decoord 2, 9 ;decoord 1, 8
 	ld a, [wRestartClockDay]
 	ld b, a
 	farcall PrintDayOfWeek
@@ -202,7 +291,7 @@ RestartClock:
 	ld b, a
 	ld a, [wRestartClockMin]
 	ld c, a
-	decoord 11, 8
+	decoord 11, 9
 	farcall PrintHoursMins
 	ld a, [wRestartClockPrevDivision]
 	lb de, " ", " "
@@ -229,7 +318,7 @@ RestartClock:
 	call Coord2Tile
 	pop de
 	ld [hl], d
-	ld bc, 2 * SCREEN_WIDTH
+	ld bc, 3 * SCREEN_WIDTH ; ld bc, 2 * SCREEN_WIDTH
 	add hl, bc
 	ld [hl], e
 	ret

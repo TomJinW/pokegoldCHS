@@ -14,6 +14,8 @@ _ReturnToBattle_UseBall:
 	farcall _LoadBattleFontsHPBar
 	call GetMemSGBLayout
 	call CloseWindow
+	; farcall ReloadBattleMonNickname ;使用球之后重新读宝可梦名字
+	; farcall ReloadEnemyMonNickname ;
 	call LoadStandardMenuHeader
 	call WaitBGMap
-	jp SetDefaultBGPAndOBP
+	jp SetPalettes

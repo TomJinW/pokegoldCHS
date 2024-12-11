@@ -1,0 +1,48 @@
+diff --git a/tools/Makefile b/tools/Makefile
+index 3c213f0d0..e18b32a9c 100644
+--- a/tools/Makefile
++++ b/tools/Makefile
+@@ -1,7 +1,7 @@
+ .PHONY: all clean
+ 
+-CC := gcc
+-CFLAGS := -O3 -flto -std=c11 -Wall -Wextra -pedantic
++CC := tcc
++CFLAGS := -O3 -flto -std=c11 -Wall -Wextra -pedantic -DYA_GETOPT_NO_COMPAT_MACRO ya_getopt.c
+ 
+ tools := \
+ 	bpp2png \
+diff --git a/tools/common.h b/tools/common.h
+index 97d901ef0..cc0a2af3c 100644
+--- a/tools/common.h
++++ b/tools/common.h
+@@ -6,11 +6,18 @@
+ #include <stdint.h>
+ #include <stdbool.h>
+ #include <stddef.h>
+-#include <stdnoreturn.h>
++#define noreturn // #include <stdnoreturn.h>
+ #include <inttypes.h>
+ #include <string.h>
+ #include <errno.h>
+-#include <getopt.h>
++#include "ya_getopt.h" // #include <getopt.h>
++#define optarg ya_optarg
++#define optind ya_optind
++#define opterr ya_opterr
++#define optopt ya_optopt
++#define no_argument ya_no_argument
++#define required_argument ya_required_argument
++#define optional_argument ya_optional_argument
+ 
+ #ifndef PROGRAM_NAME
+ #error Define PROGRAM_NAME before including common.h!
+@@ -29,7 +36,7 @@ noreturn void usage_exit(int status) {
+ }
+ 
+ int getopt_long_index;
+-#define getopt_long(argc, argv, optstring, longopts) getopt_long(argc, argv, optstring, longopts, &getopt_long_index)
++#define getopt_long(argc, argv, optstring, longopts) ya_getopt_long(argc, argv, optstring, longopts, &getopt_long_index)
+ 
+ void *xmalloc(size_t size) {
+ 	errno = 0;

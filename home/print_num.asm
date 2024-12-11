@@ -166,7 +166,7 @@ PrintNum::
 	dec e
 	jr nz, .money_leading_zero
 	inc hl
-	ld [hl], "."
+	ld [hl], "<DOT>" ;"."
 
 .money_leading_zero
 	call .AdvancePointer
@@ -276,7 +276,7 @@ PrintNum::
 	dec e
 	ret nz
 	inc hl
-	ld [hl], "."
+	ld [hl], "<DOT>" ;"."
 	ret
 
 .PrintLeadingZero:

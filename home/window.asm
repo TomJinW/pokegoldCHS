@@ -1,4 +1,4 @@
-ReanchorMap::
+RefreshScreen::
 	call ClearWindowData
 	ldh a, [hROMBank]
 	push af
@@ -6,7 +6,7 @@ ReanchorMap::
 	rst Bankswitch
 
 	call ReanchorBGMap_NoOAMUpdate
-	call HDMATransferTilemapAndAttrmap_Menu
+	call _OpenAndCloseMenu_HDMATransferTilemapAndAttrmap
 	call LoadFonts_NoOAMUpdate
 
 	pop af
@@ -29,8 +29,8 @@ CloseText::
 	call ClearWindowData
 	xor a
 	ldh [hBGMapMode], a
-	call LoadOverworldTilemapAndAttrmapPals
-	call HDMATransferTilemapAndAttrmap_Menu
+	call OverworldTextModeSwitch
+	call _OpenAndCloseMenu_HDMATransferTilemapAndAttrmap
 	xor a
 	ldh [hBGMapMode], a
 	call SafeUpdateSprites
@@ -50,16 +50,16 @@ OpenText::
 	ld a, BANK(ReanchorBGMap_NoOAMUpdate) ; aka BANK(LoadFonts_NoOAMUpdate)
 	rst Bankswitch
 
-	call ReanchorBGMap_NoOAMUpdate ; anchor bgmap
+	call ReanchorBGMap_NoOAMUpdate ; clear bgmap
 	call SpeechTextbox
-	call HDMATransferTilemapAndAttrmap_Menu ; transfer bgmap
+	call _OpenAndCloseMenu_HDMATransferTilemapAndAttrmap ; anchor bgmap
 	call LoadFonts_NoOAMUpdate ; load font
 	pop af
 	rst Bankswitch
 
 	ret
 
-HDMATransferTilemapAndAttrmap_Menu::
+_OpenAndCloseMenu_HDMATransferTilemapAndAttrmap::
 	ldh a, [hOAMUpdate]
 	push af
 	ld a, $1

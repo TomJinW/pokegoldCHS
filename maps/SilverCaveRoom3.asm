@@ -23,14 +23,14 @@ Red:
 	writetext RedLeavesText
 	waitbutton
 	closetext
-	special FadeOutToBlack
+	special FadeBlackQuickly
 	special ReloadSpritesNoPalettes
 	disappear SILVERCAVEROOM3_RED
 	pause 15
-	special FadeInFromBlack
+	special FadeInQuickly
 	pause 30
 	special HealParty
-	reanchormap
+	refreshscreen
 	credits
 	end
 

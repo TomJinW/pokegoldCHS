@@ -1,4 +1,12 @@
 UpdateItemDescription:
+
+	; push hl
+	; ld a, $2E
+	; lb bc, 10, 7
+	; coord hl, 7, 2
+	; call DFSStaticize
+	; pop hl
+
 	ld a, [wMenuSelection]
 	ld [wCurSpecies], a
 	hlcoord 0, 12

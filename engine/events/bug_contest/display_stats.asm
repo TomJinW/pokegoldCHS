@@ -3,35 +3,37 @@ DisplayCaughtContestMonStats:
 	call ClearTilemap
 	call ClearSprites
 	call LoadFontsBattleExtra
+	ld b, SCGB_DIPLOMA
+	call GetSGBLayout
 
 	ld hl, wOptions
 	ld a, [hl]
 	push af
 	set NO_TEXT_SCROLL, [hl]
 
-	hlcoord 0, 0
-	ld b, 4
-	ld c, 13
+	hlcoord 0, 4
+	ld b, 5
+	ld c, 8
 	call Textbox
 
-	hlcoord 0, 6
-	ld b, 4
-	ld c, 13
+	hlcoord 10, 4
+	ld b, 5
+	ld c, 8
 	call Textbox
 
-	hlcoord 2, 0
+	hlcoord 1, 3
 	ld de, .Stock
 	call PlaceString
 
-	hlcoord 2, 6
+	hlcoord 11, 3
 	ld de, .This
 	call PlaceString
 
-	hlcoord 5, 4
+	hlcoord 1, 9
 	ld de, .Health
 	call PlaceString
 
-	hlcoord 5, 10
+	hlcoord 11, 9
 	ld de, .Health
 	call PlaceString
 
@@ -39,31 +41,33 @@ DisplayCaughtContestMonStats:
 	ld [wNamedObjectIndex], a
 	call GetPokemonName
 	ld de, wStringBuffer1
-	hlcoord 1, 2
+	hlcoord 1, 6
 	call PlaceString
 
-	ld h, b
-	ld l, c
+	; ld h, b
+	; ld l, c
+	hlcoord 6, 7
 	ld a, [wContestMonLevel]
 	ld [wTempMonLevel], a
 	call PrintLevel
 
 	ld de, wEnemyMonNickname
-	hlcoord 1, 8
+	hlcoord 11, 6
 	call PlaceString
 
-	ld h, b
-	ld l, c
+	; ld h, b
+	; ld l, c
+	hlcoord 16, 7
 	ld a, [wEnemyMonLevel]
 	ld [wTempMonLevel], a
 	call PrintLevel
 
-	hlcoord 11, 4
+	hlcoord 6, 9
 	ld de, wContestMonMaxHP
 	lb bc, 2, 3
 	call PrintNum
 
-	hlcoord 11, 10
+	hlcoord 16, 9
 	ld de, wEnemyMonMaxHP
 	call PrintNum
 
@@ -74,9 +78,9 @@ DisplayCaughtContestMonStats:
 	ld [wOptions], a
 
 	call WaitBGMap
-	ld b, SCGB_DIPLOMA
-	call GetSGBLayout
-	call SetDefaultBGPAndOBP
+	; ld b, SCGB_DIPLOMA
+	; call GetSGBLayout
+	call SetPalettes
 	ret
 
 .Health:

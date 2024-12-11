@@ -64,12 +64,53 @@ HideCursor::
 	ret
 
 PushWindow::
+	; CGB 超频模式启动
+	; ld a, [hCGB] ;
+	; and a ;
+	; jr z, .NOTCGB ;
+
+	; ld a, 1 ;
+	; ldh [rKEY1], a ;
+	; stop ;
+.NOTCGB
+
 	callfar _PushWindow
+
+	; CGB 超频模式关闭
+	; ld a, [hCGB] ;
+	; and a ;
+	; jr z, .NOTCGB2 ;
+
+	; ld a, 1 ;
+	; ldh [rKEY1], a ;
+	; stop ;
+.NOTCGB2
 	ret
 
 ExitMenu::
 	push af
+	; CGB 超频模式启动
+	; ld a, [hCGB] ;
+	; and a ;
+	; jr z, .NOTCGB ;
+
+	; ld a, 1 ;
+	; ldh [rKEY1], a ;
+	; stop ;
+.NOTCGB
+
 	callfar _ExitMenu
+
+	; CGB 超频模式关闭
+	; ld a, [hCGB] ;
+	; and a ;
+	; jr z, .NOTCGB2 ;
+
+	; ld a, 1 ;
+	; ldh [rKEY1], a ;
+	; stop ;
+.NOTCGB2
+	
 	pop af
 	ret
 
@@ -86,32 +127,61 @@ CloseWindow::
 	ret
 
 RestoreTileBackup::
-	call MenuBoxCoord2Tile
-	call GetMenuBoxDims
-	inc b
-	inc c
-
-.row
-	push bc
-	push hl
-
-.col
-	ld a, [de]
-	ld [hli], a
-	dec de
-	dec c
-	jr nz, .col
-
-	pop hl
-	ld bc, SCREEN_WIDTH
-	add hl, bc
-	pop bc
-	dec b
-	jr nz, .row
-
+	homecall _RestoreTileBackup
 	ret
+; 	call MenuBoxCoord2Tile
+; 	call GetMenuBoxDims
+; 	inc b
+; 	inc c
+
+; .row
+; 	push bc
+; 	push hl
+
+; .col
+; 	ld a, [de]
+; 	ld [hli], a
+; 	dec de
+; 	dec c
+; 	jr nz, .col
+
+; 	pop hl
+; 	ld bc, SCREEN_WIDTH
+; 	add hl, bc
+; 	pop bc
+; 	dec b
+; 	jr nz, .row
+
+; 	ret
+
+; SetWRAMBank2IfCGB::
+; 	; ldh a, [hCGB]
+; 	; and a
+; 	; ret z
+; 	di
+; 	ld a, 2
+; 	ldh [rSVBK], a
+; 	ret
+
+; ReturnToWRAMBank1IfCGB::
+; 	; ldh a, [hCGB]
+; 	; and a
+; 	; ret z
+; 	ld a, 1
+; 	ldh [rSVBK], a
+; 	ei
+; 	ret
 
 PopWindow::
+
+	ldh a, [hCGB]
+	and a
+	jr z, .cgb
+	; di ; 中断
+	ld a, 2
+	ldh [rSVBK], a
+.cgb
+
 	ld b, wMenuHeaderEnd - wMenuHeader
 	ld de, wMenuHeader
 .loop
@@ -120,6 +190,10 @@ PopWindow::
 	inc de
 	dec b
 	jr nz, .loop
+
+	xor a
+	ldh [rSVBK], a
+	; ei ; 中断
 	ret
 
 GetMenuBoxDims::
@@ -159,9 +233,23 @@ GetWindowStackTop::
 	ld h, [hl]
 	ld l, a
 	inc hl
+
+	ldh a, [hCGB]
+	and a
+	jr z, .dmg
+	; di ; 中断
+	ld a, 2
+	ldh [rSVBK], a
+.dmg
+
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
+
+	
+	xor a
+	ldh [rSVBK], a
+	; ei ; 中断
 	ret
 
 PlaceVerticalMenuItems::
@@ -380,7 +468,7 @@ CopyNameFromMenu::
 	ret
 
 YesNoBox::
-	lb bc, SCREEN_WIDTH - 6, 7
+	lb bc, SCREEN_WIDTH - 6, 6
 
 PlaceYesNoBox::
 	jr _YesNoBox
@@ -402,7 +490,7 @@ _YesNoBox::
 	ld [wMenuBorderRightCoord], a
 	ld a, c
 	ld [wMenuBorderTopCoord], a
-	add 4
+	add 5 ;add 4 CHS_Fix
 	ld [wMenuBorderBottomCoord], a
 	call PushWindow
 
@@ -428,12 +516,12 @@ InterpretTwoOptionMenu::
 
 YesNoMenuHeader::
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 10, 5, 15, 9
+	menu_coords 9, 5, 15, 9 ;menu_coords 10, 5, 15, 9
 	dw .MenuData
 	db 1 ; default option
 
 .MenuData:
-	db STATICMENU_CURSOR | STATICMENU_NO_TOP_SPACING ; flags
+	db STATICMENU_CURSOR ; | STATICMENU_NO_TOP_SPACING ; flag
 	db 2
 	db "YES@"
 	db "NO@"
@@ -679,14 +767,14 @@ PlaceNthMenuStrings::
 	call PlaceString
 	ret
 
-GetNthMenuStrings:: ; unreferenced
-	call GetMenuDataPointerTableEntry
-	inc hl
-	inc hl
-	ld a, [hli]
-	ld d, [hl]
-	ld e, a
-	ret
+; GetNthMenuStrings:: ; unreferenced
+; 	call GetMenuDataPointerTableEntry
+; 	inc hl
+; 	inc hl
+; 	ld a, [hli]
+; 	ld d, [hl]
+; 	ld e, a
+; 	ret
 
 MenuJumptable::
 	ld a, [wMenuSelection]
@@ -719,11 +807,21 @@ ClearWindowData::
 	ld hl, wMoreMenuData
 	call .ClearMenuData
 
-	xor a
-	call OpenSRAM
+	; ld a, BANK(sWindowStackBottom)
+	; call OpenSRAM
+	call OpenSWindowStackSRAMOnlyDMG
+
+	ldh a, [hCGB]
+	and a
+	ld hl, sWindowStackBottom
+	jr z, .dmg
+	; di ; 中断
+	ld a, 2
+	ldh [rSVBK], a
+	ld hl, wWindowStackBottom
+.dmg
 
 	xor a
-	ld hl, sWindowStackTop
 	ld [hld], a
 	ld [hld], a
 	ld a, l
@@ -731,6 +829,9 @@ ClearWindowData::
 	ld a, h
 	ld [wWindowStackPointer + 1], a
 
+	xor a
+	ldh [rSVBK], a
+	; ei ; 中断
 	call CloseSRAM
 	ret
 

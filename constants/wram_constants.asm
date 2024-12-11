@@ -22,7 +22,7 @@ DEF AUTO_INPUT EQU $ff
 	const WILDMON    ; 4
 
 ; wGameTimerPaused::
-DEF GAME_TIMER_COUNTING_F EQU 0
+DEF GAME_TIMER_PAUSED_F EQU 0
 
 ; wJoypadDisable::
 DEF JOYPAD_DISABLE_MON_FAINT_F    EQU 6
@@ -55,7 +55,7 @@ DEF NUM_FRAMES EQU const_value
 ; wTextboxFlags::
 	const_def
 	const FAST_TEXT_DELAY_F ; 0
-	const TEXT_DELAY_F      ; 1
+	const NO_TEXT_DELAY_F   ; 1
 
 ; wGBPrinterBrightness::
 DEF GBPRINTER_LIGHTEST EQU $00
@@ -89,12 +89,6 @@ DEF RIGHT_MASK EQU 1 << RIGHT
 	shift_const FACE_LEFT  ; 2
 	shift_const FACE_RIGHT ; 1
 DEF FACE_CURRENT EQU 0
-
-; wStateFlags
-DEF SPRITE_UPDATES_DISABLED_F             EQU 0
-DEF LAST_12_SPRITE_OAM_STRUCTS_RESERVED_F EQU 1
-DEF TEXT_STATE_F                          EQU 6
-DEF SCRIPTED_MOVEMENT_STATE_F             EQU 7
 
 ; wPokemonWithdrawDepositParameter::
 DEF PC_WITHDRAW       EQU 0
@@ -299,16 +293,3 @@ DEF DAYCARELADY_HAS_MON_F        EQU 0
 
 ; shared flag between wDayCareMan and wDayCareLady
 DEF DAYCARE_INTRO_SEEN_F         EQU 7
-
-; hVBlank::
-; VBlankHandlers indexes (see home/vblank.asm)
-	const_def
-	const VBLANK_NORMAL     ; 0
-	const VBLANK_CUTSCENE   ; 1
-	const VBLANK_SOUND_ONLY ; 2
-	const VBLANK_UNUSED_3   ; 3
-	const VBLANK_SERIAL     ; 4
-	const VBLANK_CREDITS    ; 5
-	const VBLANK_UNUSED_6   ; 6
-	const VBLANK_UNUSED_7   ; 7
-DEF NUM_VBLANK_HANDLERS EQU const_value

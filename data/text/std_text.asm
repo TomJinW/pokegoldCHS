@@ -1,3 +1,4 @@
+; comments
 NurseMornText:
 	text "Good morning!"
 	line "Welcome to our"
@@ -45,7 +46,8 @@ NurseGoodbyeText:
 	line "again."
 	done
 
-; not used
+
+NurseSeeYouAgainTextUnused: ; not used
 	text "We hope to see you"
 	line "again."
 	done
@@ -134,7 +136,8 @@ HomepageText:
 	line "updated…"
 	done
 
-; not used
+
+PokemonRadioTextUnused: ; not used
 	text "#MON RADIO!"
 
 	para "Call in with your"
@@ -146,12 +149,13 @@ TrashCanText:
 	line "here…"
 	done
 
-; not used
+StrengthTextUnused: ; not used
 	text "A #MON may be"
 	line "able to move this."
 	done
 
-; not used
+RockSmashTextUnused: ; not used
+
 	text "Maybe a #MON"
 	line "can break this."
 	done

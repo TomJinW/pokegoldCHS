@@ -1,6 +1,7 @@
 tools/flips
 roms/*
 __Hash/*
+release/*
 Thumbs.db
 release/roms/md5.txt
 release/patches/patched-md5.txt

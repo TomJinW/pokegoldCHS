@@ -369,7 +369,7 @@ _EndUsedMove4Text::
 	done
 
 _EndUsedMove5Text::
-	text "!"
+	text "！"
 	done
 
 Text_BattleEffectActivate::
@@ -382,6 +382,7 @@ Text_BattleEffectActivate::
 
 _BattleStatWentWayUpText::
 	text_pause
+_BattleStatWentWayUpText2::
 	text "<SCROLL>went way up!"
 	prompt
 
@@ -399,6 +400,7 @@ Text_BattleFoeEffectActivate::
 
 _BattleStatSharplyFellText::
 	text_pause
+_BattleStatSharplyFellText2::
 	text "<SCROLL>sharply fell!"
 	prompt
 
@@ -639,6 +641,16 @@ _ContestJudging_SecondPlaceText::
 	text "!@"
 	text_end
 
+_ContestJudging_SecondPlaceTextENG::
+	text "第2名是捉到了"
+	line "@"
+	text_ram wStringBuffer1
+	text "的"
+	cont "@" 
+	text_ram wBugContestWinnerName
+	text "。@"
+	text_end
+
 _ContestJudging_SecondPlaceScoreText::
 	text_start
 
@@ -658,6 +670,16 @@ _ContestJudging_ThirdPlaceText::
 	line "@"
 	text_ram wStringBuffer1
 	text "!@"
+	text_end
+
+_ContestJudging_ThirdPlaceTextENG::
+	text "第3名是捉到了"
+	line "@"
+	text_ram wStringBuffer1
+	text "的"
+	cont "@" 
+	text_ram wBugContestWinnerName
+	text "。@"
 	text_end
 
 _ContestJudging_ThirdPlaceScoreText::
@@ -1349,6 +1371,16 @@ _ReceivedItemText::
 	done
 
 _PutItemInPocketText::
+	text "<PLAYER> put the"
+	line "@"
+	text_ram wStringBuffer1
+	text " in"
+	cont "the @"
+	text_ram wStringBuffer3
+	text "."
+	prompt
+
+_PutLongItemInPocketText::
 	text "<PLAYER> put the"
 	line "@"
 	text_ram wStringBuffer1

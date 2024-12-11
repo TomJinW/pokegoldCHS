@@ -19,6 +19,27 @@ PlayersHouse1FNoopScene:
 	end
 
 MeetMomScript:
+	IF DEF(_DEBUG)
+	giveitem HM_CUT
+	giveitem HM_FLY
+	giveitem HM_SURF
+	giveitem HM_STRENGTH
+	giveitem HM_FLASH
+	giveitem HM_WHIRLPOOL
+	giveitem HM_WATERFALL
+	giveitem TM_ROCK_SMASH
+	giveitem MAX_ELIXER, 95
+	giveitem CARBOS, 95
+	giveitem LEFTOVERS, 95
+	giveitem TWISTEDSPOON, 95
+	giveitem RARE_CANDY, 95
+	giveitem MASTER_BALL, 95
+	giveitem MASTER_BALL, 95
+	giveitem FULL_RESTORE, 95
+	giveitem BERRY, 95
+	giveitem LUCKY_EGG, 95
+	ENDC
+	
 	applymovement PLAYER, PlayersHouseDownstairsMovement
 	playmusic MUSIC_MOM
 	turnobject PLAYERSHOUSE1F_MOM1, UP
@@ -292,7 +313,12 @@ PlayersHouse1F_MapEvents:
 
 	def_warp_events
 	warp_event  6,  7, NEW_BARK_TOWN, 2
+	IF DEF(_DEBUG)
+	; warp_event  7,  7, HALL_OF_FAME, 2
 	warp_event  7,  7, NEW_BARK_TOWN, 2
+	ELSE
+	warp_event  7,  7, NEW_BARK_TOWN, 2
+	ENDC
 	warp_event  9,  0, PLAYERS_HOUSE_2F, 1
 
 	def_coord_events
