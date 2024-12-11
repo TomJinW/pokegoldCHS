@@ -4,6 +4,9 @@
 # Explicitly declare text files you want to always be normalized and converted
 # to native line endings on checkout.
 
+*.xlsx binary diff=hex
+*.numbers binary diff=hex
+
 # files part of the build
 *.asm text
 *.pal text
@@ -20,6 +23,7 @@
 *.sha1 text
 
 # Denote all files that are truly binary and should not be modified.
+*.cia binary diff=hex
 *.png binary diff=hex
 *.lz.* binary diff=hex
 *.bin binary diff=hex
@@ -27,7 +31,8 @@
 *.rle binary diff=hex
 *.attrmap binary diff=hex
 *.tilemap binary diff=hex
-
+*.xlsx binary diff=hex
+*.zip binary diff=hex
 # Declare files that will always have CRLF line endings on checkout.
 *.patch.template text eol=crlf linguist-language=INI
 

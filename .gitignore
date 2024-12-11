@@ -1,3 +1,24 @@
+tools/flips
+roms/*
+__Hash/*
+Thumbs.db
+release/roms/md5.txt
+release/patches/patched-md5.txt
+release/patches/*.ips
+*.s1
+*.s2
+*.s3
+*.s4
+*.s5
+*.s6
+*.s7
+*.s8
+*.s9
+*.s10
+*.cht
+.sync*
+rgbds-cn
+tmp
 # compiled objects
 *.o
 
@@ -5,6 +26,7 @@
 *.1bpp
 *.2bpp
 *.lz
+*.lz.bin
 *.gbcpal
 *.dimensions
 *.sgb.tilemap
