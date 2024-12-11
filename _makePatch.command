@@ -45,11 +45,21 @@ md5 pokesilver.gbc >> release/patches/patched-md5.txt
 md5 pokegold_64KB.gbc >> release/patches/patched-md5.txt
 md5 pokesilver_64KB.gbc >> release/patches/patched-md5.txt
 
+md5 pokegold.gbc > release/roms/md5.txt
+md5 pokesilver.gbc >> release/roms/md5.txt
+md5 pokegold_64KB.gbc >> release/roms/md5.txt
+md5 pokesilver_64KB.gbc >> release/roms/md5.txt
+
 else
 md5sum pokegold.gbc > release/patches/patched-md5.txt
 md5sum pokesilver.gbc >> release/patches/patched-md5.txt
 md5sum pokegold_64KB.gbc >> release/patches/patched-md5.txt
 md5sum pokesilver_64KB.gbc >> release/patches/patched-md5.txt
+
+md5sum pokegold.gbc > release/roms/md5.txt
+md5sum pokesilver.gbc >> release/roms/md5.txt
+md5sum pokegold_64KB.gbc >> release/roms/md5.txt
+md5sum pokesilver_64KB.gbc >> release/roms/md5.txt
 fi
 
 cp VersionUpdate.md release/roms/汉化版版本更新历史.txt
