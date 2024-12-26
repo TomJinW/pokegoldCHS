@@ -5601,7 +5601,7 @@
     },
     {
         "Sentence": {
-            "text": "text 朋友进行过交换吗？\nline 有些事一个人是办不到的。\n",
+            "text": "text 和朋友进行过交换吗？\nline 有些事一个人是办不到的。\n",
             "note": "",
             "state": "Unmarked",
             "tag": "_OakRating14\ncommon_2.asm"

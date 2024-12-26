@@ -152,7 +152,7 @@ def get_textdata():
             if '英文' in cen or '结束' in cen:
                 if olabel != '':
                     if olabel in tb_dict_version_not_matched and not olabel in tb_dict:
-                        print(f'olabel {olabel} 的版本不匹配 {tb_dict_version_not_matched[olabel].version} {version}')
+                        # print(f'olabel {olabel} 的版本不匹配 {tb_dict_version_not_matched[olabel].version} {version}')
                         olabel = ctr
                         lastVer = ver
                         enlist = []
@@ -163,8 +163,8 @@ def get_textdata():
                         ctrl = []
                         continue
                     if lastVer != '' and lastVer != version:
-                        print('L2: 当前文本版本不匹配，ignoring...')
-                        print(olabel)
+                        # print('L2: 当前文本版本不匹配，ignoring...')
+                        # print(olabel)
                         # print(ctr)
                         olabel = ctr
                         lastVer = ver
