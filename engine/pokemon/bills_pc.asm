@@ -1177,7 +1177,19 @@ PCMonInfo:
 	ret z
 
 	call GetBasePokemonName
+	ld a, [wEngPKMNNameMark]
+	cp 1
 	hlcoord 1, 12 ;hlcoord 1, 14
+	jr nz, .CHS
+	;ENG
+	farcall GetStrLength
+	ld a, b
+	cp 10
+	hlcoord 1, 12
+	jr c, .lessThan10Char
+	hlcoord 0, 12 ;hlcoord 1, 14
+.CHS
+.lessThan10Char
 	call PlaceString
 
 	hlcoord 2, 10 ;hlcoord 1, 12

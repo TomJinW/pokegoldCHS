@@ -21481,7 +21481,7 @@
     },
     {
         "Sentence": {
-            "text": "text 哦哦，这就是@\ntext_ram wStringBuffer3\ntext 呀！\nline 真是可爱的宝可梦！\npara 感谢您特意带来给我看。\n",
+            "text": "text 哦哦，这就是\nline @\ntext_ram wStringBuffer3\ntext 呀！\ncont 真是可爱的宝可梦！\npara 感谢您特意带来给我看。\n",
             "note": "",
             "state": "Unmarked",
             "tag": "BillsGrandpaShownPokemonText\nBillsHouse.asm"
