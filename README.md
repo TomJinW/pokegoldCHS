@@ -166,11 +166,11 @@
 	
 	| Title ID <br> Product Code | 金 | 银 |
 	|:---:|:----:|:----:|
-	|英语版|x<br>CTR-P-RCQA|y<br>CTR-P-|
-	|法语版|x<br>CTR-P-RCSA|y<br>CTR-P-|
-	|德语版|x<br>CTR-P-RCUA|y<br>CTR-P-|
-	|西语版|x<br>CTR-P-RCWA|y<br>CTR-P-|
-	|意语版|x<br>CTR-P-RCYA|y<br>CTR-P-|
+	|英语版|0004000000172600<br>CTR-N-QBPA|0004000000172700<br>CTR-N-QBQA|
+	|法语版|0004000000172C00<br>CTR-N-QBVA|0004000000172D00<br>CTR-N-QBWA|
+	|德语版|0004000000172900<br>CTR-N-QBSA|0004000000172A00<br>CTR-N-QBTA|
+	|西语版|0004000000172F00<br>CTR-P-RCYA|0004000000173000<br>CTR-N-QBZA|
+	|意语版|0004000000173200<br>CTR-N-QB3A|0004000000173300<br>CTR-N-QB4A|
 	- 不推荐使用日文版 VC 为底，使用日文版 VC，将无法支持「宝可梦虚拟传送」，无法和其他国际版 3DS Virtual Console 进行无线联机。
 			
 <br>
