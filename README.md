@@ -259,7 +259,5 @@
 
 - [神奇宝贝百科](https://wiki.52poke.com/) [Bulbapedia](bulbapedia.bulbagarden.net) [tcrf.net](https://tcrf.net/Pokémon_Red_and_Blue)
 
-- [pocketrgb-en](https://github.com/Dracrius/pocketrgb-en)
-
 ## 开源协议声明
 - [第三方开源项目原始协议](Third-Party-License.txt)
