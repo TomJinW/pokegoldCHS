@@ -1,3 +1,4 @@
+build/*
 src/tools/flips
 src/roms/*
 src/__Hash/*

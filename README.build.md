@@ -125,7 +125,7 @@
 
 ## 步骤二：编译ROM
 
-### macOS 和 Linux
+### macOS 和 Linux 首次编译：
 
 - 克隆代码仓库（将本仓库和与水晶版汉化共享的 excel 仓库一并克隆）：
 
@@ -137,12 +137,21 @@
 - 添加运行权限并运行：
 
 	```
-	chmod +x _importBuild.sh _prepare.command && ./_prepare.command
+	chmod +x _prepare.command && ./_prepare.command
 	```
 
-- 脚本会自动导入汉化文本并编译 ROM。
+- 脚本会创建一个 build 文件夹，会自动把代码复制到 build 文件夹，脚本还会自动把汉化更改应用到 build 文件夹中，并在 build 文件夹中进行编译。
 
-- 最后看到「Restore Backup?」提示是否将repo恢复到未加入汉化文本的状态，输入1或者2并按下回车键选择。如果直接按下回车会默认使用选项1。
+- 最后看到「done!」说明一切完成。
+
+### 首次编译完成之后：
+
+- 可以直接在 build 文件夹里修改需要的部分并运行 make 来重新编译游戏，汉化版的修改已经应用于 build 文件夹，所以可以不需要再运行 _prepare.command：
+
+	```
+	cd build
+	make
+	```
 
 ## 查看编译 ROM
 

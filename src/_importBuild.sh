@@ -35,27 +35,27 @@ make
 # FOR ROM & VC Final release
 # make gold_64 silver_64 gold_vc silver_vc --always-make
 
-echo Restore Backup?
-echo 1.Yes
-echo 2.No
+# echo Restore Backup?
+# echo 1.Yes
+# echo 2.No
 # read restoreOption
-if [ -z "${restoreOption}" ]
-then
-    echo The Option is not set, using the default one.
-    restoreOption=1
-fi
+# if [ -z "${restoreOption}" ]
+# then
+#     echo The Option is not set, using the default one.
+#     restoreOption=1
+# fi
 
 NOW=$( date '+%F_%H:%M:%S' )
 python3 tools/_exportJSON.py __Hash/_Gen2-$NOW.json
 cp __Hash/_Gen2-$NOW.json Gen2.json
 
-if [[ $restoreOption -eq 2 ]]
-then
-echo done!
-else
-python3 tools/_backup.py xlsx/xlsxList.txt xlsx/ 1 2
-echo done!
-fi
+# if [[ $restoreOption -eq 2 ]]
+# then
+# echo done!
+# else
+# python3 tools/_backup.py xlsx/xlsxList.txt xlsx/ 1 2
+# echo done!
+# fi
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
 md5 pokegold.gbc > __Hash/_md5-$NOW.txt
@@ -79,3 +79,5 @@ md5sum pokesilver_vc.gbc >> __Hash/_md5-$NOW.txt
 fi
 
 cp __Hash/_md5-$NOW.txt md5.txt
+
+echo done!
