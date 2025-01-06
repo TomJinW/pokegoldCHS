@@ -1,3 +1,3 @@
-[submodule "PokeGSC_SharedXLSXCN"]
-	path = PokeGSC_SharedXLSXCN
+[submodule "src/PokeGSC_SharedXLSXCN"]
+	path = src/PokeGSC_SharedXLSXCN
 	url = https://github.com/TomJinW/PokeGSC_SharedXLSXCN
