@@ -1,11 +1,11 @@
-tools/flips
-roms/*
-__Hash/*
-release/*
+src/tools/flips
+src/roms/*
+src/__Hash/*
+src/release/*
 Thumbs.db
-release/roms/md5.txt
-release/patches/patched-md5.txt
-release/patches/*.ips
+src/release/roms/md5.txt
+src/release/patches/patched-md5.txt
+src/release/patches/*.ips
 *.s1
 *.s2
 *.s3
@@ -18,8 +18,8 @@ release/patches/*.ips
 *.s10
 *.cht
 .sync*
-rgbds-cn
-tmp
+src/rgbds-cn
+src/tmp
 # compiled objects
 *.o
 
