@@ -100,7 +100,7 @@
 
 		- 如果需要原生 arm64 版 rgbds，你可以：
 
-			1. [前往这里下载](https://tomjinw.github.io/download/rgbds-0.8.0-macos-arm64.zip) 本人编译的 arm64 Mac 版 rgbds，文件名为：rgbds-0.8.0-macos-arm64.zip。
+			1. [前往这里下载](https://tomjinw.github.io/download/rgbds-0.7.0.macUniversal.zip) 本人编译的 arm64 Mac 版 rgbds，文件名为：rgbds-0.7.0.macUniversal.zip。
 			2. 使用源代码自行编译 rgbds，[前往这里](https://rgbds.gbdev.io/install/source)查看官方教程。
  	
 	3. 下载好压缩包之后：
