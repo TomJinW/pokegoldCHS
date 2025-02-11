@@ -4,7 +4,7 @@ cd "$filepath"
 
 # python3 -m install beautifulsoup4
 echo Creating build directory...
-rm -r build
+# rm -r build
 mkdir build
 cp -r src/* build
 cd build

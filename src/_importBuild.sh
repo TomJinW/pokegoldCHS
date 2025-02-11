@@ -48,6 +48,7 @@ make
 NOW=$( date '+%F_%H:%M:%S' )
 python3 tools/_exportJSON.py __Hash/_Gen2-$NOW.json
 cp __Hash/_Gen2-$NOW.json Gen2.json
+cp __Hash/_Gen2-$NOW.json ../src/Gen2.json
 
 # if [[ $restoreOption -eq 2 ]]
 # then
@@ -79,5 +80,6 @@ md5sum pokesilver_vc.gbc >> __Hash/_md5-$NOW.txt
 fi
 
 cp __Hash/_md5-$NOW.txt md5.txt
+cp __Hash/_md5-$NOW.txt ../src/md5.txt
 
 echo done!

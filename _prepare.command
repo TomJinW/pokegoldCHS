@@ -3,7 +3,7 @@ filepath=$(cd "$(dirname "$0")"; pwd)
 cd "$filepath"
 
 echo Creating build directory...
-rm -r build
+# rm -r build
 mkdir build
 cp -r src/* build
 cd build
