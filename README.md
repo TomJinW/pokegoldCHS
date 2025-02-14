@@ -1,5 +1,6 @@
 # 宝可梦 Gen 2 金/银 汉化版
 
+![alt text](__preview.jpg "Sample")
 
 [pret/pokered 原始 README.md](README.O.md)
 
