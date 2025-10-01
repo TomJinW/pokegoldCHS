@@ -62,10 +62,10 @@ md5sum pokegold_64KB.gbc >> release/roms/md5.txt
 md5sum pokesilver_64KB.gbc >> release/roms/md5.txt
 fi
 
-cp VersionUpdate.md release/roms/汉化版版本更新历史.txt
-cp VersionUpdate.md release/patches/VersionUpdate.md
+cp ../VersionUpdate.md release/roms/汉化版版本更新历史.txt
+cp ../VersionUpdate.md release/patches/VersionUpdate.md
 
-cp pokegold.gbc /Users/tom/Library/Containers/com.isaacmarovitz.Whisky/Bottles/DFA10767-07CD-4F1B-9881-30F28A2CB1DF/drive_c/local/DN_3DS/pokegold.gbc
-cp pokesilver.gbc /Users/tom/Library/Containers/com.isaacmarovitz.Whisky/Bottles/DFA10767-07CD-4F1B-9881-30F28A2CB1DF/drive_c/local/DN_3DS/pokesilver.gbc
-cp pokegold.patch /Users/tom/Library/Containers/com.isaacmarovitz.Whisky/Bottles/DFA10767-07CD-4F1B-9881-30F28A2CB1DF/drive_c/local/DN_3DS/pokegold.patch
-cp pokesilver.patch /Users/tom/Library/Containers/com.isaacmarovitz.Whisky/Bottles/DFA10767-07CD-4F1B-9881-30F28A2CB1DF/drive_c/local/DN_3DS/pokesilver.patch
+# cp pokegold.gbc /Users/tom/Library/Containers/com.isaacmarovitz.Whisky/Bottles/DFA10767-07CD-4F1B-9881-30F28A2CB1DF/drive_c/local/DN_3DS/pokegold.gbc
+# cp pokesilver.gbc /Users/tom/Library/Containers/com.isaacmarovitz.Whisky/Bottles/DFA10767-07CD-4F1B-9881-30F28A2CB1DF/drive_c/local/DN_3DS/pokesilver.gbc
+# cp pokegold.patch /Users/tom/Library/Containers/com.isaacmarovitz.Whisky/Bottles/DFA10767-07CD-4F1B-9881-30F28A2CB1DF/drive_c/local/DN_3DS/pokegold.patch
+# cp pokesilver.patch /Users/tom/Library/Containers/com.isaacmarovitz.Whisky/Bottles/DFA10767-07CD-4F1B-9881-30F28A2CB1DF/drive_c/local/DN_3DS/pokesilver.patch

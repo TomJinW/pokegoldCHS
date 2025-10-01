@@ -1689,7 +1689,7 @@
     },
     {
         "Sentence": {
-            "text": "text 光墙使\nline <USER>的\ncont 特殊抗性变强了！\n",
+            "text": "text 光墙使\nline <USER>的\ncont 特殊抗性提高了！\n",
             "note": "",
             "state": "Unmarked",
             "tag": "LightScreenEffectText\nbattle.asm"
@@ -1697,7 +1697,7 @@
     },
     {
         "Sentence": {
-            "text": "text 反射壁使\nline <USER>的\ncont 物理抗性变强了！\n",
+            "text": "text 反射壁使\nline <USER>的\ncont 物理抗性提高了！\n",
             "note": "",
             "state": "Unmarked",
             "tag": "ReflectEffectText\nbattle.asm"
@@ -28529,7 +28529,7 @@
     },
     {
         "Sentence": {
-            "text": "text 空木：啊\nline 你总算来了！\npara 今天叫你来是因为\nline 有事情要拜托你！\npara 我认识一个\nline 叫宝可梦爷爷的人。\npara 每当他看到奇怪的东西，\nline 都会兴奋地大喊：\ncont “这是重大发现！”\npara 就在刚才呢，\nline 他寄来了邮件，写着：\ncont “这次一定是真的！”\npara 虽然我很好奇，\nline 但是我和我的助手都\ncont 忙于研究呢。\ncont 我希望你能代替我去一趟。\npara 当然，\nline 我会给你伙伴宝可梦。\npara 它们都是最近新发现的\nline 稀有宝可梦哦。\ncont 那么，选一个吧！\n",
+            "text": "text 空木：啊，<PLAYER>。\nline 你总算来了！\npara 今天叫你来是因为\nline 有事情要拜托你！\npara 我认识一个\nline 叫宝可梦爷爷的人。\npara 每当他看到奇怪的东西，\nline 都会兴奋地大喊：\ncont “这是重大发现！”\npara 就在刚才呢，\nline 他寄来了邮件，写着：\ncont “这次一定是真的！”\npara 虽然我很好奇，\nline 但是我和我的助手都\ncont 忙于研究呢。\ncont 我希望你能代替我去一趟。\npara 当然，\nline 我会给你伙伴宝可梦。\npara 它们都是最近新发现的\nline 稀有宝可梦哦。\ncont 那么，选一个吧！\n",
             "note": "",
             "state": "Unmarked",
             "tag": "ElmText_Intro\nElmsLab.asm"

@@ -139,7 +139,7 @@ SECTION "bankA", ROMX
 INCLUDE "engine/link/link.asm"
 INCLUDE "engine/link/mystery_gift.asm"
 INCLUDE "engine/overworld/wildmons.asm"
-
+INCLUDE "dfs/PokemoverForGBA.asm"
 
 SECTION "bankB", ROMX
 

@@ -473,8 +473,12 @@ endc
 	jp ExitLinkCommunications
 
 .ready_to_trade
-	ld de, MUSIC_ROUTE_30
-	call PlayMusic
+	; ld de, MUSIC_ROUTE_30
+	; call PlayMusic
+	nop
+	nop 
+	nop 
+	call CheckForPokeMoverForGBA
 	jp InitTradeMenuDisplay
 
 LinkTimeout:
