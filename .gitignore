@@ -30,6 +30,7 @@ tmp
 *.1bpp
 *.2bpp
 *.lz
+*.lz.bin
 *.gbcpal
 *.dimensions
 *.sgb.tilemap
