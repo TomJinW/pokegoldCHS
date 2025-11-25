@@ -22,7 +22,6 @@ LoadSGBLayout:
 	jp hl
 
 SGBLayoutJumptable:
-; entries correspond to SCGB_* constants (see constants/scgb_constants.asm)
 	table_width 2, SGBLayoutJumptable
 	dw .SGB_BattleGrayscale
 	dw .SGB_BattleColors
@@ -325,7 +324,12 @@ endr
 
 .SGB_GSTitleScreen:
 	ld hl, PalPacket_GSTitleScreen
+	ld a, [Rom0End]
+	cp $A0
+	ld de, BlkPacket_GSTitleScreen2
+	jr z, .BKMVer
 	ld de, BlkPacket_GSTitleScreen
+.BKMVer
 	ld a, SCGB_DIPLOMA
 	ld [wDefaultSGBLayout], a
 	ret

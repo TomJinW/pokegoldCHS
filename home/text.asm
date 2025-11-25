@@ -125,9 +125,9 @@ SpeechTextbox::
 	ld c, TEXTBOX_INNERW
 	jp Textbox
 
-GameFreakText:: ; unreferenced
-	text "ゲームフりーク！" ; "GAMEFREAK!"
-	done
+; GameFreakText:: ; unreferenced
+; 	text "ゲームフりーク！" ; "GAMEFREAK!"
+; 	done
 
 RadioTerminator::
 	ld hl, .stop
@@ -142,7 +142,7 @@ PrintText::
 
 PrintTextboxText::
 	bccoord TEXTBOX_INNERX, TEXTBOX_INNERY
-	call PrintTextboxTextAt
+	call PlaceHLTextAtBC
 	ret
 
 SetUpTextbox::
@@ -154,8 +154,11 @@ SetUpTextbox::
 	ret
 
 PlaceString::
+	call IncreaseDFSStack
 	push hl
 	; fallthrough
+	; ld a, $80
+	; ld [wDFSCode + 2], a
 
 PlaceNextChar::
 	ld a, [de]
@@ -163,6 +166,7 @@ PlaceNextChar::
 	jr nz, CheckDict
 	ld b, h
 	ld c, l
+	call DecreaseDFSStack
 	pop hl
 	ret
 
@@ -222,58 +226,81 @@ ENDM
 	dict "<PROMPT>",  PromptText
 	dict "<PKMN>",    PlacePKMN
 	dict "<POKE>",    PlacePOKE
-	dict "<WBR>",     NextChar
-	dict "<BSP>",     " "
+	dict "<WBR>",     NextChar ; dict "%",         NextChar
+	; dict "¯",         " "
 	dict "<DEXEND>",  PlaceDexEnd
 	dict "<TARGET>",  PlaceMoveTargetsName
 	dict "<USER>",    PlaceMoveUsersName
 	dict "<ENEMY>",   PlaceEnemysName
-	dict "ﾟ",         .diacritic
-	cp "ﾞ"
-	jr nz, .not_diacritic
+; 	dict "ﾟ",         .diacritic
+; 	cp "ﾞ"
+; 	jr nz, .not_diacritic
 
-.diacritic
-	ld b, a
-	call Diacritic
-	jp NextChar
+; .diacritic
+; 	ld b, a
+; 	call Diacritic
+; 	jp NextChar
 
-.not_diacritic
-	cp FIRST_REGULAR_TEXT_CHAR
-	jr nc, .place
-; dakuten or handakuten
-	cp "パ"
-	jr nc, .handakuten
-; dakuten
-	cp FIRST_HIRAGANA_DAKUTEN_CHAR
-	jr nc, .hiragana_dakuten
-; katakana dakuten
-	add "カ" - "ガ"
-	jr .place_dakuten
+; .not_diacritic
+; 	cp FIRST_REGULAR_TEXT_CHAR
+; 	jr nc, .place
+; ; dakuten or handakuten
+; 	cp "パ"
+; 	jr nc, .handakuten
+; ; dakuten
+; 	cp FIRST_HIRAGANA_DAKUTEN_CHAR
+; 	jr nc, .hiragana_dakuten
+; ; katakana dakuten
+; 	add "カ" - "ガ"
+; 	jr .place_dakuten
 
-.hiragana_dakuten
-	add "か" - "が"
-.place_dakuten
-	ld b, "ﾞ" ; dakuten
-	call Diacritic
-	jr .place
+; .hiragana_dakuten
+; 	add "か" - "が"
+; .place_dakuten
+; 	ld b, "ﾞ" ; dakuten
+; 	call Diacritic
+; 	jr .place
 
-.handakuten
-	cp "ぱ"
-	jr nc, .hiragana_handakuten
-; katakana handakuten
-	add "ハ" - "パ"
-	jr .place_handakuten
+; .handakuten
+; 	cp "ぱ"
+; 	jr nc, .hiragana_handakuten
+; ; katakana handakuten
+; 	add "ハ" - "パ"
+; 	jr .place_handakuten
 
-.hiragana_handakuten
-	add "は" - "ぱ"
-.place_handakuten
-	ld b, "ﾟ" ; handakuten
-	call Diacritic
+; .hiragana_handakuten
+; 	add "は" - "ぱ"
+; .place_handakuten
+; 	ld b, "ﾟ" ; handakuten
+; 	call Diacritic
 
-.place
+; .place
+.not_dictionary
+	; ld [hli], a
+	; call PrintLetterDelay
+	; jp NextChar
+	push hl
+	push de
+	ld hl,wDFSCode
+rept 3
 	ld [hli], a
-	call PrintLetterDelay
+	inc de
+	ld a, [de]
+endr
+	ld [hl], a
+	pop de
+	pop hl
+	call dfsUnion
 	jp NextChar
+
+PlaceDFSChar::
+	xor a
+	ld [wDFSCombineCode], a
+	ld [wDFSNoManagementCombineCode], a
+
+dfsUnion::
+	homecall _dfsUnion
+	ret
 
 MACRO print_name
 	push de
@@ -340,15 +367,23 @@ PlaceEnemysName::
 
 	ld de, wOTClassName
 	call PlaceString
-	ld h, b
-	ld l, c
-	ld de, String_Space
-	call PlaceString
 	push bc
 	callfar Battle_GetTrainerName
-	pop hl
 	ld de, wStringBuffer1
+	pop hl
 	jr PlaceCommandCharacter
+	
+
+	; call PlaceString
+	; ld h, b
+	; ld l, c
+	; ld de, String_Space
+	; call PlaceString
+	; push bc
+	; callfar Battle_GetTrainerName
+	; pop hl
+	; ld de, wStringBuffer1
+	; jr PlaceCommandCharacter
 
 .rival
 	ld de, wRivalName
@@ -386,6 +421,8 @@ NextLineChar::
 	ld bc, SCREEN_WIDTH * 2
 	add hl, bc
 	push hl
+	; xor a
+	; ld [wDFSNoManagementCombineCode], a
 	jp NextChar
 
 LineFeedChar::
@@ -397,12 +434,17 @@ LineFeedChar::
 
 LineChar::
 	pop hl
+	; xor a
+	; ld [wDFSNoManagementCombineCode], a
 	hlcoord TEXTBOX_INNERX, TEXTBOX_INNERY + 2
 	push hl
 	jp NextChar
 
 Paragraph::
 	push de
+
+	; xor a
+	; ld [wDFSNoManagementCombineCode], a
 
 	ld a, [wLinkMode]
 	cp LINK_COLOSSEUM
@@ -412,8 +454,10 @@ Paragraph::
 .linkbattle
 	call Text_WaitBGMap
 	call PromptButton
-	hlcoord TEXTBOX_INNERX, TEXTBOX_INNERY
-	lb bc, TEXTBOX_INNERH - 1, TEXTBOX_INNERW
+	; hlcoord TEXTBOX_INNERX, TEXTBOX_INNERY
+	; lb bc, TEXTBOX_INNERH - 1, TEXTBOX_INNERW
+	hlcoord TEXTBOX_INNERX, TEXTBOX_INNERY - 1
+	lb bc, TEXTBOX_INNERH, TEXTBOX_INNERW
 	call ClearBox
 	call UnloadBlinkingCursor
 	ld c, 20
@@ -423,6 +467,9 @@ Paragraph::
 	jp NextChar
 
 _ContText::
+	; xor a
+	; ld [wDFSNoManagementCombineCode], a
+
 	ld a, [wLinkMode]
 	or a
 	jr nz, .communication
@@ -464,11 +511,13 @@ ContText::
 PlaceDexEnd::
 ; Ends a Pokédex entry in Gen 1.
 ; Dex entries are now regular strings.
-	ld [hl], "."
-	pop hl
+	; ld [hl], "."
+	; pop hl
 	ret
 
 PromptText::
+	; xor a
+	; ld [wDFSNoManagementCombineCode], a
 	ld a, [wLinkMode]
 	cp LINK_COLOSSEUM
 	jr z, .ok
@@ -483,6 +532,12 @@ PromptText::
 	call UnloadBlinkingCursor
 
 DoneText::
+	push af
+	; xor a
+	; ld [wDFSNoManagementCombineCode], a
+	pop af
+
+	call DecreaseDFSStack
 	pop hl
 	ld de, .stop
 	dec de
@@ -509,17 +564,19 @@ NullChar:: ; unused
 	done
 
 TextScroll::
-	hlcoord TEXTBOX_X, TEXTBOX_INNERY
-	decoord TEXTBOX_X, TEXTBOX_INNERY - 1
-	ld bc, 3 * SCREEN_WIDTH
-	call CopyBytes
-	hlcoord TEXTBOX_INNERX, TEXTBOX_INNERY + 2
-	ld a, " "
-	ld bc, TEXTBOX_INNERW
-	call ByteFill
-	ld c, 5
-	call DelayFrames
+	homecall _TextScroll
 	ret
+	; hlcoord TEXTBOX_X, TEXTBOX_INNERY
+	; decoord TEXTBOX_X, TEXTBOX_INNERY - 1
+	; ld bc, 3 * SCREEN_WIDTH
+	; call CopyBytes
+	; hlcoord TEXTBOX_INNERX, TEXTBOX_INNERY + 2
+	; ld a, " "
+	; ld bc, TEXTBOX_INNERW
+	; call ByteFill
+	; ld c, 5
+	; call DelayFrames
+	; ret
 
 Text_WaitBGMap::
 	push bc
@@ -576,13 +633,15 @@ PokeFluteTerminator:: ; unreferenced
 .stop:
 	text_end
 
-PrintTextboxTextAt::
+PlaceHLTextAtBC::
 	ld a, [wTextboxFlags]
 	push af
-	set TEXT_DELAY_F, a
+	set NO_TEXT_DELAY_F, a
 	ld [wTextboxFlags], a
 
+	call IncreaseDFSStack
 	call DoTextUntilTerminator
+	call DecreaseDFSStack
 
 	pop af
 	ld [wTextboxFlags], a
@@ -611,6 +670,40 @@ DoTextUntilTerminator::
 
 	; jp de
 	push de
+	ret
+
+IncreaseDFSStack::
+	push af
+	ld a, [wDFSStack]
+	inc a
+	ld [wDFSStack], a
+	dec a
+	jr nz, .not_bottom
+	; xor a
+	ld [wDFSCombineCode], a
+	ld [wDFSNoManagementCombineCode], a
+.not_bottom
+	pop af
+	ret
+
+DecreaseDFSStack::
+	push af
+	; ld a, [wDFSNoManagementForceCombine]
+	; and a
+	; jr nz, .noresetting
+	; xor a
+	; ld [wDFSNoManagementCombineCode], a
+.noresetting
+	ld a, [wDFSStack]
+	dec a
+	ld [wDFSStack], a
+	jr nz, .not_bottom
+	; xor a
+	ld [wDFSCombineCode], a
+	ld [wDFSNoManagementCombineCode], a
+	
+.not_bottom
+	pop af
 	ret
 
 TextCommands::
@@ -841,17 +934,17 @@ TextCommand_SOUND::
 	pop bc
 	ret
 
-TextCommand_CRY:: ; unreferenced
-; play a pokemon cry
-	push de
-	ld e, [hl]
-	inc hl
-	ld d, [hl]
-	call PlayMonCry
-	pop de
-	pop hl
-	pop bc
-	ret
+; TextCommand_CRY:: ; unreferenced
+; ; play a pokemon cry
+; 	push de
+; 	ld e, [hl]
+; 	inc hl
+; 	ld d, [hl]
+; 	call PlayMonCry
+; 	pop de
+; 	pop hl
+; 	pop bc
+; 	ret
 
 TextSFX::
 	dbw TX_SOUND_DEX_FANFARE_50_79,  SFX_DEX_FANFARE_50_79
@@ -942,10 +1035,12 @@ TextCommand_DAY::
 	ld d, h
 	ld e, l
 	pop hl
+	push de
+	ld de, .Day
 	call PlaceString
 	ld h, b
 	ld l, c
-	ld de, .Day
+	pop de
 	call PlaceString
 	pop hl
 	ret

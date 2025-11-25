@@ -14,18 +14,18 @@ InitSpriteAnimStruct::
 
 	ret
 
-ReinitSpriteAnimFrame:: ; unreferenced
-	ld [wSpriteAnimID], a
-	ldh a, [hROMBank]
-	push af
+; ReinitSpriteAnimFrame:: ; unreferenced
+; 	ld [wSpriteAnimID], a
+; 	ldh a, [hROMBank]
+; 	push af
 
-	ld a, BANK(_ReinitSpriteAnimFrame)
-	rst Bankswitch
-	ld a, [wSpriteAnimID]
+; 	ld a, BANK(_ReinitSpriteAnimFrame)
+; 	rst Bankswitch
+; 	ld a, [wSpriteAnimID]
 
-	call _ReinitSpriteAnimFrame
+; 	call _ReinitSpriteAnimFrame
 
-	pop af
-	rst Bankswitch
+; 	pop af
+; 	rst Bankswitch
 
-	ret
+; 	ret

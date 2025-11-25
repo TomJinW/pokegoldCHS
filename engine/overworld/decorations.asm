@@ -28,6 +28,12 @@ _PlayerDecorationMenu:
 	jr nc, .top_loop
 
 .exit_menu
+
+	; ld de, TilesetPlayersRoomGFXUncompressed
+	; ld hl, vTiles2 tile $0
+	; lb bc, BANK(TilesetPlayersRoomGFXUncompressed), $60
+	; call Get2bpp
+
 	call ExitMenu
 	pop af
 	ld [wWhichIndexSet], a
@@ -37,7 +43,8 @@ _PlayerDecorationMenu:
 
 .MenuHeader:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 5, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1
+	menu_coords 0, 0, SCREEN_WIDTH - 5, SCREEN_HEIGHT - 1 ;menu_coords 5, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1
+	; menu_coords 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1 ;menu_coords 5, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1
 	dw .MenuData
 	db 1 ; default option
 
@@ -303,7 +310,7 @@ FindOwnedOrnaments:
 	db DECO_SQUIRTLE_DOLL ; 24
 	db DECO_POLIWAG_DOLL ; 25
 	db DECO_DIGLETT_DOLL ; 26
-	db DECO_STARYU_DOLL ; 27
+	db DECO_STARMIE_DOLL ; 27
 	db DECO_MAGIKARP_DOLL ; 28
 	db DECO_ODDISH_DOLL ; 29
 	db DECO_GENGAR_DOLL ; 2a
@@ -355,6 +362,7 @@ PopulateDecoCategoryMenu:
 	call DoDecorationAction2
 
 .no_action_1
+	farcall dfsClearCache
 	call ExitMenu
 	ret
 
@@ -381,6 +389,13 @@ PopulateDecoCategoryMenu:
 	call DoDecorationAction2
 
 .no_action_2
+	; hlcoord 2, 1
+	; lb bc, 16, 13
+	; call ClearBox
+	; ld c, 30
+	; call DelayFrames
+
+	farcall dfsClearCache
 	call ExitMenu
 	ret
 
@@ -395,7 +410,7 @@ PopulateDecoCategoryMenu:
 
 .NonscrollingMenuHeader:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1
+	menu_coords 0, 0, SCREEN_WIDTH - 5, SCREEN_HEIGHT - 1
 	dw .NonscrollingMenuData
 	db 1 ; default option
 
@@ -408,7 +423,7 @@ PopulateDecoCategoryMenu:
 
 .ScrollingMenuHeader:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 1, 1, SCREEN_WIDTH - 2, SCREEN_HEIGHT - 2
+	menu_coords 1, 1, SCREEN_WIDTH - 6, SCREEN_HEIGHT - 2
 	dw .ScrollingMenuData
 	db 1 ; default option
 
@@ -662,6 +677,7 @@ DecoAction_TrySetItUp:
 
 DecoAction_SetItUp:
 ; See if there's anything of the same type already out
+	; call SetupDFSNomanagementIMEWithDelay
 	ld a, [wCurDecoration]
 	and a
 	jr z, .nothingthere
@@ -679,6 +695,8 @@ DecoAction_SetItUp:
 	call GetDecorationName
 	ld hl, PutAwayAndSetUpText
 	call MenuTextboxBackup
+
+	; call DisableDFSNoManagement
 	xor a
 	ret
 
@@ -688,16 +706,24 @@ DecoAction_SetItUp:
 	call GetDecorationName
 	ld hl, SetUpTheDecoText
 	call MenuTextboxBackup
+
+	; call DisableDFSNoManagement
 	xor a
 	ret
 
 .alreadythere
 	ld hl, AlreadySetUpText
 	call MenuTextboxBackup
+
+	; push af
+	; call DisableDFSNoManagement
+	; pop af
+	
 	scf
 	ret
 
 DecoAction_TryPutItAway:
+	; call SetupDFSNomanagementIMEWithDelay
 ; If there is no item of that type already set, there is nothing to put away.
 	ld a, [hl]
 	ld [wCurDecoration], a
@@ -715,16 +741,21 @@ DecoAction_TryPutItAway:
 	call GetDecorationName
 	ld hl, PutAwayTheDecoText
 	call MenuTextboxBackup
+
+	; call DisableDFSNoManagement
 	xor a
 	ret
 
 .nothingthere
 	ld hl, NothingToPutAwayText
 	call MenuTextboxBackup
+
+	; call DisableDFSNoManagement
 	xor a
 	ret
 
 DecoAction_setupornament:
+	; call SetupDFSNomanagementIMEWithDelay
 	ld hl, WhichSidePutOnText
 	call DecoAction_AskWhichSide
 	jr c, .cancel
@@ -735,13 +766,16 @@ DecoAction_setupornament:
 	jr DecoAction_FinishUp_Ornament
 
 .cancel
+	; call DisableDFSNoManagement
 	xor a
 	ret
 
 DecoAction_putawayornament:
+	; call SetupDFSNomanagementIMEWithDelay
 	ld hl, WhichSidePutAwayText
 	call DecoAction_AskWhichSide
 	jr nc, .incave
+	; call DisableDFSNoManagement
 	xor a
 	ret
 
@@ -754,6 +788,7 @@ DecoAction_FinishUp_Ornament:
 	ld [hl], a
 	ld a, [wOtherDecoration]
 	ld [de], a
+	; call DisableDFSNoManagement
 	xor a
 	ret
 
@@ -776,6 +811,8 @@ DecoAction_SetItUp_Ornament:
 	call .getwhichside
 	ld hl, PutAwayAndSetUpText
 	call MenuTextboxBackup
+
+	; call DisableDFSNoManagement
 	xor a
 	ret
 
@@ -788,12 +825,19 @@ DecoAction_SetItUp_Ornament:
 	call GetDecorationName
 	ld hl, SetUpTheDecoText
 	call MenuTextboxBackup
+
+	; call DisableDFSNoManagement
 	xor a
 	ret
 
 .failed
 	ld hl, AlreadySetUpText
 	call MenuTextboxBackup
+
+	; push af
+	; call DisableDFSNoManagement
+	; pop af
+
 	scf
 	ret
 
@@ -803,6 +847,7 @@ DecoAction_SetItUp_Ornament:
 	ld a, [wOtherDecoration]
 	cp b
 	ret nz
+	; call DisableDFSNoManagement
 	xor a
 	ld [wOtherDecoration], a
 	ret
@@ -823,12 +868,14 @@ DecoAction_PutItAway_Ornament:
 	ld [wSelectedDecoration], a
 	ld hl, PutAwayTheDecoText
 	call MenuTextboxBackup
+	; call DisableDFSNoManagement
 	xor a
 	ret
 
 .nothingthere
 	ld hl, NothingToPutAwayText
 	call MenuTextboxBackup
+	; call DisableDFSNoManagement
 	xor a
 	ret
 
@@ -840,6 +887,21 @@ DecoAction_AskWhichSide:
 	call MenuTextbox
 	ld hl, DecoSideMenuHeader
 	call GetMenu2
+
+	; push de
+	; push hl
+	; push bc
+	; push af
+	; hlcoord 1, 13
+	; lb bc, 4, 18
+	; call ClearBox
+	; ld c, 3
+	; call DelayFrames
+	; pop af
+	; pop bc
+	; pop hl
+	; pop de
+
 	call ExitMenu
 	call CopyMenuData
 	jr c, .nope
@@ -875,6 +937,7 @@ QueryWhichSide:
 DecoSideMenuHeader:
 	db MENU_BACKUP_TILES ; flags
 	menu_coords 0, 0, 12, 7
+	; menu_coords 12, 4, SCREEN_WIDTH - 1, 11
 	dw .MenuData
 	db 1 ; default option
 

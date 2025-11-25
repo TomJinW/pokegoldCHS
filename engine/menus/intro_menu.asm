@@ -1,4 +1,57 @@
+ChineseVersionText:
+	text " 《精灵宝可梦 金银》"
+	line "       汉化版"
+	cont "TomJinW  :程序、测试"
+	cont "colorcat :测试"
+	cont "NELO     :测试"
+	cont "小光      :美工、测试"
+	cont "卧看微尘   :美工"
+	cont "星夜之幻   :协助"
+	cont "萌萌猪猪灵 :文本、测试"
+	cont "无敌阿尔宙斯:文本、测试"
+
+	para "基于CKN DMG 口袋群星"
+	line "联合汉化《水晶》文本。"
+	cont "原水晶汉化版翻译："
+	cont "萌萌猪猪灵、无敌阿尔宙斯"
+	cont "吃馍法师、伊布布布"
+
+	para "基于2023年初代宝可梦"
+	line "汉化版文本程序修改。"
+	cont "原初代汉化版程序："
+	cont "星夜之幻、TomJinW"
+
+	para "本汉化版"
+	line "不得用于商业用途。"
+
+	
+
+
+
+	IF DEF(_DEBUG)
+	; para "[CURR_DATE]"
+	; line "[CURR_TIME]"
+	ENDC
+
+
+
+	prompt
+	text_end
+
 NewGame:
+	ldh a, [hJoyDown]
+	and SELECT | START
+	cp SELECT | START
+	jr nz, .skip_version
+	ld a, [wOptions]
+	push af
+	set NO_TEXT_SCROLL, a
+	ld [wOptions], a
+	ld hl, ChineseVersionText
+	call PrintText
+	pop af
+	ld [wOptions], a
+.skip_version
 	xor a
 	ld [wDebugFlags], a
 	call ResetWRAM
@@ -37,13 +90,13 @@ _ResetWRAM:
 	call ByteFill
 
 	ldh a, [rLY]
-	ldh [hUnusedBackup], a
+	; ldh [hUnusedBackup], a
 	call DelayFrame
 	ldh a, [hRandomSub]
 	ld [wPlayerID], a
 
 	ldh a, [rLY]
-	ldh [hUnusedBackup], a
+	; ldh [hUnusedBackup], a
 	call DelayFrame
 	ldh a, [hRandomAdd]
 	ld [wPlayerID + 1], a
@@ -179,9 +232,9 @@ SetDefaultBoxNames:
 
 InitializeMagikarpHouse:
 	ld hl, wBestMagikarpLengthFeet
-	ld a, $3
+	ld a, $4 ;ld a, $3
 	ld [hli], a
-	ld a, $6
+	ld a, $1d ;ld a, $6
 	ld [hli], a
 	ld de, .Ralph
 	call CopyName2
@@ -345,7 +398,7 @@ FinishContinueFunction:
 	xor a
 	ld [wDontPlayMapMusicOnReload], a
 	ld hl, wGameTimerPaused
-	set GAME_TIMER_COUNTING_F, [hl]
+	set GAME_TIMER_PAUSED_F, [hl]
 	farcall OverworldLoop
 	ld a, [wSpawnAfterChampion]
 	cp SPAWN_RED
@@ -360,12 +413,12 @@ DisplaySaveInfoOnContinue:
 	call CheckRTCStatus
 	and %10000000
 	jr z, .clock_ok
-	lb de, 4, 8
+	lb de, 5, 8 ;lb de, 4, 8
 	call DisplayContinueDataWithRTCError
 	ret
 
 .clock_ok
-	lb de, 4, 8
+	lb de, 5, 8 ;lb de, 4, 8
 	call DisplayNormalContinueData
 	ret
 
@@ -402,7 +455,7 @@ Continue_LoadMenuHeader:
 
 .MenuHeader_Dex:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 0, 0, 15, 9
+	menu_coords 0, 0, 14, 9 ;menu_coords 0, 0, 15, 9
 	dw .MenuData_Dex
 	db 1 ; default option
 
@@ -416,7 +469,7 @@ Continue_LoadMenuHeader:
 
 .MenuHeader_NoDex:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 0, 0, 15, 9
+	menu_coords 0, 0, 14, 9 ;menu_coords 0, 0, 15, 9
 	dw .MenuData_NoDex
 	db 1 ; default option
 
@@ -431,25 +484,25 @@ Continue_LoadMenuHeader:
 Continue_DisplayBadgesDex:
 	call MenuBoxCoord2Tile
 	push hl
-	decoord 13, 4, 0
+	decoord 10, 4, 0 ;decoord 13, 4, 0
 	add hl, de
 	call Continue_DisplayBadgeCount
 	pop hl
 	push hl
-	decoord 12, 6, 0
+	decoord 9, 6, 0 ;decoord 12, 6, 0
 	add hl, de
 	call Continue_DisplayPokedexNumCaught
 	pop hl
 	ret
 
 Continue_PrintGameTime:
-	decoord 9, 8, 0
+	decoord 8, 8, 0 ;decoord 9, 8, 0
 	add hl, de
 	call Continue_DisplayGameTime
 	ret
 
 Continue_UnknownGameTime:
-	decoord 9, 8, 0
+	decoord 11, 8, 0 ;decoord 9, 8, 0
 	add hl, de
 	ld de, .three_question_marks
 	call PlaceString
@@ -489,7 +542,7 @@ Continue_DisplayGameTime:
 	ld de, wGameTimeHours
 	lb bc, 2, 3
 	call PrintNum
-	ld [hl], "<COLON>"
+	ld [hl], "ぇ" ; ld [hl], "<NEW_COLON>" CHS_Fix
 	inc hl
 	ld de, wGameTimeMinutes
 	lb bc, PRINTNUM_LEADINGZEROS | 1, 2
@@ -611,6 +664,11 @@ OakText7:
 
 NamePlayer:
 	call MovePlayerPicRight
+
+	ld de, PlayerGFX_Name
+	ld hl, vTiles2 tile $62
+	lb bc, BANK(PlayerGFX_Name), 5
+	call Get2bpp
 	ld hl, NameMenuHeader
 	call ShowPlayerNamingChoices
 	ld a, [wMenuCursorY]
@@ -651,6 +709,7 @@ NamePlayer:
 INCLUDE "data/player_names.asm"
 
 ShowPlayerNamingChoices:
+
 	call LoadMenuHeader
 	call VerticalMenu
 	ld a, [wMenuCursorY]
@@ -658,6 +717,9 @@ ShowPlayerNamingChoices:
 	call CopyNameFromMenu
 	call CloseWindow
 	ret
+
+PlayerGFX_Name:
+	INCBIN "gfx/new_game/name_chinese.2bpp"
 
 StorePlayerName:
 	ld hl, wStringBuffer2
@@ -1102,7 +1164,7 @@ IF DEF(_GOLD)
 ELIF DEF(_SILVER)
 	depixel 15, 11, 4, 0
 ENDC
-	ld a, SPRITE_ANIM_OBJ_GS_TITLE_TRAIL
+	ld a, SPRITE_ANIM_INDEX_GS_TITLE_TRAIL
 	call InitSpriteAnimStruct
 	ret
 

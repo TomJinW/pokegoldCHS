@@ -1,7 +1,29 @@
 ; LCD handling
 
+; push af
+; ldh a, [rVBK]
+; push af
+; push hl
+; push de
+; xor a
+; ldh [rVBK], a
+
+; 退出时
+; pop de
+; pop hl
+; pop af
+; ldh [rVBK], a
+; pop af
+; reti
+
 LCD::
 	push af
+
+	; ldh a, [rSVBK]
+	; push af
+	; xor a
+	; ldh [rSVBK], a
+
 	ldh a, [hLCDCPointer]
 	and a
 	jr z, .done
@@ -19,6 +41,9 @@ LCD::
 	pop hl
 
 .done
+	; pop af
+	; ldh [rSVBK], a
+	
 	pop af
 	reti
 

@@ -147,12 +147,12 @@ CheckPhoneCall::
 	farcall CheckReceiveCallTimer
 	ret
 
-.unused ; unreferenced
-	ret
+; .unused ; unreferenced
+; 	ret
 
-FarInitCallReceiveDelay: ; unreferenced
-	farcall InitCallReceiveDelay
-	ret
+; FarInitCallReceiveDelay: ; unreferenced
+; 	farcall InitCallReceiveDelay
+; 	ret
 
 CheckPhoneContactTimeOfDay:
 	push hl
@@ -429,7 +429,7 @@ WrongNumber:
 	text_end
 
 Script_ReceivePhoneCall:
-	reanchormap
+	refreshscreen
 	callasm RingTwice_StartCall
 	memcall wCallerContact + PHONE_CONTACT_SCRIPT2_BANK
 	waitbutton
@@ -447,13 +447,13 @@ Script_SpecialBillCall::
 	jp LoadCallerScript
 
 Script_SpecialElmCall: ; unreferenced
-	callasm .LoadElmScript
-	pause 30
-	sjump Script_ReceivePhoneCall
+; 	callasm .LoadElmScript
+; 	pause 30
+; 	sjump Script_ReceivePhoneCall
 
-.LoadElmScript:
-	ld e, PHONE_ELM
-	jp LoadCallerScript
+; .LoadElmScript:
+; 	ld e, PHONE_ELM
+; 	jp LoadCallerScript
 
 RingTwice_StartCall:
 	call .Ring
@@ -532,10 +532,10 @@ Phone_CallEnd:
 	call HangUp_Wait20Frames
 	ret
 
-HangUp_ShutDown: ; unreferenced
-	ld de, SFX_SHUT_DOWN_PC
-	call PlaySFX
-	ret
+; HangUp_ShutDown: ; unreferenced
+; 	ld de, SFX_SHUT_DOWN_PC
+; 	call PlaySFX
+; 	ret
 
 HangUp_Beep:
 	ld hl, PhoneClickText
@@ -582,7 +582,7 @@ Phone_Wait20Frames:
 Phone_TextboxWithName:
 	push bc
 	call Phone_CallerTextbox
-	hlcoord 1, 1
+	hlcoord 1, 2 ;hlcoord 1, 1
 	ld [hl], "☎"
 	inc hl
 	inc hl
@@ -631,21 +631,22 @@ GetCallerTrainerClass:
 	ld c, a
 	pop hl
 	ret
-
+; 修改电话人物名称显示 CHS_Fix
 GetCallerName:
 	ld a, c
 	and a
 	jr z, .NotTrainer
 
 	call Phone_GetTrainerName
-	push hl
+	; push hl
 	push bc
 	call PlaceString
-	ld a, ":"
-	ld [bc], a
+	; ld a, ":"
+	; ld [bc], a
 	pop bc
-	pop hl
-	ld de, SCREEN_WIDTH + 3
+	; pop hl
+	; ld de, SCREEN_WIDTH + 3
+	ld de, 5
 	add hl, de
 	call Phone_GetTrainerClassName
 	call PlaceString
@@ -663,8 +664,8 @@ GetCallerName:
 	ld d, [hl]
 	pop hl
 	call PlaceString
-	ld a, ":"
-	ld [bc], a
+	; ld a, ":"
+	; ld [bc], a
 	ret
 
 INCLUDE "data/phone/non_trainer_names.asm"

@@ -37,7 +37,7 @@ ApplyTilemap::
 	jr z, .dmg
 
 	ld a, [wSpriteUpdatesEnabled]
-	cp FALSE
+	cp 0
 	jr z, .dmg
 
 	ld a, 1
@@ -136,12 +136,12 @@ endr
 	ld sp, hl
 	ret
 
-SetDefaultBGPAndOBP::
+SetPalettes::
 ; Inits the Palettes
 ; depending on the system the monochromes palettes or color palettes
 	ldh a, [hCGB]
 	and a
-	jr nz, .SetDefaultBGPAndOBPForGameBoyColor
+	jr nz, .SetPalettesForGameBoyColor
 	ld a, %11100100
 	ldh [rBGP], a
 	ld a, %11010000
@@ -149,7 +149,7 @@ SetDefaultBGPAndOBP::
 	ldh [rOBP1], a
 	ret
 
-.SetDefaultBGPAndOBPForGameBoyColor:
+.SetPalettesForGameBoyColor:
 	push de
 	ld a, %11100100
 	call DmgToCgbBGPals
@@ -212,10 +212,26 @@ GetHPPal::
 	ld a, e
 	cp (HP_BAR_LENGTH_PX * 50 / 100) ; 24
 	ret nc
-	assert HP_GREEN + 1 == HP_YELLOW
-	inc d
+	inc d ; HP_YELLOW
 	cp (HP_BAR_LENGTH_PX * 21 / 100) ; 10
 	ret nc
-	assert HP_YELLOW + 1 == HP_RED
-	inc d
+	inc d ; HP_RED
 	ret
+
+SetShortHPPal::
+; Set palette for hp bar pixel length e at hl.
+	call GetShortHPPal
+	ld [hl], d
+	ret
+
+GetShortHPPal::
+; Get palette for hp bar pixel length e in d.
+	ld d, HP_GREEN
+	ld a, e
+	cp (HP_BAR_SHORT_LENGTH_PX * 50 / 100) ; 24?
+	ret nc
+	inc d ; HP_YELLOW
+	cp (HP_BAR_SHORT_LENGTH_PX * 32 / 100) ; 10?
+	ret nc
+	inc d ; HP_RED
+	ret	

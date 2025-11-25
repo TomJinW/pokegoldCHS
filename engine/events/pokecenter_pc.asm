@@ -42,7 +42,7 @@ PokemonCenterPC:
 
 .TopMenu:
 	db MENU_BACKUP_TILES | MENU_NO_CLICK_SFX ; flags
-	menu_coords 0, 0, 15, 12
+	menu_coords 0, 0, 14, 12
 	dw .MenuData
 	db 1 ; default option
 
@@ -158,6 +158,21 @@ PlayersPC:
 
 OaksPC:
 	call PC_PlayChoosePCSound
+	ld a, $61
+	hlcoord 2, 5
+	lb bc, 4, 3
+	call DFSStaticize
+
+	ld a, $6D
+	hlcoord 2, 1
+	lb bc, 2, 3
+	call DFSStaticize
+
+	ld a, $73
+	hlcoord 2, 3
+	lb bc, 2, 1
+	call DFSStaticize
+
 	ld hl, PokecenterOaksPCText
 	call PC_DisplayText
 	farcall ProfOaksPC
@@ -212,7 +227,7 @@ _PlayersHousePC:
 	call _PlayersPC
 	and a
 	jr nz, .changed_deco_tiles
-	call LoadOverworldTilemapAndAttrmapPals
+	call OverworldTextModeSwitch
 	call ApplyTilemap
 	call UpdateSprites
 	call PC_PlayShutdownSound

@@ -31,7 +31,7 @@ MagnetTrain:
 	ld hl, hVBlank
 	ld a, [hl]
 	push af
-	ld [hl], VBLANK_CUTSCENE
+	ld [hl], 1
 .loop
 	ld a, [wJumptableIndex]
 	bit 7, a
@@ -291,7 +291,7 @@ MagnetTrain_Jumptable:
 	ld d, (8 + 2) * TILE_WIDTH + 5
 	ld a, [wMagnetTrainPlayerSpriteInitX]
 	ld e, a
-	ld a, SPRITE_ANIM_OBJ_MAGNET_TRAIN_RED
+	ld a, SPRITE_ANIM_INDEX_MAGNET_TRAIN_RED
 	call InitSpriteAnimStruct
 	ld hl, SPRITEANIMSTRUCT_TILE_ID
 	add hl, bc

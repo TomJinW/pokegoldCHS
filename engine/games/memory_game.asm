@@ -77,7 +77,7 @@ _MemoryGame:
 	ret
 
 .ResetBoard:
-	call UnusedCursor_InterpretJoypad_AnimateCursor
+	; call UnusedCursor_InterpretJoypad_AnimateCursor
 	jr nc, .proceed
 	ld hl, wJumptableIndex
 	set 7, [hl]
@@ -109,7 +109,7 @@ endr
 
 .spawn_object
 	depixel 6, 3, 4, 4
-	ld a, SPRITE_ANIM_OBJ_MEMORY_GAME_CURSOR
+	ld a, SPRITE_ANIM_INDEX_MEMORY_GAME_CURSOR
 	call InitSpriteAnimStruct
 	ld a, 5
 	ld [wMemoryGameNumberTriesRemaining], a
@@ -232,7 +232,7 @@ endr
 	ld hl, wJumptableIndex
 	inc [hl]
 .AskPlayAgain:
-	call UnusedCursor_InterpretJoypad_AnimateCursor
+	; call UnusedCursor_InterpretJoypad_AnimateCursor
 	jr nc, .restart
 	ld hl, wJumptableIndex
 	set 7, [hl]
@@ -465,7 +465,7 @@ MemoryGame_InitStrings:
 .japstr1
 	db "とったもの@"
 .japstr2
-	db "あと　かい@"
+	db_w "あと<　>かい@"
 
 MemoryGame_Card2Coord:
 	ld d, 0

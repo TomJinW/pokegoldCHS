@@ -1,19 +1,19 @@
 DisableSpriteUpdates::
 	xor a
 	ldh [hMapAnims], a
-	ld a, [wStateFlags]
-	res SPRITE_UPDATES_DISABLED_F, a
-	ld [wStateFlags], a
-	ld a, FALSE
+	ld a, [wVramState]
+	res 0, a
+	ld [wVramState], a
+	ld a, $0
 	ld [wSpriteUpdatesEnabled], a
 	ret
 
 EnableSpriteUpdates::
-	ld a, TRUE
+	ld a, $1
 	ld [wSpriteUpdatesEnabled], a
-	ld a, [wStateFlags]
-	set SPRITE_UPDATES_DISABLED_F, a
-	ld [wStateFlags], a
-	ld a, TRUE
+	ld a, [wVramState]
+	set 0, a
+	ld [wVramState], a
+	ld a, $1
 	ldh [hMapAnims], a
 	ret

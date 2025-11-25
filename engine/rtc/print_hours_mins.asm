@@ -40,7 +40,7 @@ PrintHoursMins:
 	ld [hl], " "
 	lb bc, 1, 2
 	call PrintNum
-	ld [hl], ":"
+	ld [hl], $76 ;ld [hl], ":" ; CHS_Fix Time
 	inc hl
 	ld d, h
 	ld e, l

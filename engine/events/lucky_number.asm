@@ -98,7 +98,7 @@ CheckForLuckyNumberWinners:
 	ld a, c
 
 	; BUG: The Lucky Number Show does not find winning ID numbers in inactive boxes 10-14 (see docs/bugs_and_glitches.md)
-	cp NUM_BOXES_JAPANESE
+	cp NUM_BOXES ; cp NUM_BOXES_JAPANESE 已修复
 	jr c, .BoxesLoop
 
 	call CloseSRAM
@@ -150,7 +150,7 @@ CheckForLuckyNumberWinners:
 .done
 	pop hl
 	push hl
-	ld de, MON_SPECIES - MON_OT_ID
+	ld de, MON_SPECIES - MON_ID
 	add hl, de
 	ld a, [hl]
 	pop hl

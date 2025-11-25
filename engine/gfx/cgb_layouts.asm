@@ -29,7 +29,6 @@ LoadSGBLayoutCGB:
 	ret
 
 CGBLayoutJumptable:
-; entries correspond to SCGB_* constants (see constants/scgb_constants.asm)
 	table_width 2, CGBLayoutJumptable
 	dw _CGB_BattleGrayscale
 	dw _CGB_BattleColors
@@ -182,33 +181,38 @@ _CGB_StatsScreenHPPals:
 	call LoadPalette_White_Col1_Col2_Black ; exp palette
 	ld hl, StatsScreenPagePals
 	ld de, wBGPals1 palette 3
-	ld bc, 3 palettes ; pink, green, and blue page palettes
+	ld bc, 4 palettes ;ld bc, 3 palettes ; pink, green, and blue page palettes
 	call CopyBytes
 	call WipeAttrmap
 
 	hlcoord 0, 0, wAttrmap
-	lb bc, 8, SCREEN_WIDTH
+	lb bc, SCREEN_HEIGHT, 8
 	ld a, $1 ; mon palette
 	call FillBoxCGB
 
-	hlcoord 10, 16, wAttrmap
+	hlcoord 9, 16, wAttrmap
 	ld bc, 10
 	ld a, $2 ; exp palette
 	call ByteFill
 
-	hlcoord 13, 5, wAttrmap
+	hlcoord 1, 14, wAttrmap
 	lb bc, 2, 2
 	ld a, $3 ; pink page palette
 	call FillBoxCGB
 
-	hlcoord 15, 5, wAttrmap
+	hlcoord 3, 14, wAttrmap
 	lb bc, 2, 2
 	ld a, $4 ; green page palette
 	call FillBoxCGB
 
-	hlcoord 17, 5, wAttrmap
+	hlcoord 5, 14, wAttrmap
 	lb bc, 2, 2
 	ld a, $5 ; blue page palette
+	call FillBoxCGB
+
+	hlcoord 8, 0, wAttrmap
+	lb bc, SCREEN_HEIGHT, 1
+	ld a, $0
 	call FillBoxCGB
 
 	call ApplyAttrmap
@@ -294,8 +298,10 @@ _CGB_BillsPC:
 	call LoadPalette_White_Col1_Col2_Black
 .GotPalette:
 	call WipeAttrmap
-	hlcoord 1, 4, wAttrmap
-	lb bc, 7, 7
+	; hlcoord 1, 4, wAttrmap
+	; lb bc, 7, 7
+	hlcoord 1, 1, wAttrmap
+	lb bc, 8, 8
 	ld a, $1 ; mon palette
 	call FillBoxCGB
 	call InitPartyMenuOBPals
@@ -544,7 +550,12 @@ _CGB_Evolution:
 	ret
 
 _CGB_GSTitleScreen:
+	ld a, [Rom0End]
+	cp $A0
+	ld hl, GSTitleBGPals2
+	jr z, .BKMVer
 	ld hl, GSTitleBGPals
+.BKMVer
 	ld de, wBGPals1
 	ld bc, 5 palettes
 	call CopyBytes
@@ -712,23 +723,23 @@ _CGB_PackPals:
 	call CopyBytes
 	call WipeAttrmap
 	hlcoord 0, 0, wAttrmap
-	lb bc, 1, 10
+	lb bc, 2, 10
 	ld a, $1
 	call FillBoxCGB
 	hlcoord 10, 0, wAttrmap
-	lb bc, 1, 10
+	lb bc, 2, 10
 	ld a, $2
 	call FillBoxCGB
-	hlcoord 7, 2, wAttrmap
+	hlcoord 6, 3, wAttrmap
 	lb bc, 9, 1
 	ld a, $3
 	call FillBoxCGB
 	hlcoord 0, 7, wAttrmap
-	lb bc, 3, 5
+	lb bc, 2, 6
 	ld a, $4
 	call FillBoxCGB
-	hlcoord 0, 3, wAttrmap
-	lb bc, 3, 5
+	hlcoord 1, 3, wAttrmap
+	lb bc, 3, 4
 	ld a, $5
 	call FillBoxCGB
 	call ApplyAttrmap
@@ -742,7 +753,7 @@ INCLUDE "gfx/pack/pack.pal"
 
 _CGB_Pokepic:
 	call _CGB_MapPals
-	call LoadOverworldAttrmapPals
+	call SwapTextboxPalettes
 	ld de, SCREEN_WIDTH
 	hlcoord 0, 0, wAttrmap
 	ld a, [wMenuBorderTopCoord]

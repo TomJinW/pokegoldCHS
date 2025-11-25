@@ -44,8 +44,8 @@ WaitScript:
 WaitScriptMovement:
 	call StopScript
 
-	ld hl, wStateFlags
-	bit SCRIPTED_MOVEMENT_STATE_F, [hl]
+	ld hl, wVramState
+	bit 7, [hl]
 	ret nz
 
 	farcall UnfreezeAllObjects
@@ -136,7 +136,7 @@ ScriptCommandTable:
 	dw Script_itemnotify                 ; 45
 	dw Script_pocketisfull               ; 46
 	dw Script_opentext                   ; 47
-	dw Script_reanchormap                ; 48
+	dw Script_refreshscreen              ; 48
 	dw Script_closetext                  ; 49
 	dw Script_writeunusedbyte            ; 4a
 	dw Script_farwritetext               ; 4b
@@ -187,7 +187,7 @@ ScriptCommandTable:
 	dw Script_changemapblocks            ; 78
 	dw Script_changeblock                ; 79
 	dw Script_reloadmap                  ; 7a
-	dw Script_refreshmap                 ; 7b
+	dw Script_reloadmappart              ; 7b
 	dw Script_writecmdqueue              ; 7c
 	dw Script_delcmdqueue                ; 7d
 	dw Script_playmusic                  ; 7e
@@ -460,8 +460,18 @@ GiveItemScript:
 Script_itemnotify:
 	call GetPocketName
 	call CurItemName
-	ld b, BANK(PutItemInPocketText)
+	ld b, BANK(PutItemInPocketText) ; aka BANK(PutLongItemInPocketText)
 	ld hl, PutItemInPocketText
+	ld a, [wCurItem]
+	cp a, ELIXER + 1
+	jr nc, .end
+	cp a, ETHER ; include ETHER MAX_ETHER ELIXER
+	jr nc, .long_item
+	cp a, MAX_ELIXER
+	jr nz, .end
+.long_item
+	ld hl, PutLongItemInPocketText
+.end
 	call MapTextbox
 	ret
 
@@ -512,6 +522,10 @@ CurItemName:
 
 PutItemInPocketText:
 	text_far _PutItemInPocketText
+	text_end
+
+PutLongItemInPocketText:
+	text_far _PutLongItemInPocketText
 	text_end
 
 PocketIsFullText:
@@ -1101,7 +1115,7 @@ Script_reloadmapafterbattle:
 	jr z, .done
 	ld b, BANK(Script_SpecialBillCall)
 	ld de, Script_SpecialBillCall
-	farcall LoadMemScript
+	farcall LoadScriptBDE
 .done
 	jp Script_reloadmap
 
@@ -1585,7 +1599,7 @@ Script_givepokemail:
 	ld b, a
 	push bc
 	inc hl
-	ld bc, MAIL_MSG_LENGTH
+	ld bc, MAIL_MSG_LENGTH + 1
 	ld de, wMonMailMessageBuffer
 	ld a, [wScriptBank]
 	call FarCopyBytes
@@ -2041,10 +2055,10 @@ Script_changeblock:
 	call BufferScreen
 	ret
 
-Script_refreshmap::
+Script_reloadmappart::
 	xor a
 	ldh [hBGMapMode], a
-	call LoadOverworldTilemapAndAttrmapPals
+	call OverworldTextModeSwitch
 	call GetMovementPermissions
 	call ApplyTilemap
 	call UpdateSprites
@@ -2076,8 +2090,8 @@ Script_opentext:
 	call OpenText
 	ret
 
-Script_reanchormap:
-	call ReanchorMap
+Script_refreshscreen:
+	call RefreshScreen
 	call GetScriptByte
 	ret
 
@@ -2206,10 +2220,10 @@ Script_endall:
 
 Script_halloffame:
 	ld hl, wGameTimerPaused
-	res GAME_TIMER_COUNTING_F, [hl]
+	res GAME_TIMER_PAUSED_F, [hl]
 	farcall HallOfFame
 	ld hl, wGameTimerPaused
-	set GAME_TIMER_COUNTING_F, [hl]
+	set GAME_TIMER_PAUSED_F, [hl]
 	jr ReturnFromCredits
 
 Script_credits:

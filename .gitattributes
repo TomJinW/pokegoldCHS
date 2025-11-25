@@ -4,6 +4,9 @@
 # Explicitly declare text files you want to always be normalized and converted
 # to native line endings on checkout.
 
+*.xlsx binary diff=hex
+*.numbers binary diff=hex
+
 # files part of the build
 *.asm text
 *.pal text

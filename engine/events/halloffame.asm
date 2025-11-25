@@ -16,6 +16,12 @@ HallOfFame::
 
 ; BUG: Entering the Hall of Fame without a save file can corrupt the PC boxes (see docs/bugs_and_glitches.md)
 
+	ld a, [wSavedAtLeastOnce]
+	and a
+	jr nz, .saved
+	farcall ErasePreviousSave
+.saved
+
 	ld hl, wHallOfFameCount
 	ld a, [hl]
 	cp HOF_MASTER_COUNT
@@ -29,6 +35,8 @@ HallOfFame::
 	xor a
 	ld [wGameLogicPaused], a
 	call AnimateHallOfFame
+	call LoadStandardFont
+	farcall DFSSetAlphabetCache
 	pop af
 	jp Credits
 
@@ -39,14 +47,16 @@ RedCredits::
 	ld [wMusicFadeID + 1], a
 	ld a, 10
 	ld [wMusicFade], a
-	farcall FadeOutToWhite
+	farcall FadeOutPalettes
 	xor a
-	ld [wStateFlags], a
+	ld [wVramState], a
 	ldh [hMapAnims], a
 	farcall InitDisplayForRedCredits
 	ld c, 8
 	call DelayFrames
 	call DisableSpriteUpdates
+	call LoadStandardFont
+	farcall DFSSetAlphabetCache
 	ld a, SPAWN_RED
 	ld [wSpawnAfterChampion], a
 	ld a, [wStatusFlags]
@@ -59,9 +69,9 @@ HallOfFame_FadeOutMusic:
 	ld [wMusicFadeID + 1], a
 	ld a, 10
 	ld [wMusicFade], a
-	farcall FadeOutToWhite
+	farcall FadeOutPalettes
 	xor a
-	ld [wStateFlags], a
+	ld [wVramState], a
 	ldh [hMapAnims], a
 	farcall InitDisplayForHallOfFame
 	ld c, 100
@@ -167,7 +177,7 @@ GetHallOfFameParty:
 	ld [de], a
 	inc de
 
-	ld hl, MON_OT_ID
+	ld hl, MON_ID
 	add hl, bc
 	ld a, [hli]
 	ld [de], a
@@ -250,7 +260,7 @@ AnimateHOFMonEntrance:
 	ldh [hBGMapMode], a
 	ld b, SCGB_PLAYER_OR_MON_FRONTPIC_PALS
 	call GetSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	call HOF_SlideBackpic
 	xor a
 	ld [wBoxAlignment], a
@@ -359,23 +369,23 @@ _HallOfFamePC:
 	call DisplayHOFMon
 ; BUG: A "HOF Master!" title for 200-Time Famers is defined but inaccessible (see docs/bugs_and_glitches.md)
 	ld a, [wHallOfFameTempWinCount]
-	cp HOF_MASTER_COUNT + 1
+	cp HOF_MASTER_COUNT ;cp HOF_MASTER_COUNT + 1 ; FIXED
 	jr c, .print_num_hof
 	ld de, .HOFMaster
 	hlcoord 1, 2
 	call PlaceString
-	hlcoord 13, 2
+	hlcoord 11, 2 ;hlcoord 13, 2
 	jr .finish
 
 .print_num_hof
 	ld de, .TimeFamer
-	hlcoord 1, 2
+	hlcoord 2, 2 ;hlcoord 1, 2
 	call PlaceString
-	hlcoord 2, 2
+	hlcoord 4, 2 ;hlcoord 2, 2
 	ld de, wHallOfFameTempWinCount
 	lb bc, 1, 3
 	call PrintNum
-	hlcoord 11, 2
+	hlcoord 10, 2 ;hlcoord 11, 2
 
 .finish
 	ld de, .EmptyString
@@ -383,7 +393,7 @@ _HallOfFamePC:
 	call WaitBGMap
 	ld b, SCGB_PLAYER_OR_MON_FRONTPIC_PALS
 	call GetSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	ld a, [wCurPartySpecies]
 	call PlayMonCry
 	and a
@@ -469,16 +479,26 @@ DisplayHOFMon:
 	ld a, [wCurPartySpecies]
 	cp EGG
 	jr z, .print_id_no
-	hlcoord 1, 13
+	hlcoord 14, 13 ;hlcoord 1, 13
 	ld a, "№"
 	ld [hli], a
-	ld [hl], "."
-	hlcoord 3, 13
+	ld [hl], "<DOT>"
+	hlcoord 16, 13 ;hlcoord 3, 13
 	ld de, wTextDecimalByte
 	lb bc, PRINTNUM_LEADINGZEROS | 1, 3
 	call PrintNum
 	call GetBasePokemonName
-	hlcoord 7, 13
+
+
+	
+
+	ld a, [wEngPKMNNameMark]
+	cp 1
+	hlcoord 1, 14 ;hlcoord 7, 13
+	jr nz, .CHS
+	hlcoord 1, 13 ;hlcoord 7, 13
+.CHS
+
 	call PlaceString
 	ld a, TEMPMON
 	ld [wMonType], a
@@ -490,9 +510,12 @@ DisplayHOFMon:
 	ld a, "♀"
 
 .got_gender
-	hlcoord 18, 13
-	ld [hli], a
-	hlcoord 8, 14
+	; hlcoord 18, 13
+	; ld [hli], a
+	; hlcoord 8, 14
+	hlcoord 12, 13
+	ld [hl], a
+	hlcoord 8, 15
 	ld a, "/"
 	ld [hli], a
 	ld de, wStringBuffer2
@@ -501,13 +524,13 @@ DisplayHOFMon:
 	call PrintLevel
 
 .print_id_no
-	hlcoord 7, 16
+	hlcoord 6, 16 ;hlcoord 7, 16
 	ld a, "<ID>"
 	ld [hli], a
 	ld a, "№"
 	ld [hli], a
 	ld [hl], "/"
-	hlcoord 10, 16
+	hlcoord 9, 16 ;hlcoord 10, 16
 	ld de, wTempMonID
 	lb bc, PRINTNUM_LEADINGZEROS | 2, 5
 	call PrintNum
@@ -545,7 +568,7 @@ HOF_AnimatePlayerPic:
 	ld [wCurPartySpecies], a
 	ld b, SCGB_PLAYER_OR_MON_FRONTPIC_PALS
 	call GetSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	call HOF_SlideBackpic
 	xor a
 	ld [wBoxAlignment], a

@@ -20,7 +20,7 @@ MomTriesToBuySomething::
 	ret nc
 	ld b, BANK(.Script)
 	ld de, .Script
-	farcall LoadMemScript
+	farcall LoadScriptBDE
 	scf
 	ret
 

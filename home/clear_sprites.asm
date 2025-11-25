@@ -14,7 +14,7 @@ HideSprites::
 	ld hl, wShadowOAMSprite00YCoord
 	ld de, SPRITEOAMSTRUCT_LENGTH
 	ld b, NUM_SPRITE_OAM_STRUCTS
-	ld a, OAM_YCOORD_HIDDEN
+	ld a, SCREEN_WIDTH_PX
 .loop
 	ld [hl], a ; y
 	add hl, de

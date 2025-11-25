@@ -6,18 +6,43 @@
 
 ; This prevents the display and audio output from lagging.
 
+; push af
+; ldh a, [rVBK]
+; push af
+; push hl
+; push de
+; xor a
+; ldh [rVBK], a
+
+; 退出时
+; pop de
+; pop hl
+; pop af
+; ldh [rVBK], a
+; pop af
+; reti
+
 VBlank::
+	
+
+
 	push af
 	push bc
 	push de
 	push hl
 
+	ldh a, [rSVBK]
+	ldh [hPreviousWRAMBank], a
+	; and 7
+	xor a
+	ldh [rSVBK], a
+
 	ldh a, [hVBlank]
-	maskbits NUM_VBLANK_HANDLERS
+	and 7
 
 	ld e, a
 	ld d, 0
-	ld hl, VBlankHandlers
+	ld hl, .VBlanks
 	add hl, de
 	add hl, de
 	ld a, [hli]
@@ -31,26 +56,28 @@ VBlank::
 .return:
 	call GameTimer
 
+	ldh a, [hPreviousWRAMBank]
+	ldh [rSVBK], a
+
 	pop hl
 	pop de
 	pop bc
 	pop af
+
+	
 	reti
 
-VBlankHandlers:
-; entries correspond to VBLANK_* constants (see constants/ram_constants.asm)
-	table_width 2, VBlankHandlers
-	dw VBlank_Normal
-	dw VBlank_Cutscene
-	dw VBlank_SoundOnly
-	dw VBlank_Unused
-	dw VBlank_Serial
-	dw VBlank_Credits
-	dw VBlank_Normal ; unused
-	dw VBlank_Normal ; unused
-	assert_table_length NUM_VBLANK_HANDLERS
+.VBlanks:
+	dw VBlank0
+	dw VBlank1
+	dw VBlank2
+	dw VBlank3
+	dw VBlank4
+	dw VBlank5
+	dw VBlank0 ; just in case
+	dw VBlank0 ; just in case
 
-VBlank_Normal::
+VBlank0::
 ; normal operation
 
 ; rng
@@ -68,6 +95,9 @@ VBlank_Normal::
 	ld hl, hVBlankCounter
 	inc [hl]
 
+	; ld a, 1
+	; ldh [hVBlankModeDebug], a
+	
 	; advance random variables
 	ldh a, [rDIV]
 	ld b, a
@@ -144,12 +174,14 @@ VBlank_Normal::
 	ld a, [wROMBankBackup]
 	rst Bankswitch
 
+	; ld a, 0
+	; ldh [hVBlankModeDebug], a
 	ldh a, [hSeconds]
-	ldh [hUnusedBackup], a
+	; ldh [hUnusedBackup], a
 
 	ret
 
-VBlank_Cutscene::
+VBlank1::
 ; scx, scy
 ; palettes
 ; bg map
@@ -228,7 +260,7 @@ UpdatePals::
 	and a
 	ret
 
-VBlank_Serial::
+VBlank4::
 ; bg map
 ; tiles
 ; oam
@@ -259,12 +291,13 @@ VBlank_Serial::
 	rst Bankswitch
 	ret
 
-VBlank_Credits::
+VBlank5::
 ; scx
 ; palettes
 ; bg map
 ; tiles
 ; joypad
+;
 
 	ldh a, [hROMBank]
 	ld [wROMBankBackup], a
@@ -306,7 +339,7 @@ VBlank_Credits::
 	ldh [rIE], a
 	ret
 
-VBlank_SoundOnly::
+VBlank2::
 ; sound only
 
 	ldh a, [hROMBank]
@@ -323,7 +356,7 @@ VBlank_SoundOnly::
 	ld [wVBlankOccurred], a
 	ret
 
-VBlank_Unused::
+VBlank3::
 ; scx, scy
 ; palettes
 ; bg map

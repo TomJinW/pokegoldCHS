@@ -42,6 +42,12 @@ GetTMHMItemMove:
 	ret
 
 AskTeachTMHM:
+
+	; ld a, $2E ;
+	; lb bc, 10, 6 ;
+	; hlcoord 9, 2 ;
+	; call DFSStaticize ;
+
 	ld hl, wOptions
 	ld a, [hl]
 	push af
@@ -83,9 +89,9 @@ ChooseMonToLearnTMHM:
 	ld [wPartyMenuActionText], a
 .loopback
 	farcall WritePartyMenuTilemap
-	farcall PlacePartyMenuText
+	farcall PrintPartyMenuText
 	call WaitBGMap
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	call DelayFrame
 	farcall PartyMenuSelect
 	push af
@@ -139,6 +145,11 @@ TeachTMHM:
 	callfar KnowsMove
 	jr c, .nope
 
+	hlcoord 10, 8
+	ld a, $70
+	lb bc, 3, 2
+	call DFSStaticize 
+	
 	predef LearnMove
 	ld a, b
 	and a
@@ -184,9 +195,9 @@ TMHM_PocketLoop:
 	xor a
 	ldh [hBGMapMode], a
 	call TMHM_DisplayPocketItems
-	ld a, 2
+	ld a, 3 ;ld a, 2
 	ld [w2DMenuCursorInitY], a
-	ld a, 7
+	ld a, 6 ;ld a, 7
 	ld [w2DMenuCursorInitX], a
 	ld a, 1
 	ld [w2DMenuNumCols], a
@@ -249,8 +260,18 @@ TMHM_ShowTMMoveDescription:
 	predef GetTMHMMove
 	ld a, [wTempTMHM]
 	ld [wCurSpecies], a
+
+	push af
+	call SetupDFSNomanagementNoDelay
+	pop af
+
 	hlcoord 1, 14
 	call PrintMoveDescription
+
+
+	call DisableDFSNoManagement
+
+
 	jp TMHM_JoypadLoop
 
 TMHM_ChooseTMorHM:
@@ -332,8 +353,10 @@ TMHM_DisplayPocketItems:
 	cp BATTLETYPE_TUTORIAL
 	jp z, Tutorial_TMHMPocket
 
-	hlcoord 5, 2
-	lb bc, 10, 15
+	; hlcoord 5, 2
+	; lb bc, 10, 15
+	hlcoord 6, 2
+	lb bc, 10, SCREEN_WIDTH - 6
 	ld a, " "
 	call ClearBox
 	call TMHM_GetCurrentPocketPosition
@@ -366,7 +389,9 @@ TMHM_DisplayPocketItems:
 	push af
 	sub NUM_TMS
 	ld [wTempTMHM], a
-	ld [hl], "H"
+	; ld [hl], "H"
+	ld de, .HChar
+	call PlaceString
 	inc hl
 	ld de, wTempTMHM
 	lb bc, PRINTNUM_LEFTALIGN | 1, 2
@@ -379,8 +404,10 @@ TMHM_DisplayPocketItems:
 	ld [wPutativeTMHMMove], a
 	call GetMoveName
 	pop hl
-	ld bc, 3
-	add hl, bc
+	; ld bc, 3
+	; add hl, bc
+	inc hl
+	inc hl
 	push hl
 	call PlaceString
 	pop hl
@@ -389,11 +416,11 @@ TMHM_DisplayPocketItems:
 	push bc
 	cp NUM_TMS + 1
 	jr nc, .hm2
-	ld bc, SCREEN_WIDTH + 9
+	ld bc, 8 ; SCREEN_WIDTH + 9 ; ld bc, SCREEN_WIDTH + 9
 	add hl, bc
 	ld [hl], "×"
 	inc hl
-	ld a, "0" ; why are we doing this?
+	; ld a, "0" ; why are we doing this?
 	pop bc
 	push bc
 	ld a, b
@@ -411,9 +438,9 @@ TMHM_DisplayPocketItems:
 
 .NotTMHM:
 	call TMHMPocket_GetCurrentLineCoord
-	inc hl
-	inc hl
-	inc hl
+	; inc hl
+	; inc hl
+	; inc hl
 	push de
 	ld de, TMHM_CancelString
 	call PlaceString
@@ -421,8 +448,11 @@ TMHM_DisplayPocketItems:
 .done
 	ret
 
+.HChar
+	db "H@"
+
 TMHMPocket_GetCurrentLineCoord:
-	hlcoord 5, 0
+	hlcoord 7, 1 ;hlcoord 5, 0
 	ld bc, 2 * SCREEN_WIDTH
 	ld a, 6
 	sub d
@@ -434,19 +464,19 @@ TMHMPocket_GetCurrentLineCoord:
 	jr nz, .loop
 	ret
 
-PlaceMoveNameAfterTMHMName: ; unreferenced
-; Similar to a part of TMHM_DisplayPocketItems.
-	pop hl
-	ld bc, 3
-	add hl, bc
-	predef GetTMHMMove
-	ld a, [wTempTMHM]
-	ld [wPutativeTMHMMove], a
-	call GetMoveName
-	push hl
-	call PlaceString
-	pop hl
-	ret
+; PlaceMoveNameAfterTMHMName: ; unreferenced
+; ; Similar to a part of TMHM_DisplayPocketItems.
+; 	pop hl
+; 	ld bc, 3
+; 	add hl, bc
+; 	predef GetTMHMMove
+; 	ld a, [wTempTMHM]
+; 	ld [wPutativeTMHMMove], a
+; 	call GetMoveName
+; 	push hl
+; 	call PlaceString
+; 	pop hl
+; 	ret
 
 TMHM_CancelString:
 	db "CANCEL@"
@@ -483,14 +513,14 @@ TMHM_PlaySFX_ReadText2:
 	pop de
 	ret
 
-VerboseReceiveTMHM: ; unreferenced
-	call ConvertCurItemIntoCurTMHM
-	call .CheckHaveRoomForTMHM
-	ld hl, .NoRoomTMHMText
-	jr nc, .print
-	ld hl, .ReceivedTMHMText
-.print
-	jp PrintText
+; VerboseReceiveTMHM: ; unreferenced
+; 	call ConvertCurItemIntoCurTMHM
+; 	call .CheckHaveRoomForTMHM
+; 	ld hl, .NoRoomTMHMText
+; 	jr nc, .print
+; 	ld hl, .ReceivedTMHMText
+; .print
+; 	jp PrintText
 
 .NoRoomTMHMText:
 	text_far _NoRoomTMHMText

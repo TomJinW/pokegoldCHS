@@ -154,7 +154,7 @@ Elevator_GetCurrentFloorText:
 	hlcoord 1, 2
 	ld de, Elevator_CurrentFloorText
 	call PlaceString
-	hlcoord 4, 4
+	hlcoord 2, 4 ;hlcoord 4, 4
 	call Elevator_GetCurrentFloorString
 	pop af
 	ld [wOptions], a

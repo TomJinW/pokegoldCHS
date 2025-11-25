@@ -77,11 +77,42 @@ sRTCHaltCheckValue:: dw
 
 
 SECTION "SRAM Window Stack", SRAM
+sDummy:: ; start at XX00
+	ds $100 ; $36 really
+sDFSUsed:: ; start at XX00
+	ds $100 ; $36 really
+sDFSCache:: ; start at XX00
+	ds $36 * 4
+sDFSFreeEng:: ds 1
+sDFSRaw4Font:: ds 6
+sDFSCombineAddr:: ds 2
+sDFSReserved:: ds 16 
+sDFS8Font::
+	ds $20
+	ds $70
+; sDFSCacheTileMapBackup::
+; 	ds $36 * 4
+; sDFSCacheTileMapBackup2::
+; 	ds $36 * 4
+sDFSCacheMenuBuffer::
+	ds $36 * 4
+sMenuBuffer::
+	ds 6 * 6
 
-sWindowStackBottom::
-	ds $800 - 1
-sWindowStackTop::
-	ds 1
+	ds 3
+sIMELine_u108::
+	ds 16
+sIMELine_u109::
+	ds 16
+
+sTmpSpace::
+	ds 4
+
+sENGMark:: db
+; sWindowStack::
+; 	ds $800 - 1
+; sWindowStackBottom::
+; 	ds 1
 
 
 SECTION "Save", SRAM
@@ -171,3 +202,18 @@ sBackupCheckValue1:: db ; loaded with SAVE_CHECK_VALUE_1, used to check save cor
 sBackupCurMapData:: ds wCurMapDataEnd - wCurMapData
 sBackupChecksum:: dw
 sBackupCheckValue2:: db ; loaded with SAVE_CHECK_VALUE_2, used to check save corruption
+
+
+SECTION "New Window Stack", SRAM
+; ds $1000
+sWindowStack::
+	ds $1000 - 1
+sWindowStackBottom::
+	ds 1
+
+SECTION "New DFS Stack", SRAM
+; ds $1000
+sDFSCodeStack:: 
+	ds $1000 - 1
+sDFSCodeStackBottom:: 
+	ds 1

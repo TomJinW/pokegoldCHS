@@ -73,10 +73,10 @@ MovementPointers:
 	dw Movement_step_sleep_8          ; 45
 	dw Movement_step_sleep            ; 46
 	dw Movement_step_end              ; 47
-	dw Movement_step_wait_end         ; 48
+	dw Movement_48                    ; 48
 	dw Movement_remove_object         ; 49
 	dw Movement_step_loop             ; 4a
-	dw Movement_step_stop             ; 4b
+	dw Movement_4b                    ; 4b
 	dw Movement_teleport_from         ; 4c
 	dw Movement_teleport_to           ; 4d
 	dw Movement_skyfall               ; 4e
@@ -198,15 +198,15 @@ Movement_step_end:
 	add hl, bc
 	ld [hl], $0
 
-	ld hl, wStateFlags
-	res SCRIPTED_MOVEMENT_STATE_F, [hl]
+	ld hl, wVramState
+	res 7, [hl]
 
 	ld hl, OBJECT_STEP_TYPE
 	add hl, bc
 	ld [hl], STEP_TYPE_FROM_MOVEMENT
 	ret
 
-Movement_step_wait_end:
+Movement_48:
 	call RestoreDefaultMovement
 	ld hl, OBJECT_MOVEMENT_TYPE
 	add hl, bc
@@ -225,8 +225,8 @@ Movement_step_wait_end:
 	add hl, bc
 	ld [hl], STEP_TYPE_SLEEP
 
-	ld hl, wStateFlags
-	res SCRIPTED_MOVEMENT_STATE_F, [hl]
+	ld hl, wVramState
+	res 7, [hl]
 	ret
 
 Movement_remove_object:
@@ -238,11 +238,11 @@ Movement_remove_object:
 	ld [hl], -1
 
 .not_leading
-	ld hl, wStateFlags
-	res SCRIPTED_MOVEMENT_STATE_F, [hl]
+	ld hl, wVramState
+	res 7, [hl]
 	ret
 
-Movement_step_stop:
+Movement_4b:
 	ld hl, OBJECT_ACTION
 	add hl, bc
 	ld [hl], OBJECT_ACTION_STAND
@@ -251,8 +251,8 @@ Movement_step_stop:
 	add hl, bc
 	ld [hl], STEP_TYPE_STANDING
 
-	ld hl, wStateFlags
-	res SCRIPTED_MOVEMENT_STATE_F, [hl]
+	ld hl, wVramState
+	res 7, [hl]
 	ret
 
 Movement_step_sleep_1:
@@ -661,7 +661,7 @@ NormalStep:
 	add hl, bc
 	ld [hl], OBJECT_ACTION_STEP
 
-	ld hl, OBJECT_TILE_COLLISION
+	ld hl, OBJECT_TILE
 	add hl, bc
 	ld a, [hl]
 	call CheckSuperTallGrassTile

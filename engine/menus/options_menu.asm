@@ -10,6 +10,17 @@
 	const OPT_CANCEL        ; 7
 DEF NUM_OPTIONS EQU const_value ; 8
 
+BattleTextIMG:
+	db 			$65,$66,$6b
+	nextDirect  $67,$68,$6c,-1
+; IF DEF(_32KB)
+; VerTextIMG:
+; 	db $00,$01,$02,$03,$04,$05,$06,$07,-1
+; ELSE
+; VerTextIMG:
+; 	db $00,$01,$03,$04,$05,$06,$07,$7f,-1
+; ENDC
+
 _Option:
 ; BUG: Options menu fails to clear joypad state on initialization (see docs/bugs_and_glitches.md)
 	ld hl, hInMenu
@@ -21,9 +32,15 @@ _Option:
 	ld b, SCREEN_HEIGHT - 2
 	ld c, SCREEN_WIDTH - 2
 	call Textbox
-	hlcoord 2, 2
+	hlcoord 1, 2
 	ld de, StringOptions
 	call PlaceString
+
+	hlcoord 1,1
+	ld de, BattleTextIMG
+	call PlaceStringDirect
+
+	
 	xor a
 	ld [wJumptableIndex], a
 
@@ -39,8 +56,26 @@ _Option:
 	inc [hl]
 	dec c
 	jr nz, .print_text_loop
+
+
+	
 	call UpdateFrame ; display the frame type
 
+	ld de, CHSENGLabel
+	ld hl, vTiles2 tile $0
+	lb bc, BANK(CHSENGLabel), 11
+	call Get1bpp
+	call DisplayCHSENGLabel
+
+	; ld de, VerImg
+	; ld hl, vTiles2 tile $0
+	; lb bc, BANK(VerImg), $8
+	; call Get1bpp
+
+	; hlcoord 1,15
+	; ld de, VerTextIMG
+	; call PlaceStringDirect
+	
 	xor a
 	ld [wJumptableIndex], a
 	inc a
@@ -48,7 +83,8 @@ _Option:
 	call WaitBGMap
 	ld b, SCGB_DIPLOMA
 	call GetSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
+
 
 .joypad_loop
 	call JoyTextDelay
@@ -70,6 +106,28 @@ _Option:
 	pop af
 	ldh [hInMenu], a
 	ret
+
+DisplayCHSENGLabel:
+	hlcoord 1,15
+	ld a, [wEngPKMNNameMark]
+	cp 1
+	ld de, .CHSText
+	jr nz, .CHS
+	ld de, .ENGText
+.CHS
+	call PlaceStringDirect
+
+	ld de, .PKMN
+	hlcoord 7,16
+	call PlaceStringDirect
+
+	ret
+.CHSText
+	db $00,$01,$02,$01,$03,$04,$6f,$05,$07,-1
+.ENGText
+	db $00,$01,$02,$01,$03,$04,$6f,$06,$07,-1
+.PKMN
+	db $08,$09,$0A,-1
 
 StringOptions:
 	db "TEXT SPEED<LF>"
@@ -149,7 +207,7 @@ Options_TextSpeed:
 	ld e, [hl]
 	inc hl
 	ld d, [hl]
-	hlcoord 11, 3
+	hlcoord 11, 2
 	call PlaceString
 	and a
 	ret
@@ -219,13 +277,15 @@ Options_BattleScene:
 	ld de, .Off
 
 .Display:
-	hlcoord 11, 5
+	hlcoord 11, 4
 	call PlaceString
 	and a
 	ret
 
-.On:  db "ON @"
-.Off: db "OFF@"
+; .On:  db "ON @"
+; .Off: db "OFF@"
+.On:  db_w "看〇@"
+.Off: db_w "不看@"
 
 Options_BattleStyle:
 	ld hl, wOptions
@@ -257,7 +317,7 @@ Options_BattleStyle:
 	ld de, .Set
 
 .Display:
-	hlcoord 11, 7
+	hlcoord 11, 6
 	call PlaceString
 	and a
 	ret
@@ -302,7 +362,7 @@ Options_Sound:
 	ld de, .Stereo
 
 .Display:
-	hlcoord 11, 9
+	hlcoord 11, 8
 	call PlaceString
 	and a
 	ret
@@ -356,7 +416,7 @@ Options_Print:
 	ld e, [hl]
 	inc hl
 	ld d, [hl]
-	hlcoord 11, 11
+	hlcoord 11, 10
 	call PlaceString
 	and a
 	ret
@@ -442,7 +502,7 @@ Options_MenuAccount:
 	ld de, .On
 
 .Display:
-	hlcoord 11, 13
+	hlcoord 11, 12
 	call PlaceString
 	and a
 	ret
@@ -474,7 +534,7 @@ Options_Frame:
 	ld [hl], a
 UpdateFrame:
 	ld a, [wTextboxFrame]
-	hlcoord 16, 15 ; where on the screen the number is drawn
+	hlcoord 15, 14 ; where on the screen the number is drawn
 	add "1"
 	ld [hl], a
 	call LoadFontsExtra
@@ -499,7 +559,16 @@ OptionsControl:
 	jr z, .DownPressed
 	cp D_UP
 	jr z, .UpPressed
+	cp SELECT
+	jr z, .SelectPressed
 	and a
+	ret
+.SelectPressed
+	ld a, [wEngPKMNNameMark]
+	and 1
+	xor 1
+	ld [wEngPKMNNameMark], a
+	call DisplayCHSENGLabel
 	ret
 
 .DownPressed:
@@ -541,7 +610,7 @@ OptionsControl:
 	ret
 
 Options_UpdateCursorPosition:
-	hlcoord 1, 1
+	hlcoord 10, 1
 	ld de, SCREEN_WIDTH
 	ld c, SCREEN_HEIGHT - 2
 .loop
@@ -549,7 +618,7 @@ Options_UpdateCursorPosition:
 	add hl, de
 	dec c
 	jr nz, .loop
-	hlcoord 1, 2
+	hlcoord 10, 2
 	ld bc, 2 * SCREEN_WIDTH
 	ld a, [wJumptableIndex]
 	call AddNTimes

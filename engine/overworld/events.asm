@@ -22,76 +22,76 @@ OverworldLoop::
 
 DisableEvents:
 	xor a
-	ld [wEnabledPlayerEvents], a
+	ld [wScriptFlags2], a
 	ret
 
 EnableEvents::
 	ld a, $ff
-	ld [wEnabledPlayerEvents], a
+	ld [wScriptFlags2], a
 	ret
 
-CheckEnabledMapEventsBit5:
-	ld hl, wEnabledPlayerEvents
+CheckBit5_ScriptFlags2:
+	ld hl, wScriptFlags2
 	bit 5, [hl]
 	ret
 
-DisableWarpsConnections: ; unreferenced
-	ld hl, wEnabledPlayerEvents
+DisableWarpsConnxns: ; unreferenced
+	ld hl, wScriptFlags2
 	res 2, [hl]
 	ret
 
 DisableCoordEvents: ; unreferenced
-	ld hl, wEnabledPlayerEvents
+	ld hl, wScriptFlags2
 	res 1, [hl]
 	ret
 
 DisableStepCount: ; unreferenced
-	ld hl, wEnabledPlayerEvents
+	ld hl, wScriptFlags2
 	res 0, [hl]
 	ret
 
 DisableWildEncounters: ; unreferenced
-	ld hl, wEnabledPlayerEvents
+	ld hl, wScriptFlags2
 	res 4, [hl]
 	ret
 
-EnableWarpsConnections: ; unreferenced
-	ld hl, wEnabledPlayerEvents
+EnableWarpsConnxns: ; unreferenced
+	ld hl, wScriptFlags2
 	set 2, [hl]
 	ret
 
 EnableCoordEvents: ; unreferenced
-	ld hl, wEnabledPlayerEvents
+	ld hl, wScriptFlags2
 	set 1, [hl]
 	ret
 
 EnableStepCount: ; unreferenced
-	ld hl, wEnabledPlayerEvents
+	ld hl, wScriptFlags2
 	set 0, [hl]
 	ret
 
 EnableWildEncounters:
-	ld hl, wEnabledPlayerEvents
+	ld hl, wScriptFlags2
 	set 4, [hl]
 	ret
 
-CheckWarpConnectionsEnabled:
-	ld hl, wEnabledPlayerEvents
+CheckWarpConnxnScriptFlag:
+	ld hl, wScriptFlags2
 	bit 2, [hl]
 	ret
 
-CheckCoordEventsEnabled:
-	ld hl, wEnabledPlayerEvents
+CheckCoordEventScriptFlag:
+	ld hl, wScriptFlags2
 	bit 1, [hl]
 	ret
 
-CheckStepCountEnabled:
-	ld hl, wEnabledPlayerEvents
+CheckStepCountScriptFlag:
+	ld hl, wScriptFlags2
 	bit 0, [hl]
 	ret
 
-CheckWildEncountersEnabled:
-	ld hl, wEnabledPlayerEvents
+CheckWildEncountersScriptFlag:
+	ld hl, wScriptFlags2
 	bit 4, [hl]
 	ret
 
@@ -242,9 +242,9 @@ PlayerEvents:
 	and a
 	ret nz
 
-	call Dummy_CheckEnabledMapEventsBit5 ; This is a waste of time
+	call Dummy_CheckScriptFlags2Bit5 ; This is a waste of time
 
-	call CheckTrainerEvent
+	call CheckTrainerBattle_GetPlayerEvent
 	jr c, .ok
 
 	call CheckTileEvent
@@ -275,11 +275,19 @@ PlayerEvents:
 	scf
 	ret
 
-CheckTrainerEvent:
+CheckTrainerBattle_GetPlayerEvent:
 	nop
 	nop
+IF DEF(_DEBUG) 
+	call DebugPressedOrHeldB
+	jr z, .bIsNotPressed
+	jr .nope
+.bIsNotPressed
+ENDC
 	call CheckTrainerBattle
 	jr nc, .nope
+
+.isChecked
 
 	ld a, PLAYEREVENT_SEENBYTRAINER
 	scf
@@ -292,7 +300,7 @@ CheckTrainerEvent:
 CheckTileEvent:
 ; Check for warps, coord events, or wild battles.
 
-	call CheckWarpConnectionsEnabled
+	call CheckWarpConnxnScriptFlag
 	jr z, .connections_disabled
 
 	call CheckMovingOffEdgeOfMap
@@ -302,21 +310,21 @@ CheckTileEvent:
 	jr c, .warp_tile
 
 .connections_disabled
-	call CheckCoordEventsEnabled
+	call CheckCoordEventScriptFlag
 	jr z, .coord_events_disabled
 
 	call CheckCurrentMapCoordEvents
 	jr c, .coord_event
 
 .coord_events_disabled
-	call CheckStepCountEnabled
+	call CheckStepCountScriptFlag
 	jr z, .step_count_disabled
 
 	call CountStep
 	ret c
 
 .step_count_disabled
-	call CheckWildEncountersEnabled
+	call CheckWildEncountersScriptFlag
 	jr z, .ok
 
 	call RandomEncounter
@@ -333,7 +341,7 @@ CheckTileEvent:
 	ret
 
 .warp_tile
-	ld a, [wPlayerTileCollision]
+	ld a, [wPlayerTile]
 	call CheckPitTile
 	jr nz, .not_pit
 	ld a, PLAYEREVENT_FALL
@@ -355,6 +363,14 @@ CheckTileEvent:
 	ret
 
 CheckWildEncounterCooldown::
+IF DEF(_DEBUG) 
+	call DebugPressedOrHeldB
+	jr z, .bIsNotPressed
+	ld a, 2
+	ld hl, wWildEncounterCooldown
+	ld [hl], a
+.bIsNotPressed 
+ENDC
 	ld hl, wWildEncounterCooldown
 	ld a, [hl]
 	and a
@@ -379,8 +395,8 @@ SetMinTwoStepWildEncounterCooldown:
 	ld [wWildEncounterCooldown], a
 	ret
 
-Dummy_CheckEnabledMapEventsBit5:
-	call CheckEnabledMapEventsBit5
+Dummy_CheckScriptFlags2Bit5:
+	call CheckBit5_ScriptFlags2
 	ret z
 	call SetXYCompareFlags
 	ret
@@ -465,8 +481,8 @@ CheckTimeEvents:
 	scf
 	ret
 
-.hatch ; unreferenced
-	ld a, PLAYEREVENT_HATCH
+.unused ; unreferenced
+	ld a, $8 ; ???
 	scf
 	ret
 
@@ -1047,7 +1063,7 @@ RunMemScript::
 	pop af
 	ret
 
-LoadMemScript::
+LoadScriptBDE::
 ; If there's already a script here, don't overwrite.
 	ld hl, wMapReentryScriptQueueFlag
 	ld a, [hl]
@@ -1114,14 +1130,16 @@ TryTileCollisionEvent::
 
 .done
 	call PlayClickSFX
-	ld a, PLAYEREVENT_MAPSCRIPT
+	ld a, $ff
 	scf
 	ret
 
 RandomEncounter::
+; Random encounter
+
 	call CheckWildEncounterCooldown
 	jr c, .nope
-	call CanEncounterWildMon
+	call CanUseSweetScent
 	jr nc, .nope
 	ld hl, wStatusFlags2
 	bit STATUSFLAGS2_BUG_CONTEST_TIMER_F, [hl]
@@ -1161,7 +1179,7 @@ WildBattleScript:
 	reloadmapafterbattle
 	end
 
-CanEncounterWildMon::
+CanUseSweetScent::
 	ld hl, wStatusFlags
 	bit STATUSFLAGS_NO_WILD_ENCOUNTERS_F, [hl]
 	jr nz, .no
@@ -1174,7 +1192,7 @@ CanEncounterWildMon::
 	jr nc, .no
 
 .ice_check
-	ld a, [wPlayerTileCollision]
+	ld a, [wPlayerTile]
 	call CheckIceTile
 	jr z, .no
 	scf
@@ -1245,7 +1263,7 @@ ChooseWildEncounter_BugContest::
 	ret
 
 TryWildEncounter_BugContest:
-	ld a, [wPlayerTileCollision]
+	ld a, [wPlayerTile]
 	call CheckSuperTallGrassTile
 	ld b, 40 percent
 	jr z, .ok

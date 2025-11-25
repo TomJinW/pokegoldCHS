@@ -1,7 +1,13 @@
 SaveMenu:
 	call LoadStandardMenuHeader
-	lb de, 4, 0
+	lb de, 5, 0 ;lb de, 4, 0
 	farcall DisplayNormalContinueData
+
+	ld a, $63
+	lb bc, 6, 3
+	coord hl, 6, 1
+	call DFSStaticize
+
 	call SpeechTextbox
 	call UpdateSprites
 	farcall SaveMenu_CopyTilemapAtOnce
@@ -13,11 +19,23 @@ SaveMenu:
 	call PauseGameLogic
 	call SavingDontTurnOffThePower
 	call ResumeGameLogic
+	; hlcoord 6, 1
+	; ld b, 8
+	; ld c, 13
+	; call ClearBox
+	; ld c, 3
+	; call DelayFrames
 	call ExitMenu
 	and a
 	ret
 
 .refused
+	; hlcoord 6, 1
+	; ld b, 8
+	; ld c, 13
+	; call ClearBox
+	; ld c, 3
+	; call DelayFrames
 	call ExitMenu
 	call ReloadPalettes
 	farcall SaveMenu_CopyTilemapAtOnce
@@ -39,12 +57,18 @@ SaveAfterLinkTrade:
 
 ChangeBoxSaveGame:
 	push de
+
+
+	call SetupDFSNomanagement
 	ld hl, ChangeBoxSaveText
 	call MenuTextbox
 	call YesNoBox
+	call DisableDFSNoManagement
 	call ExitMenu
 	jr c, .refused
+	call SetupDFSNomanagement
 	call AskOverwriteSaveFile
+	call DisableDFSNoManagement
 	jr c, .refused
 	call PauseGameLogic
 	call SaveBox
@@ -115,14 +139,20 @@ MoveMonWOMail_InsertMon_SaveGame:
 
 StartMoveMonWOMail_SaveGame:
 	ld hl, MoveMonWOMailSaveText
+	call SetupDFSNomanagement
 	call MenuTextbox
+	call DisableDFSNoManagement
 	call YesNoBox
 	call ExitMenu
 	jr c, .refused
+	call SetupDFSNomanagement
 	call AskOverwriteSaveFile
+	call DisableDFSNoManagement
 	jr c, .refused
 	call PauseGameLogic
+	; call SetupDFSNomanagement
 	call SavingDontTurnOffThePower
+	; call DisableDFSNoManagement
 	call ResumeGameLogic
 	and a
 	ret
@@ -391,6 +421,10 @@ SaveOptions:
 	ld a, [wOptions]
 	and ~(1 << NO_TEXT_SCROLL)
 	ld [sOptions], a
+
+	ld a, [wEngPKMNNameMark]
+	ld [sENGMark], a
+
 	jp CloseSRAM
 
 SavePlayerData:
@@ -589,6 +623,15 @@ TryLoadSaveData:
 
 	ld a, BANK(sPlayerData)
 	call OpenSRAM
+
+	ld a, [sENGMark]
+	cp 1
+	ld a, 0
+	jr nz, .CHS
+	ld a, 1
+.CHS
+	ld [wEngPKMNNameMark], a
+
 	ld hl, sPlayerData + wStartDay - wPlayerData
 	ld de, wStartDay
 	ld bc, 14
@@ -667,7 +710,7 @@ CheckBackupSaveFile:
 CheckTextDelay:
 ; Fix options if text delay is invalid
 	ld hl, wTextboxFlags
-	res TEXT_DELAY_F, [hl]
+	res NO_TEXT_DELAY_F, [hl]
 	ld a, [wOptions]
 	and TEXT_DELAY_MASK
 	cp TEXT_DELAY_FAST
@@ -678,7 +721,7 @@ CheckTextDelay:
 	ret z
 	ld a, [wOptions]
 	and ~TEXT_DELAY_MASK
-	or (1 << FAST_TEXT_DELAY_F) | (1 << TEXT_DELAY_F)
+	or (1 << FAST_TEXT_DELAY_F) | (1 << NO_TEXT_DELAY_F)
 	ld [wOptions], a
 	ret
 

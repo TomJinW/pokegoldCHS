@@ -104,7 +104,7 @@ All the bugs documented here were fixed in Pokémon Crystal. Any that weren't ar
  	cp PLAYER_SURF_PIKA
  	jr z, .alreadyfail
  	call GetFacingTileCoord
- 	call GetTilePermission
+ 	call GetTileCollision
  	cp WATER_TILE
  	jr nz, .cannotsurf
  	call CheckDirection

@@ -169,5 +169,30 @@ hDebugRoomMenuPage:: db
 ELSE
 	ds 1
 ENDC
+; hVBlankModeDebug:: db
+hPreviousWRAMBank:: db
 
-	ds 20
+UNION
+; 输入法拼音数据
+wIMEPinyin:: ds 7
+; 输入法选字所在页
+wIMEBank:: ds 1
+
+; 输入法拼音返回字符
+wIMEChar:: ds 2
+
+; 输入法选字当前行
+wIMELine:: ds 1
+
+; 输入法选字最大行
+wIMEMaxLine:: ds 1
+
+; 输入法选字所在地址
+wIMEAddr:: ds 2
+NEXTU
+hTmpTileBuffer:: ds 16
+ENDU
+
+hCurrentPrintMode :: db
+hCurrentPrintTileIDOffset :: db
+hTmpSpace:: ds 1

@@ -1,5 +1,19 @@
+_LoadDexMenuOptionFont::
+	ld de, UnusedWeekdayKanjiGFX
+	ld hl, vTiles2 + $6B0
+	lb bc, BANK(UnusedWeekdayKanjiGFX), 9
+	jp Get1bpp
+
 _LoadStandardFont::
+	callfar dfsClearCache
+	; ld a, DFS_FONT_STYLE_OVERWORLD
+	; ld [wDFSFontSytle], a
+
 	ld de, Font
+	xor a ; DFS_VRAM_LIMIT_NOLIMIT FS_FONT_STYLE_STANDARD
+	ld [wDFSFontSytle], a
+
+
 	ld hl, vTiles1
 	lb bc, BANK(Font), 128 ; "A" to "9"
 	jp Get1bpp
@@ -89,8 +103,13 @@ StatsScreen_LoadFont::
 	call Get2bpp
 LoadStatsScreenPageTilesGFX:
 	ld de, StatsScreenPageTilesGFX
-	ld hl, vTiles2 tile $31
+	ld hl, vTiles2 tile $31 ;CHS_Fix
 	lb bc, BANK(StatsScreenPageTilesGFX), 17
+	call Get2bpp
+
+	ld de, StatsScreenPageTilesGFX + 16 * 13
+	ld hl, vTiles2 tile $52 ;CHS_Fix
+	lb bc, BANK(StatsScreenPageTilesGFX), 2
 	call Get2bpp
 	ret
 

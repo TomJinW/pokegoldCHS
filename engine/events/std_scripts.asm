@@ -737,12 +737,12 @@ CoinVendor_IntroScript:
 
 .MenuHeader:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 0, 4, 15, TEXTBOX_Y - 1
+	menu_coords 0, 5, 15, TEXTBOX_Y; menu_coords 0, 6, 15, TEXTBOX_Y
 	dw .MenuData
 	db 1 ; default option
 
 .MenuData:
-	db STATICMENU_CURSOR ; flags
+	db STATICMENU_CURSOR ;| STATICMENU_NO_TOP_SPACING; flags
 	db 3 ; items
 	db " 50 :  ¥1000@"
 	db "500 : ¥10000@"

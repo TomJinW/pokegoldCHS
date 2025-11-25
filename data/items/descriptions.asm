@@ -261,741 +261,723 @@ ItemDescriptions:
 	assert_table_length $100
 
 MasterBallDesc:
-	db   "The best BALL. It"
-	next "never misses.@"
+	db_w "必定能捉到宝可梦的"
+	next "最好的球。@"
 
 UltraBallDesc:
-	db   "A BALL with a high"
-	next "rate of success.@"
+	db_w "有很高的几率可以"
+	next "捉到宝可梦的球。@"
 
 BrightpowderDesc:
-	db   "Lowers the foe's"
-	next "accuracy. (HOLD)@"
+	db_w "携带后，光芒会迷惑对手，"
+	next "降低其命中率。@"
 
 GreatBallDesc:
-	db   "A BALL with a de-"
-	next "cent success rate.@"
+	db_w "用于捕捉宝可梦的道具。"
+	next "比精灵球的性能高。@"
 
 PokeBallDesc:
-	db   "An item for catch-"
-	next "ing #MON.@"
+	db_w "用于捕捉宝可梦的道具。@"
 
 TeruSama1Desc:
-	db   "?@"
+	db_w "?@"
 
 BicycleDesc:
-	db   "A collapsible bike"
-	next "for fast movement.@"
+	db_w "可以用2倍速度移动的"
+	next "折叠式自行车。@"
 
 MoonStoneDesc:
-	db   "Evolves certain"
-	next "kinds of #MON.@"
+	db_w "能让某些特定的"
+	next "宝可梦进化。@"
 
 AntidoteDesc:
-	db   "Cures poisoned"
-	next "#MON.@"
+	db_w "能治愈中毒状态。@"
 
 BurnHealDesc:
-	db   "Heals burned"
-	next "#MON.@"
+	db_w "能治愈灼伤状态。@"
 
 IceHealDesc:
-	db   "Defrosts frozen"
-	next "#MON.@"
+	db_w "能治愈冰冻状态。@"
 
 AwakeningDesc:
-	db   "Awakens sleeping"
-	next "#MON.@"
+	db_w "能治愈睡眠状态。@"
 
 ParlyzHealDesc:
-	db   "Heals paralyzed"
-	next "#MON.@"
+	db_w "能治愈麻痹状态。@"
 
 FullRestoreDesc:
-	db   "Fully restores HP"
-	next "& status.@"
+	db_w "能完全回复体力并"
+	next "治愈所有的异常状态。@"
 
 MaxPotionDesc:
-	db   "Fully restores"
-	next "#MON HP.@"
+	db_w "能完全回复体力。@"
 
 HyperPotionDesc:
-	db   "Restores #MON"
-	next "HP by 200.@"
+	db_w "能回复体力200。@"
 
 SuperPotionDesc:
-	db   "Restores #MON"
-	next "HP by 50.@"
+	db_w "能回复体力50。@"
 
 PotionDesc:
-	db   "Restores #MON"
-	next "HP by 20.@"
+	db_w "能回复体力20。@"
 
 EscapeRopeDesc:
-	db   "Use for escaping"
-	next "from caves, etc.@"
+	db_w "可以从洞穴之类的"
+	next "地方中脱身。@"
 
 RepelDesc:
-	db   "Repels weak #-"
-	next "MON for 100 steps.@"
+	db_w "100步之内，"
+	next "弱小的宝可梦将不会出现。@"
 
 MaxElixerDesc:
-	db   "Fully restores the"
-	next "PP of one #MON.@"
+	db_w "能让1只宝可梦的"
+	next "所有招式的点数完全回复。@"
 
 FireStoneDesc:
-	db   "Evolves certain"
-	next "kinds of #MON.@"
+	db_w "能让某些特定的"
+	next "宝可梦进化。@"
 
 ThunderStoneDesc:
-	db   "Evolves certain"
-	next "kinds of #MON.@"
+	db_w "能让某些特定的"
+	next "宝可梦进化。@"
 
 WaterStoneDesc:
-	db   "Evolves certain"
-	next "kinds of #MON.@"
+	db_w "能让某些特定的"
+	next "宝可梦进化。@"
 
 TeruSama2Desc:
-	db   "?@"
+	db_w "?@"
 
 HPUpDesc:
-	db   "Raises the HP of"
-	next "one #MON.@"
+	db_w "能提高体力的基础点数。@"
 
 ProteinDesc:
-	db   "Raises ATTACK of"
-	next "one #MON.@"
+	db_w "能提高攻击的基础点数。@"
 
 IronDesc:
-	db   "Raises DEFENSE of"
-	next "one #MON.@"
+	db_w "能提高防御的基础点数。@"
 
 CarbosDesc:
-	db   "Raises SPEED of"
-	next "one #MON.@"
+	db_w "能提高速度的基础点数。@"
 
 LuckyPunchDesc:
-	db   "Ups critical hit"
-	next "ratio of CHANSEY.@"
+	db_w "让吉利蛋携带后，"
+	next "会变得容易击中要害。@"
 
 CalciumDesc:
-	db   "Ups SPECIAL stats"
-	next "of one #MON.@"
+	db_w "能提高特殊攻击与"
+	next "特殊防御的基础点数。@"
 
 RareCandyDesc:
-	db   "Raises level of a"
-	next "#MON by one.@"
+	db_w "能让宝可梦的等级提高1。@"
 
 XAccuracyDesc:
-	db   "Raises accuracy."
-	next "(1 BTL)@"
+	db_w "招式会变得容易命中。"
+	next "仅在使用过的对战中生效。@"
 
 LeafStoneDesc:
-	db   "Evolves certain"
-	next "kinds of #MON.@"
+	db_w "能让某些特定的"
+	next "宝可梦进化。@"
 
 MetalPowderDesc:
-	db   "Raises DEFENSE of"
-	next "DITTO. (HOLD)@"
+	db_w "让百变怪携带后，"
+	next "防御就会提高。@"
 
 NuggetDesc:
-	db   "Made of pure gold."
-	next "Sell high.@"
+	db_w "纯金制成。"
+	next "可以高价出售。@"
 
 PokeDollDesc:
-	db   "Use to escape from"
-	next "a wild #MON.@"
+	db_w "绝对能从遇到的"
+	next "野生宝可梦面前逃走。@"
 
 FullHealDesc:
-	db   "Eliminates all"
-	next "status problems.@"
+	db_w "能治愈所有异常状态。@"
 
 ReviveDesc:
-	db   "Restores a fainted"
-	next "#MON to 1/2 HP.@"
+	db_w "能从濒死状态中"
+	next "回复至一半体力的状态。@"
 
 MaxReviveDesc:
-	db   "Fully restores a"
-	next "fainted #MON.@"
+	db_w "能从濒死状态中"
+	next "回复至体力全满的状态。@"
 
 GuardSpecDesc:
-	db   "Prevents stat"
-	next "reduction. (1 BTL)@"
+	db_w "能力不会被降低。"
+	next "仅在使用过的对战中生效。@"
 
 SuperRepelDesc:
-	db   "Repels weak #-"
-	next "MON for 200 steps.@"
+	db_w "200步之内，"
+	next "弱小的宝可梦将不会出现。@"
 
 MaxRepelDesc:
-	db   "Repels weak #-"
-	next "MON for 250 steps.@"
+	db_w "250步之内，"
+	next "弱小的宝可梦将不会出现。@"
 
 DireHitDesc:
-	db   "Ups critical hit"
-	next "ratio. (1 BTL)@"
+	db_w "会变得容易击中要害。"
+	next "仅在使用过的对战中生效。@"
 
 TeruSama3Desc:
-	db   "?@"
+	db_w "?@"
 
 FreshWaterDesc:
-	db   "Restores #MON"
-	next "HP by 50.@"
+	db_w "采集自白银山，"
+	next "能回复体力50。@"
 
 SodaPopDesc:
-	db   "Restores #MON"
-	next "HP by 60.@"
+	db_w "清凉爽快，"
+	next "能回复体力60。@"
 
 LemonadeDesc:
-	db   "Restores #MON"
-	next "HP by 80.@"
+	db_w "非常甜，"
+	next "能回复体力80。@"
 
 XAttackDesc:
-	db   "Raises ATTACK."
-	next "(1 BTL)@"
+	db_w "攻击力会提高。"
+	next "仅在使用过的对战中生效。@"
 
 TeruSama4Desc:
-	db   "?@"
+	db_w "?@"
 
 XDefendDesc:
-	db   "Raises DEFENSE."
-	next "(1 BTL)@"
+	db_w "防御力会提高。"
+	next "仅在使用过的对战中生效。@"
 
 XSpeedDesc:
-	db   "Raises SPEED."
-	next "(1 BTL)@"
+	db_w "速度会提高。"
+	next "仅在使用过的对战中生效。@"
 
 XSpecialDesc:
-	db   "Raises SPECIAL"
-	next "stats. (1 BTL)@"
+	db_w "特殊攻击力会提高。"
+	next "仅在使用过的对战中生效。@"
 
 CoinCaseDesc:
-	db   "Holds up to 9,999"
-	next "game coins.@"
+	db_w "最多能放入9999枚"
+	next "获得的代币。@"
 
 ItemfinderDesc:
-	db   "Checks for unseen"
-	next "items in the area.@"
+	db_w "会对看不见的道具起反应，"
+	next "并发出声音提醒。@"
 
 TeruSama5Desc:
-	db   "?@"
+	db_w "?@"
 
 ExpShareDesc:
-	db   "Shares battle EXP."
-	next "points. (HOLD)@"
+	db_w "携带它就能分到经验值。@"
 
 OldRodDesc:
-	db   "Use by water to"
-	next "fish for #MON.@"
+	db_w "在水边使用的话，"
+	next "可以钓到宝可梦。@"
 
 GoodRodDesc:
-	db   "A good ROD for"
-	next "catching #MON.@"
+	db_w "用于钓宝可梦的道具。"
+	next "不错的钓竿。@"
 
 SilverLeafDesc:
-	db   "A strange, silver-"
-	next "colored leaf.@"
+	db_w "银色的神奇叶子。@"
 
 SuperRodDesc:
-	db   "The best ROD for"
-	next "catching #MON.@"
+	db_w "用于钓宝可梦的道具。"
+	next "作为最好的钓竿而闻名。@"
 
 PPUpDesc:
-	db   "Raises max PP of"
-	next "a selected move.@"
+	db_w "招式点数的最大值会提高。@"
 
 EtherDesc:
-	db   "Restores PP of one"
-	next "move by 10.@"
+	db_w "能让1个招式的招式点数"
+	next "回复10。@"
 
 MaxEtherDesc:
-	db   "Fully restores PP"
-	next "of one move.@"
+	db_w "能让1个招式的招式点数"
+	next "完全回复。@"
 
 ElixerDesc:
-	db   "Restores PP of all"
-	next "moves by 10.@"
+	db_w "能让全部招式的招式点数"
+	next "回复10。@"
 
 RedScaleDesc:
-	db   "A scale from the"
-	next "red GYARADOS.@"
+	db_w "在愤怒之湖里出现的"
+	next "红色暴鲤龙的鳞片。@"
 
 SecretPotionDesc:
-	db   "Fully heals any"
-	next "#MON.@"
+	db_w "能让任何宝可梦"
+	next "变得精力充沛。@"
 
 SSTicketDesc:
-	db   "A ticket for the"
-	next "S.S.AQUA.@"
+	db_w "乘坐水流号时需要用到。@"
 
 MysteryEggDesc:
-	db   "An EGG obtained"
-	next "from MR.#MON.@"
+	db_w "宝可梦爷爷寄放的东西。"
+	next "不知道是什么的蛋。@"
 
-TeruSama6Desc:
-	db   "?@"
+ClearBellDesc:
+	db_w "能发出能静心宁神的音色。@"
 
 SilverWingDesc:
-	db   "A strange, silver-"
-	next "colored feather.@"
+	db_w "散发着银色光辉的"
+	next "神奇羽毛。@"
 
 MoomooMilkDesc:
-	db   "Restores #MON"
-	next "HP by 100.@"
+	db_w "营养百分百的牛奶。"
+	next "能回复体力100。@"
 
 QuickClawDesc:
-	db   "Raises 1st strike"
-	next "ratio. (HOLD)@"
+	db_w "携带后，"
+	next "有时能比对手先一步攻击。@"
 
 PsnCureBerryDesc:
-	db   "A self-cure for"
-	next "poison. (HOLD)@"
+	db_w "携带后，"
+	next "可以自动治愈中毒状态。@"
 
 GoldLeafDesc:
-	db   "A strange, gold-"
-	next "colored leaf.@"
+	db_w "金色的神奇叶子。@"
 
 SoftSandDesc:
-	db   "Powers up ground-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，地面属性的"
+	next "招式威力就会提高。@"
 
 SharpBeakDesc:
-	db   "Powers up flying-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，飞行属性的"
+	next "招式威力就会提高。@"
 
 PrzCureBerryDesc:
-	db   "A self-cure for"
-	next "paralysis. (HOLD)@"
+	db_w "携带后，"
+	next "可以自动治愈麻痹状态。 @"
 
 BurntBerryDesc:
-	db   "A self-cure for"
-	next "freezing. (HOLD)@"
+	db_w "携带后，"
+	next "可以自动治愈冰冻状态。@"
 
 IceBerryDesc:
-	db   "A self-heal for a"
-	next "burn. (HOLD)@"
+	db_w "携带后，"
+	next "可以自动治愈灼伤状态。@"
 
 PoisonBarbDesc:
-	db   "Powers up poison-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，毒属性的"
+	next "招式威力就会提高。@"
 
 KingsRockDesc:
-	db   "May make the foe"
-	next "flinch. (HOLD)@"
+	db_w "携带后，"
+	next "有时会让对手畏缩。@"
 
 BitterBerryDesc:
-	db   "A self-cure for"
-	next "confusion. (HOLD)@"
+	db_w "携带后，"
+	next "可以自动治愈混乱状态。 @"
 
 MintBerryDesc:
-	db   "A self-awakening"
-	next "for sleep. (HOLD)@"
+	db_w "携带后，"
+	next "可以自动治愈睡眠状态。@"
 
 RedApricornDesc:
-	db   "A red APRICORN.@"
+	db_w "红色的球果。@"
 
 TinyMushroomDesc:
-	db   "An ordinary mush-"
-	next "room. Sell low.@"
+	db_w "普通的蘑菇。"
+	next "可以廉价出售。@"
 
 BigMushroomDesc:
-	db   "A rare mushroom."
-	next "Sell high.@"
+	db_w "珍稀的蘑菇。"
+	next "可以高价出售。@"
 
 SilverPowderDesc:
-	db   "Powers up bug-type"
-	next "moves. (HOLD)@"
+	db_w "携带后，虫属性的"
+	next "招式威力就会提高。@"
 
 BluApricornDesc:
-	db   "A blue APRICORN.@"
+	db_w "蓝色的球果。@"
 
-TeruSama7Desc:
-	db   "?@"
+TeruSama6Desc:
+	db_w "?@"
 
 AmuletCoinDesc:
-	db   "Doubles monetary"
-	next "earnings. (HOLD)@"
+	db_w "携带的宝可梦在对战中出场"
+	next "过，就能获得2倍金钱。@"
 
 YlwApricornDesc:
-	db   "A yellow APRICORN.@"
+	db_w "黄色的球果。@"
 
 GrnApricornDesc:
-	db   "A green APRICORN.@"
+	db_w "绿色的球果。@"
 
 CleanseTagDesc:
-	db   "Helps repel wild"
-	next "#MON. (HOLD)@"
+	db_w "携带后，野生宝可梦"
+	next "就会不容易出现。@"
 
 MysticWaterDesc:
-	db   "Powers up water-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，水属性的"
+	next "招式威力就会提高。@"
 
 TwistedSpoonDesc:
-	db   "Powers up psychic-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，超能力属性的"
+	next "招式威力就会提高。@"
 
 WhtApricornDesc:
-	db   "A white APRICORN.@"
+	db_w "白色的球果。@"
 
 BlackbeltDesc:
-	db   "Boosts fighting-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，格斗属性的"
+	next "招式威力就会提高。@"
 
 BlkApricornDesc:
-	db   "A black APRICORN."
-	next "@"
+	db_w "黑色的球果。@"
 
-TeruSama8Desc:
-	db   "?@"
+TeruSama7Desc:
+	db_w "?@"
 
 PnkApricornDesc:
-	db   "A pink APRICORN."
-	next "@"
+	db_w "粉色的球果。@"
 
 BlackGlassesDesc:
-	db   "Powers up dark-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，恶属性招式的"
+	next "威力就会提高。@"
 
 SlowpokeTailDesc:
-	db   "Very tasty. Sell"
-	next "high.@"
+	db_w "非常美味，"
+	next "可以高价出售。@"
 
 PinkBowDesc:
-	db   "Powers up normal-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，一般属性招式的"
+	next "威力就会提高。@"
 
 StickDesc:
-	db   "An ordinary stick."
-	next "Sell low.@"
+	db_w "某种长葱，"
+	next "可以廉价出售。@"
 
 SmokeBallDesc:
-	db   "Escape from wild"
-	next "#MON. (HOLD)@"
+	db_w "绝对能从遇到的"
+	next "野生宝可梦面前逃走。@"
 
 NeverMeltIceDesc:
-	db   "Powers up ice-type"
-	next "moves. (HOLD)@"
+	db_w "携带后，冰属性的"
+	next "招式威力就会提高。@"
 
 MagnetDesc:
-	db   "Boosts electric-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，电属性的"
+	next "招式威力就会提高。@"
 
 MiracleBerryDesc:
-	db   "Cures all status"
-	next "problems. (HOLD)@"
+	db_w "携带后，可以治愈自己"
+	next "所有的异常状态。@"
 
 PearlDesc:
-	db   "A beautiful pearl."
-	next "Sell low.@"
+	db_w "美丽的珍珠，"
+	next "可以廉价出售。@"
 
 BigPearlDesc:
-	db   "A big, beautiful"
-	next "pearl. Sell high.@"
+	db_w "美丽且大颗的珍珠，"
+	next "可以高价出售。@"
 
 EverStoneDesc:
-	db   "Stops evolution."
-	next "(HOLD)@"
+	db_w "携带后，宝可梦"
+	next "不会进化的神奇石头。@"
 
 SpellTagDesc:
-	db   "Powers up ghost-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，幽灵属性的"
+	next "招式威力就会提高。@"
 
 RageCandyBarDesc:
-	db   "Restores #MON"
-	next "HP by 20.@"
+	db_w "卡吉镇特产的馒头。"
+	next "能回复体力20。@"
 
-TeruSama9Desc:
-	db   "?@"
+GSBallDesc:
+	db_w "带着神奇气场的球。@"
 
-TeruSama10Desc:
-	db   "?@"
+BlueCardDesc:
+	db_w "可以将密语节目的点数"
+	next "积攒起来的卡片。@"
 
 MiracleSeedDesc:
-	db   "Powers up grass-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，草属性的"
+	next "招式威力就会提高。@"
 
 ThickClubDesc:
-	db   "A bone of some"
-	next "sort. Sell low.@"
+	db_w "某种骨头，"
+	next "可以廉价出售。@"
 
 FocusBandDesc:
-	db   "May prevent faint-"
-	next "ing. (HOLD)@"
+	db_w "携带它的宝可梦"
+	next "有时不会倒下。@"
 
-TeruSama11Desc:
-	db   "?@"
+TeruSama8Desc:
+	db_w "?@"
 
 EnergyPowderDesc:
-	db   "Restores #MON"
-	next "HP by 50. Bitter.@"
+	db_w "非常苦的粉。"
+	next "能回复体力50。@"
 
 EnergyRootDesc:
-	db   "Restores #MON"
-	next "HP by 200. Bitter.@"
+	db_w "非常苦的根。"
+	next "能回复体力200。@"
 
 HealPowderDesc:
-	db   "Cures all status"
-	next "problems. Bitter.@"
+	db_w "能治愈所有异常状态，"
+	next "但是很苦。@"
 
 RevivalHerbDesc:
-	db   "Revives fainted"
-	next "#MON. Bitter.@"
+	db_w "能让濒死的宝可梦"
+	next "回复所有体力，但是很苦。@"
 
 HardStoneDesc:
-	db   "Powers up rock-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，岩石属性的"
+	next "招式威力就会提高。@"
 
 LuckyEggDesc:
-	db   "Earns extra EXP."
-	next "points. (HOLD)@"
+	db_w "携带的宝可梦获得的"
+	next "经验值会少量增加。@"
 
 CardKeyDesc:
-	db   "Opens shutters in"
-	next "the RADIO TOWER.@"
+	db_w "可以打开电台的卷帘门。@"
 
 MachinePartDesc:
-	db   "A machine part for"
-	next "the POWER PLANT.@"
+	db_w "发电厂的机器零件。@"
 
-TeruSama12Desc:
-	db   "?@"
+EggTicketDesc:
+	db_w "似乎可以在满金市"
+	next "交换柜台使用。@"
 
 LostItemDesc:
-	db   "The # DOLL lost"
-	next "by the COPYCAT.@"
+	db_w "模仿少女丢失的皮皮玩偶。@"
 
 StardustDesc:
-	db   "Pretty, red sand."
-	next "Sell high.@"
+	db_w "美丽的红色沙子。"
+	next "可以高价出售。@"
 
 StarPieceDesc:
-	db   "A hunk of red gem."
-	next "Sell very high.@"
+	db_w "美丽的红色宝石碎片。"
+	next "可以用极高价格出售。@"
 
 BasementKeyDesc:
-	db   "Opens doors.@"
+	db_w "能打开门的钥匙。@"
 
 PassDesc:
-	db   "A ticket for the"
-	next "MAGNET TRAIN.@"
+	db_w "可以搭乘列车。@"
 
-TeruSama13Desc:
-	db   "?@"
+TeruSama9Desc:
+	db_w "?@"
 
-TeruSama14Desc:
-	db   "?@"
+TeruSama10Desc:
+	db_w "?@"
 
-TeruSama15Desc:
-	db   "?@"
+TeruSama11Desc:
+	db_w "?@"
 
 CharcoalDesc:
-	db   "Powers up fire-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，火属性的"
+	next "招式威力就会提高。@"
 
 BerryJuiceDesc:
-	db   "Restores #MON"
-	next "HP by 20.@"
+	db_w "用树果制成的果汁。"
+	next "能回复体力20。@"
 
 ScopeLensDesc:
-	db   "Raises critical"
-	next "hit ratio. (HOLD)@"
+	db_w "携带后，"
+	next "会变得容易击中要害。@"
 
-TeruSama16Desc:
-	db   "?@"
+TeruSama12Desc:
+	db_w "?@"
 
-TeruSama17Desc:
-	db   "?@"
+TeruSama13Desc:
+	db_w "?@"
 
 MetalCoatDesc:
-	db   "Powers up steel-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，钢属性的"
+	next "招式威力就会提高。@"
 
 DragonFangDesc:
-	db   "Powers up dragon-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，龙属性的"
+	next "招式威力就会提高。@"
 
-TeruSama18Desc:
-	db   "?@"
+TeruSama14Desc:
+	db_w "?@"
 
 LeftoversDesc:
-	db   "Restores HP during"
-	next "battle. (HOLD)@"
+	db_w "携带后，在战斗期间"
+	next "体力会缓缓回复。@"
 
-TeruSama19Desc:
-	db   "?@"
+TeruSama15Desc:
+	db_w "?@"
 
-TeruSama20Desc:
-	db   "?@"
+TeruSama16Desc:
+	db_w "?@"
 
-TeruSama21Desc:
-	db   "?@"
+TeruSama17Desc:
+	db_w "?@"
 
 MysteryBerryDesc:
-	db   "A self-restore"
-	next "for PP. (HOLD)@"
+	db_w "携带后，可以在战斗时"
+	next "回复自己的招式点数。@"
 
 DragonScaleDesc:
-	db   "A rare dragon-type"
-	next "item.@"
+	db_w "神奇的鳞片。龙属性宝可梦"
+	next "有时会携带它。@"
 
 BerserkGeneDesc:
-	db   "Boosts ATTACK but"
-	next "causes confusion.@"
+	db_w "能大幅提高攻击，"
+	next "但会造成混乱。@"
 
-TeruSama22Desc:
-	db   "?@"
+TeruSama18Desc:
+	db_w "?@"
 
-TeruSama23Desc:
-	db   "?@"
+TeruSama19Desc:
+	db_w "?@"
 
-TeruSama24Desc:
-	db   "?@"
+TeruSama20Desc:
+	db_w "?@"
 
 SacredAshDesc:
-	db   "Fully revives all"
-	next "fainted #MON.@"
+	db_w "能让所有陷入濒死的宝可梦"
+	next "恢复到正常状态。@"
 
 HeavyBallDesc:
-	db   "A BALL for catch-"
-	next "ing heavy #MON.@"
+	db_w "能很容易地捕捉"
+	next "身体沉重的宝可梦。@"
 
 FlowerMailDesc:
-	db   "Flower-print MAIL."
-	next "(HOLD)@"
+	db_w "花朵图案的信纸。"
+	next "写好后能让宝可梦携带。@"
 
 LevelBallDesc:
-	db   "A BALL for lower-"
-	next "level #MON.@"
+	db_w "比自己宝可梦的等级越低，"
+	next "就会越容易捕捉。@"
 
 LureBallDesc:
-	db   "A BALL for #MON"
-	next "hooked by a ROD.@"
+	db_w "能很容易地捕捉"
+	next "钓上来的宝可梦。@"
 
 FastBallDesc:
-	db   "A BALL for catch-"
-	next "ing fast #MON.@"
+	db_w "能很容易地捕捉"
+	next "逃跑速度很快的宝可梦。@"
 
-TeruSama25Desc:
-	db   "?@"
+TeruSama21Desc:
+	db_w "?@"
 
 LightBallDesc:
-	db   "An odd, electrical"
-	next "orb. (HOLD)@"
+	db_w "电光闪烁的神奇之球。@"
 
 FriendBallDesc:
-	db   "A BALL that makes"
-	next "#MON friendly.@"
+	db_w "捉到的宝可梦"
+	next "会变得和训练家亲密起来。@"
 
 MoonBallDesc:
-	db   "A BALL for MOON"
-	next "STONE evolvers.@"
+	db_w "能很容易地捕捉"
+	next "使用月之石进化的宝可梦。@"
 
 LoveBallDesc:
-	db   "For catching the"
-	next "opposite gender.@"
+	db_w "能很容易地捕捉和自己"
+	next "宝可梦性别不同的宝可梦。@"
 
 NormalBoxDesc:
-	db   "Open it and see"
-	next "what's inside.@"
+	db_w "打开看看。@"
 
 GorgeousBoxDesc:
-	db   "Open it and see"
-	next "what's inside.@"
+	db_w "打开看看。@"
 
 SunStoneDesc:
-	db   "Evolves certain"
-	next "kinds of #MON.@"
+	db_w "能让某些特定的"
+	next "宝可梦进化。@"
 
 PolkadotBowDesc:
-	db   "Powers up normal-"
-	next "type moves. (HOLD)@"
+	db_w "携带后，一般属性的"
+	next "招式威力会提高。@"
 
-TeruSama26Desc:
-	db   "?@"
+TeruSama22Desc:
+	db_w "?@"
 
 UpGradeDesc:
-	db   "A mysterious box"
-	next "made by SILPH CO.@"
+	db_w "神奇的盒子，"
+	next "西尔佛公司制造。@"
 
 BerryDesc:
-	db   "A self-restore"
-	next "item. (10HP, HOLD)@"
+	db_w "携带后，"
+	next "可以自动回复体力10。@"
 
 GoldBerryDesc:
-	db   "A self-restore"
-	next "item. (30HP, HOLD)@"
+	db_w "携带后，"
+	next "可以自动回复体力30。@"
 
 SquirtBottleDesc:
-	db   "A bottle used for"
-	next "watering plants.@"
+	db_w "杰尼龟造型的洒水壶，"
+	next "用来给草木浇水的道具。@"
 
-TeruSama27Desc:
-	db   "?@"
+TeruSama23Desc:
+	db_w "?@"
 
 ParkBallDesc:
-	db   "The Bug-Catching"
-	next "Contest BALL.@"
+	db_w "捕虫大赛上使用的球。@"
 
 RainbowWingDesc:
-	db   "A mystical feather"
-	next "of rainbow colors.@"
+	db_w "散发着虹色光辉的"
+	next "神奇羽毛。@"
 
-TeruSama28Desc:
-	db   "?@"
+TeruSama24Desc:
+	db_w "?@"
 
 BrickPieceDesc:
-	db   "A rare chunk of"
-	next "brick.@"
+	db_w "破损砖块的碎片。@"
 
 SurfMailDesc:
-	db   "LAPRAS-print MAIL."
-	next "(HOLD)@"
+	db_w "拉普拉斯图案的信纸。"
+	next "写好后能让宝可梦携带。@"
 
 LiteBlueMailDesc:
-	db   "DRATINI-print"
-	next "MAIL. (HOLD)@"
+	db_w "迷你龙图案的信纸。"
+	next "写好后能让宝可梦携带。@"
 
 PortraitMailDesc:
-	db   "MAIL featuring the"
-	next "holder's likeness.@"
+	db_w "印有携带它的宝可梦。"
+	next "写好后能让宝可梦携带。@"
 
 LovelyMailDesc:
-	db   "Heart-print MAIL."
-	next "(HOLD)@"
+	db_w "爱心标记十分可爱的信纸。"
+	next "写好后能让宝可梦携带。@"
 
 EonMailDesc:
-	db   "EEVEE-print MAIL."
-	next "(HOLD)@"
+	db_w "伊布剪影图案的信纸。"
+	next "写好后能让宝可梦携带。@"
 
 MorphMailDesc:
-	db   "DITTO-print MAIL."
-	next "(HOLD)@"
+	db_w "百变怪剪影图案的信纸。"
+	next "写好后能让宝可梦携带。@"
 
 BlueSkyMailDesc:
-	db   "Sky-print MAIL."
-	next "(HOLD)@"
+	db_w "美丽的蓝天图案的信纸。"
+	next "写好后能让宝可梦携带。@"
 
 MusicMailDesc:
-	db   "NATU-print MAIL."
-	next "(HOLD)@"
+	db_w "天然雀图案的信纸。"
+	next "写好后能让宝可梦携带。@"
 
 MirageMailDesc:
-	db   "MEW-print MAIL."
-	next "(HOLD)@"
+	db_w "梦幻图案的信纸。"
+	next "写好后能让宝可梦携带。@"
+
+TeruSama25Desc:
+	db_w "?@"
+
+TeruSama26Desc:
+	db_w "?@"
+
+TeruSama27Desc:
+	db_w "?@"
+
+TeruSama28Desc:
+	db_w "?@"
 
 TeruSama29Desc:
-	db   "?@"
+	db_w "?@"
 
 TeruSama30Desc:
-	db   "?@"
+	db_w "?@"
 
 TeruSama31Desc:
-	db   "?@"
+	db_w "?@"
 
 TeruSama32Desc:
-	db   "?@"
+	db_w "?@"
 
 TeruSama33Desc:
-	db   "?@"
+	db_w "?@"
 
 TeruSama34Desc:
 	db   "?@"

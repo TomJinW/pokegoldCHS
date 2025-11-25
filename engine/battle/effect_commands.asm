@@ -664,7 +664,7 @@ BattleCommand_CheckObedience:
 
 	; If the monster's id doesn't match the player's,
 	; some conditions need to be met.
-	ld a, MON_OT_ID
+	ld a, MON_ID
 	call BattlePartyAttr
 
 	ld a, [wPlayerID]
@@ -4585,7 +4585,6 @@ GetStatName:
 
 INCLUDE "data/battle/stat_names.asm"
 
-StatLevelMultipliers:
 INCLUDE "data/battle/stat_multipliers.asm"
 
 BattleCommand_AllStatsUp:
@@ -4967,8 +4966,10 @@ BattleCommand_ForceSwitch:
 	call AnimateCurrentMove
 	ld c, $14
 	call DelayFrames
-	hlcoord 1, 0
-	lb bc, 4, 10
+	; hlcoord 1, 0
+	; lb bc, 4, 10
+	hlcoord 0, 0 ; Enemy Hud Reset CHS_Fix
+	lb bc, 4, 11 ;
 	call ClearBox
 	ld c, 20
 	call DelayFrames

@@ -2,7 +2,7 @@
 
 MACRO vc_const
 	DEF x = \1
-	println "{02x:x} \1" ; same format as rgblink's .sym file
+	println "00:{04x:x} \1" ; same format as rgblink's .sym file
 ENDM
 
 ; [FPA 001 Begin]
@@ -40,7 +40,7 @@ ENDM
 	vc_const "@"
 
 ; [FPA 042801 Begin]
-	vc_const BATTLE_ANIM_GFX_BUBBLE
+	vc_const ANIM_GFX_BUBBLE
 
 ; [fight begin]
 	vc_const SCREEN_HEIGHT_PX

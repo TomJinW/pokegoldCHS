@@ -9,6 +9,12 @@ _Diploma:
 	call WaitPressAorB_BlinkCursor
 	ret
 
+DecompressDiplomaGFX::
+	ld hl, DiplomaGFX
+	ld de, vTiles2
+	call Decompress
+	ret
+
 PlaceDiplomaOnScreen:
 	call ClearBGPalettes
 	call ClearTilemap
@@ -37,7 +43,7 @@ PlaceDiplomaOnScreen:
 	call WaitBGMap
 	ld b, SCGB_DIPLOMA
 	call GetSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	call DelayFrame
 	ret
 
@@ -64,13 +70,13 @@ PrintDiplomaPage2:
 	decoord 0, 0
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
 	call CopyBytes
-	ld de, .GameFreak
-	hlcoord 8, 0
-	call PlaceString
+	; ld de, .GameFreak
+	; hlcoord 8, 0
+	; call PlaceString
 	ld de, .PlayTime
 	hlcoord 3, 15
 	call PlaceString
-	hlcoord 12, 15
+	hlcoord 10, 15
 	ld de, wGameTimeHours
 	lb bc, 2, 4
 	call PrintNum

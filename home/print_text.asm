@@ -15,7 +15,7 @@ PrintLetterDelay::
 
 ; non-scrolling text?
 	ld a, [wTextboxFlags]
-	bit TEXT_DELAY_F, a
+	bit NO_TEXT_DELAY_F, a
 	ret z
 
 	push hl

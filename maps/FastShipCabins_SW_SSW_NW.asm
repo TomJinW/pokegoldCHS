@@ -58,13 +58,13 @@ FastShipBed:
 	writetext FastShipBedText1
 	waitbutton
 	closetext
-	special FadeOutToBlack
+	special FadeBlackQuickly
 	special ReloadSpritesNoPalettes
 	special HealParty
 	playmusic MUSIC_HEAL
 	pause 60
 	special RestartMapMusic
-	special FadeInFromBlack
+	special FadeInQuickly
 	opentext
 	writetext FastShipBedText2
 	waitbutton

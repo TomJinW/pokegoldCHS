@@ -436,8 +436,20 @@ Place2DMenuCursor:
 	ret
 
 _PushWindow::
-	xor a ; BANK(sWindowStack)
-	call OpenSRAM
+	
+	; ld a, BANK(sWindowStackBottom)
+	; call OpenSRAM
+	call OpenSWindowStackSRAMOnlyDMG 
+
+	ldh a, [hCGB]
+	and a
+	jr z, .dmg
+	; di ; 中断
+	ld a, BANK(wWindowStackBottom)
+	ldh [rSVBK], a
+	ld a, 1
+	; ldh [rKEY1], a
+.dmg
 
 	ld hl, wWindowStackPointer
 	ld e, [hl]
@@ -470,29 +482,9 @@ _PushWindow::
 	ld l, a
 	set 0, [hl]
 	call MenuBoxCoord2Tile
-	call GetMenuBoxDims
-	inc b
-	inc c
-	call .ret ; empty function
-
-.row
-	push bc
-	push hl
-
-.col
-	ld a, [hli]
-	ld [de], a
-	dec de
-	dec c
-	jr nz, .col
-
-	pop hl
-	ld bc, SCREEN_WIDTH
-	add hl, bc
-	pop bc
-	dec b
-	jr nz, .row
+	call .copy
 	jr .done
+	; call .ret ; empty function
 
 .not_bit_7
 	pop hl ; last-pushed register was de
@@ -504,7 +496,8 @@ _PushWindow::
 
 .done
 	pop hl
-	call .ret ; empty function
+	; pop hl
+	; call .ret ; empty function
 	ld a, h
 	ld [de], a
 	dec de
@@ -515,21 +508,184 @@ _PushWindow::
 	ld [hl], e
 	inc hl
 	ld [hl], d
-
+.done2
 	call CloseSRAM
+
+	xor a
+	ldh [rSVBK], a
+	; ldh [rKEY1], a
+	; ei ; 中断
+
 	ld hl, wWindowStackSize
 	inc [hl]
 	ret
 
-.ret
+.copy
+	call GetMenuBoxDims
+	inc b
+	inc c
+.row
+
+	; call BackupCurrentWRAMBankIDAndSwitchToWRAMBank2
+	push bc
+	push hl
+	; call RestoreAndSwitchTowLastWRAMBankID
+
+.col
+
+	; call BackupCurrentWRAMBankIDAndSwitchToWRAMBank2
+	push bc
+	; call RestoreAndSwitchTowLastWRAMBankID
+
+	ld a, [hl]
+	cp DFS_TILENO_VRAM0_START
+	jr c, .normal
+
+	; call BackupCurrentWRAMBankIDAndSwitchToWRAMBank2
+	push hl
+	; call RestoreAndSwitchTowLastWRAMBankID
+
+	; ld bc, wAttrmap - wTilemap
+	; add hl, bc
+	; cp DFS_TILENO_VRAM0_END + 2 ;e8
+	cp $EC
+	; bit OAM_TILE_BANK, [hl] ; bit keep cy
+
+ASSERT LOW(sDFSCache) == 0, "Error wDFSCache is not $XX00 !"
+	ld h, HIGH(sDFSCache)
+	; jr nz, .dfs_code
+	; inc h                   ; inc keep cy
+	jr c, .dfs_code
+
+	; call BackupCurrentWRAMBankIDAndSwitchToWRAMBank2
+	pop hl
+	; call RestoreAndSwitchTowLastWRAMBankID
+
+.normal
+
+	ld [de], a
+
+	; ld a, BANK(sDFSCodeStack)
+	; call OpenSRAM
+	call OpenSDFSCodeStackSRAMOnlyDMG
+
+	ld a, BANK(wDFSCodeStack)
+	ldh [rSVBK], a
+
+	ld a, DFS_MASK_CLEAR
+	ld [de], a
+	dec de
+
+	; ld a, BANK(sWindowStackBottom)
+	; call OpenSRAM
+	call OpenSWindowStackSRAMOnlyDMG
+	ld a, BANK(wWindowStack)
+	ldh [rSVBK], a
+
+	ld bc, wAttrmap - wTilemap
+	add hl, bc
+	ld a, [hl]
+	ld [de], a
+	dec de
+	ld bc, wTilemap - wAttrmap + 1
+	add hl, bc
+	jr .next
+
+.dfs_code
+	push af
+
+	and a, %01111110
+	rlca
+	ld l, a ; l = 图块号（过滤最高位） * DFS_CACHE_SIZE
+
+	push de
+
+	ld de, wDFSCode
+	ld bc, DFS_CACHE_SIZE
+
+	ld a, [MBC3SRamBank]
+	and a, 7
+	ldh [hTmpSpace], a
+	ld a, BANK(sDFSCache)
+	call OpenSRAM
+	call CopyBytes
+	call CloseSRAM
+	ldh a, [hTmpSpace]
+	call OpenSRAM
+
+
+	pop de
+	pop bc ; push af
+
+	ld hl, wDFSCode
+
+	; ld a, BANK(sDFSCodeStack)
+	; call OpenSRAM
+	call OpenSDFSCodeStackSRAMOnlyDMG
+	ld a, BANK(wDFSCodeStack)
+	ldh [rSVBK], a
+
+	ld a, [hli]
+	ld [de], a
+	dec de
+	ld a, [hli]
+	ld c, a
+	ld a, [hli]
+
+	; CCHHHHHH -> ICHHHHHH
+	; I用于标志使用缓存块中的哪部分，覆盖的C通过前面的CC还原
+	rla
+	rr b
+	rra
+
+	ld [de], a
+	inc de
+
+	; ld a, BANK(sWindowStackBottom)
+	; call OpenSRAM
+	call OpenSWindowStackSRAMOnlyDMG
+	
+	ld a, BANK(wWindowStack)
+	ldh [rSVBK], a
+
+	ld a, c
+	ld [de], a
+	dec de
+	ld a, [hl]
+	ld [de], a
+	dec de
+
+	pop hl
+
+	inc hl
+
+.next
+	pop bc
+
+	dec c
+	jp nz, .col
+
+	pop hl
+	ld bc, SCREEN_WIDTH
+	add hl, bc
+	pop bc
+
+	dec b
+	jp nz, .row
 	ret
 
 _ExitMenu::
+	; ld a, 1
+	; ld [wIfCurrentlyRestoringWindow], a
+	
+
 	xor a
 	ldh [hBGMapMode], a
 
-	xor a ; BANK(sWindowStack)
-	call OpenSRAM
+	
+	; ld a, BANK(sWindowStackBottom)
+	; call OpenSRAM
+	call OpenSWindowStackSRAMOnlyDMG
 
 	call GetWindowStackTop
 	ld a, l
@@ -545,8 +701,23 @@ _ExitMenu::
 	jr z, .loop
 	ld d, h
 	ld e, l
+
+	ldh a, [hCGB]
+	and a
+	jr z, .dmg
+	; di ; 中断
+	
+	ld a, 2
+	ldh [rSVBK], a
+.dmg
+
 	call RestoreTileBackup
 
+	xor a
+	ldh [rSVBK], a
+	; ld [wIfCurrentlyRestoringWindow], a
+	; ldh [rKEY1], a   ; 
+	; ei ; 中断
 .loop
 	call GetWindowStackTop
 	ld a, h
@@ -556,18 +727,25 @@ _ExitMenu::
 
 .done
 	call CloseSRAM
+
+
 	ld hl, wWindowStackSize
 	dec [hl]
 	call RestoreOverworldMapTiles
 	ld a, [wSpriteUpdatesEnabled]
 	cp 0
 	ret z
+
+
+
 	call ReloadPalettes
+
+
 	ret
 
 RestoreOverworldMapTiles:
-	ld a, [wStateFlags]
-	bit SPRITE_UPDATES_DISABLED_F, a
+	ld a, [wVramState]
+	bit 0, a
 	ret z
 	xor a ; sScratch
 	call OpenSRAM
@@ -576,7 +754,7 @@ RestoreOverworldMapTiles:
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
 	call CopyBytes
 	call CloseSRAM
-	call LoadOverworldTilemapAndAttrmapPals
+	call OverworldTextModeSwitch
 	xor a ; sScratch
 	call OpenSRAM
 	ld hl, sScratch

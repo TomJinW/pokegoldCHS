@@ -1,0 +1,61 @@
+text_low	
+text_pause	
+sound_item	
+sound_caught_mon	
+sound_dex_fanfare_80_109	
+sound_slot_machine_start	
+sound_dex_fanfare_50_79	
+text_ram wPlayerTrademonSpeciesName	PLAYERTMON
+text_ram wPlayerTrademonSenderName	SENDERN
+text_ram wOTTrademonSpeciesName	OTTMONNAME
+text_ram wOTTrademonSenderName	OTSENDE
+text_ram wStringBuffer3	3BCDEFGHIJ
+text_ram wcd49	LIKEAMONNM
+text_ram wSeerCaughtLevelString	99
+text_ram wSeerNickname	SEERMONNAM
+text_ram wSeerCaughtLocation	ABC(???)
+text_ram wSeerTimeOfDay	清晨
+text_ram wSeerOT	SEEROTN
+text_ram wBreedMon1Nickname	BREEDMONNM
+text_ram wEnemyMonNickname	ENEMYMONNM
+text_ram wStringBuffer4	4BCDEFGHIJ
+text_ram wStringBuffer5	5BCDEFGHIJ
+text_ram wMysteryGiftPartnerName	PARTERN
+text_ram wStringBuffer2	2BCDEFGHIJ
+text_ram wMysteryGiftPlayerName	GIFTNAM
+text_ram wMagikarpRecordHoldersName	MAGINAM
+text_ram wPlayerName	PLAYERN
+text_ram wBattleMonNickname	BATTMONNAM
+text_ram wMonOrItemNameBuffer	PP单项多补剂
+text_ram wBreedMon2Nickname	BRED2MONNM
+text_ram wMobileParticipant1Nickname	MOBILE1NAM
+text_ram wMobileParticipant2Nickname	MOBILE2NAM
+text_ram wMobileParticipant3Nickname	MOBILE3NAM
+text_ram wStringBuffer1	1BCDEFGHIJ
+text_ram wBugContestWinnerName	BUGWINE
+text_ram wd004	一二三四五
+text_ram wBufferTrademonNickname	一二三四五
+text_decimal wScriptVar, 1, 3	100
+text_decimal wBlueCardBalance, 1, 2	99
+text_decimal wCoins, 2, 4	9999
+text_decimal hMoneyTemp, 3, 6	999999
+text_decimal wEnemyDamageTaken, 1, 1	9
+text_decimal wTextDecimalByte, 1, 1	9
+text_decimal wStringBuffer1, 1, 2	99
+text_decimal wBreedingCompatibility, 1, 3	999
+text_decimal wItemQuantityChange, 1, 2	99
+text_decimal wPlayerDamageTaken, 1, 1	9
+text_decimal wCurPartyLevel, 1, 3	999
+text_decimal wPayDayMoney, 3, 6	999999
+text_decimal wCurHPAnimDeltaHP, 2, 3	999
+text_decimal wcf64, 1, 3	999
+text_decimal wStringBuffer2 + 1, 1, 3	999
+text_decimal wStringBuffer2 + 2, 3, 4	9999
+text_decimal wStringBuffer2, 1, 2	99
+text_decimal wStringBuffer2, 2, 4	9999
+text_decimal wBugContestThirdPlaceScore, 2, 3	999
+text_decimal wBugContestFirstPlaceScore, 2, 3	999
+text_decimal wBugContestSecondPlaceScore, 2, 3	999
+text_decimal wBattleReward, 3, 6	999999
+text_promptbutton	
+text_today	

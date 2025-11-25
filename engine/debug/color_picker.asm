@@ -1042,7 +1042,7 @@ DebugColor_PlaceCursor:
 	ret
 
 DebugColor_AreYouFinishedString:
-	db   "おわりますか？"                        ; Are you finished?
+	db_w "おわりますか<？>"                        ; Are you finished?
 	next "はい<DOT><DOT><DOT>", DEBUGTEST_A ; YES...(A)
 	next "いいえ<DOT><DOT>", DEBUGTEST_B     ; NO..(B)
 	db   "@"
@@ -1065,7 +1065,7 @@ TilesetColorPicker: ; unreferenced
 	ld [wDebugTilesetCurColor], a
 	ldh [hMapAnims], a
 	call ClearSprites
-	call LoadOverworldTilemapAndAttrmapPals
+	call OverworldTextModeSwitch
 	call WaitBGMap2
 	xor a
 	ldh [hBGMapMode], a

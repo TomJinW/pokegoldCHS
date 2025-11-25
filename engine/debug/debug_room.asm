@@ -214,29 +214,29 @@ DebugRoomMenu_WinWorkClr:
 	ld h, a
 	inc hl
 	ld a, l
-	sub LOW(sWindowStackBottom)
+	sub LOW(sWindowStack)
 	ld a, h
-	sbc HIGH(sWindowStackBottom)
+	sbc HIGH(sWindowStack)
 	ret c
-	ld a, BANK(sWindowStackBottom)
+	ld a, BANK(sWindowStack)
 	call OpenSRAM
-	ld bc, -sWindowStackBottom + $10000
+	ld bc, -sWindowStack + $10000
 	add hl, bc
 	ld b, h
 	ld c, l
-	ld hl, sWindowStackBottom
+	ld hl, sWindowStack
 	xor a
 	call ByteFill
 	call CloseSRAM
 	ret
 
 DebugRoom_PrintWindowStackBottomTop:
-	ld a, BANK(sWindowStackBottom)
+	ld a, BANK(sWindowStack)
 	call OpenSRAM
-	ld hl, sWindowStackBottom
+	ld hl, sWindowStack
 .loop
 	ld a, h
-	cp HIGH(sWindowStackTop) + 1
+	cp HIGH(sWindowStackBottom) + 1
 	jr z, .ok
 	ld a, [hl]
 	or a
@@ -256,8 +256,8 @@ DebugRoom_PrintWindowStackBottomTop:
 	ld c, 2
 	call PrintHexNumber
 	pop hl
-	ld d, LOW(sWindowStackBottom)
-	ld e, HIGH(sWindowStackBottom)
+	ld d, LOW(sWindowStack)
+	ld e, HIGH(sWindowStack)
 	push de
 	ld hl, sp+0
 	ld d, h
@@ -421,7 +421,7 @@ DebugRoom_EditPagedValues:
 	call WaitBGMap
 	ld b, SCGB_DIPLOMA
 	call GetSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 .resume
 	call DelayFrame
 	call JoyTextDelay

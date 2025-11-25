@@ -200,13 +200,13 @@ CheckMapForSomethingToCut:
 	ret
 
 Script_CutFromMenu:
-	refreshmap
+	reloadmappart
 	special UpdateTimePals
 
 Script_Cut:
 	callasm GetPartyNickname
 	writetext UseCutText
-	refreshmap
+	reloadmappart
 	callasm CutDownTreeOrGrass
 	closetext
 	end
@@ -220,7 +220,7 @@ CutDownTreeOrGrass:
 	ld [hl], a
 	xor a
 	ldh [hBGMapMode], a
-	call LoadOverworldTilemapAndAttrmapPals
+	call OverworldTextModeSwitch
 	call UpdateSprites
 	call DelayFrame
 	ld a, [wCutWhirlpoolAnimationType]
@@ -277,7 +277,10 @@ FlashFunction:
 .CheckUseFlash:
 	ld de, ENGINE_ZEPHYRBADGE
 	farcall CheckBadge
+	IF DEF(_DEBUG)
+	ELSE
 	jr c, .nozephyrbadge
+	ENDC
 	ld a, [wTimeOfDayPalset]
 	cp DARKNESS_PALSET
 	jr nz, .notadarkcave
@@ -299,7 +302,7 @@ UseFlash:
 	jp QueueScript
 
 Script_UseFlash:
-	refreshmap
+	reloadmappart
 	special UpdateTimePals
 	writetext UseFlashTextScript
 	callasm BlindingFlash
@@ -339,7 +342,10 @@ SurfFunction:
 ; BUG: You can Surf on top of NPCs (see docs/bugs_and_glitches.md)
 	ld de, ENGINE_FOGBADGE
 	call CheckBadge
+	IF DEF(_DEBUG)
+	ELSE
 	jr c, .nofogbadge
+	ENDC
 	ld hl, wBikeFlags
 	bit BIKEFLAGS_ALWAYS_ON_BIKE_F, [hl]
 	jr nz, .cannotsurf
@@ -349,7 +355,7 @@ SurfFunction:
 	cp PLAYER_SURF_PIKA
 	jr z, .alreadyfail
 	call GetFacingTileCoord
-	call GetTilePermission
+	call GetTileCollision
 	cp WATER_TILE
 	jr nz, .cannotsurf
 	call CheckDirection
@@ -479,7 +485,7 @@ TrySurfOW::
 
 ; Must be facing water.
 	ld a, [wFacingTileID]
-	call GetTilePermission
+	call GetTileCollision
 	cp WATER_TILE
 	jr nz, .quit
 
@@ -542,6 +548,9 @@ FlyFunction:
 	dw .FailFly
 
 .TryFly:
+	IF DEF(_DEBUG)
+	jr .outdoors
+	ELSE
 	ld de, ENGINE_STORMBADGE
 	call CheckBadge
 	jr c, .nostormbadge
@@ -549,6 +558,7 @@ FlyFunction:
 	call CheckOutdoorMap
 	jr z, .outdoors
 	jr .indoors
+	ENDC
 
 .outdoors
 	xor a
@@ -593,7 +603,7 @@ FlyFunction:
 	ret
 
 .FlyScript:
-	refreshmap
+	reloadmappart
 	callasm HideSprites
 	special UpdateTimePals
 	callasm FlyFromAnim
@@ -617,8 +627,11 @@ WaterfallFunction:
 .TryWaterfall:
 	ld de, ENGINE_RISINGBADGE
 	farcall CheckBadge
+	IF DEF(_DEBUG)
+	ELSE
 	ld a, $80
 	ret c
+	ENDC
 	call CheckMapCanWaterfall
 	jr c, .failed
 	ld hl, Script_WaterfallFromMenu
@@ -647,7 +660,7 @@ CheckMapCanWaterfall:
 	ret
 
 Script_WaterfallFromMenu:
-	refreshmap
+	reloadmappart
 	special UpdateTimePals
 
 Script_UsedWaterfall:
@@ -669,7 +682,7 @@ Script_UsedWaterfall:
 .CheckContinueWaterfall:
 	xor a
 	ld [wScriptVar], a
-	ld a, [wPlayerTileCollision]
+	ld a, [wPlayerTile]
 	call CheckWaterfallTile
 	ret z
 	ld a, $1
@@ -815,13 +828,13 @@ EscapeRopeOrDig:
 	text_end
 
 .UsedEscapeRopeScript:
-	refreshmap
+	reloadmappart
 	special UpdateTimePals
 	writetext .UseEscapeRopeText
 	sjump .UsedDigOrEscapeRopeScript
 
 .UsedDigScript:
-	refreshmap
+	reloadmappart
 	special UpdateTimePals
 	writetext .UseDigText
 
@@ -907,11 +920,11 @@ TeleportFunction:
 	text_end
 
 .TeleportScript:
-	refreshmap
+	reloadmappart
 	special UpdateTimePals
 	writetext .TeleportReturnText
 	pause 60
-	refreshmap
+	reloadmappart
 	closetext
 	playsound SFX_WARP_TO
 	applymovement PLAYER, .TeleportFrom
@@ -940,7 +953,10 @@ StrengthFunction:
 .TryStrength:
 	ld de, ENGINE_PLAINBADGE
 	call CheckBadge
+	IF DEF(_DEBUG)
+	ELSE
 	jr c, .Failed
+	ENDC
 	jr .UseStrength
 
 .AlreadyUsingStrength: ; unreferenced
@@ -977,7 +993,7 @@ SetStrengthFlag:
 	ret
 
 Script_StrengthFromMenu:
-	refreshmap
+	reloadmappart
 	special UpdateTimePals
 
 Script_UsedStrength:
@@ -1076,7 +1092,10 @@ WhirlpoolFunction:
 .TryWhirlpool:
 	ld de, ENGINE_GLACIERBADGE
 	call CheckBadge
+	IF DEF(_DEBUG)
+	ELSE
 	jr c, .noglacierbadge
+	ENDC
 	call TryWhirlpoolMenu
 	jr c, .failed
 	ld a, $1
@@ -1136,13 +1155,13 @@ TryWhirlpoolMenu:
 	ret
 
 Script_WhirlpoolFromMenu:
-	refreshmap
+	reloadmappart
 	special UpdateTimePals
 
 Script_UsedWhirlpool:
 	callasm GetPartyNickname
 	writetext UseWhirlpoolText
-	refreshmap
+	reloadmappart
 	callasm DisappearWhirlpool
 	closetext
 	end
@@ -1156,7 +1175,7 @@ DisappearWhirlpool:
 	ld [hl], a
 	xor a
 	ldh [hBGMapMode], a
-	call LoadOverworldTilemapAndAttrmapPals
+	call OverworldTextModeSwitch
 	ld a, [wCutWhirlpoolAnimationType]
 	ld e, a
 	farcall PlayWhirlpoolSound
@@ -1235,14 +1254,14 @@ HeadbuttNothingText:
 	text_end
 
 HeadbuttFromMenuScript:
-	refreshmap
+	reloadmappart
 	special UpdateTimePals
 
 HeadbuttScript:
 	callasm GetPartyNickname
 	writetext UseHeadbuttText
 
-	refreshmap
+	reloadmappart
 	callasm ShakeHeadbuttTree
 
 	callasm TreeMonEncounter
@@ -1332,7 +1351,7 @@ GetFacingObject:
 	ret
 
 RockSmashFromMenuScript:
-	refreshmap
+	reloadmappart
 	special UpdateTimePals
 
 RockSmashScript:
@@ -1343,7 +1362,7 @@ RockSmashScript:
 	playsound SFX_STRENGTH
 	earthquake 84
 	applymovementlasttalked MovementData_RockSmash
-	disappear LAST_TALKED
+	disappear -2
 
 	callasm RockMonEncounter
 	readmem wTempWildMonSpecies
@@ -1426,7 +1445,7 @@ FishFunction:
 	cp PLAYER_SURF_PIKA
 	jr z, .fail
 	call GetFacingTileCoord
-	call GetTilePermission
+	call GetTileCollision
 	cp WATER_TILE
 	jr z, .facingwater
 .fail
@@ -1558,7 +1577,7 @@ Fishing_CheckFacingUp:
 	ret
 
 Script_FishCastRod:
-	refreshmap
+	reloadmappart
 	loadmem hBGMapMode, $0
 	special UpdateTimePals
 	loademote EMOTE_ROD
@@ -1573,8 +1592,8 @@ MovementData_CastRod:
 	step_end
 
 PutTheRodAway:
-	hlcoord 1, 14
-	lb bc, 3, 18
+	hlcoord 1, 13 ; CHS_Fix
+	lb bc, 4, 18 ;
 	call ClearBox
 	call WaitBGMap
 	xor a
@@ -1673,7 +1692,7 @@ BikeFunction:
 	jr .nope
 
 .ok
-	call GetPlayerTilePermission
+	call GetPlayerTile
 	and $f ; lo nybble only
 	jr nz, .nope ; not FLOOR_TILE
 	xor a
@@ -1684,7 +1703,7 @@ BikeFunction:
 	ret
 
 Script_GetOnBike:
-	refreshmap
+	reloadmappart
 	special UpdateTimePals
 	loadvar VAR_MOVEMENT, PLAYER_BIKE
 	writetext GotOnBikeText
@@ -1704,7 +1723,7 @@ Overworld_DummyFunction: ; unreferenced
 	ret
 
 Script_GetOffBike:
-	refreshmap
+	reloadmappart
 	special UpdateTimePals
 	loadvar VAR_MOVEMENT, PLAYER_NORMAL
 	writetext GotOffBikeText
@@ -1745,7 +1764,10 @@ TryCutOW::
 
 	ld de, ENGINE_HIVEBADGE
 	call CheckEngineFlag
+	IF DEF(_DEBUG)
+	ELSE
 	jr c, .cant_cut
+	ENDC
 
 	ld a, BANK(AskCutScript)
 	ld hl, AskCutScript

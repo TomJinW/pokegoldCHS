@@ -6,6 +6,12 @@ Serial::
 	push de
 	push hl
 
+	ldh a, [rSVBK]
+	ldh [hUnusedBackup], a
+	and 7
+	xor a
+	ldh [rSVBK], a
+
 	ld a, [wPrinterConnectionOpen]
 	bit 0, a
 	jr nz, .printer
@@ -74,10 +80,16 @@ Serial::
 	ldh [hSerialSend], a
 
 .end
+	
+	ldh a, [hUnusedBackup]
+	ldh [rSVBK], a
+
 	pop hl
 	pop de
 	pop bc
 	pop af
+
+
 	reti
 
 Serial_ExchangeBytes::
@@ -270,7 +282,7 @@ Serial_ExchangeSyncBytes::
 	jr nz, .exchange
 	ret
 
-Serial_PlaceWaitingTextAndSyncAndExchangeNybble::
+Serial_PrintWaitingTextAndSyncAndExchangeNybble::
 	call LoadTilemapToTempTilemap
 	callfar PlaceWaitingText
 	call WaitLinkTransfer
@@ -280,7 +292,7 @@ Serial_SyncAndExchangeNybble:: ; unreferenced
 	call LoadTilemapToTempTilemap
 	callfar PlaceWaitingText
 	jp WaitLinkTransfer ; pointless
-
+	ds $10
 WaitLinkTransfer::
 	vc_hook Wireless_WaitLinkTransfer
 	ld a, $ff
@@ -398,17 +410,17 @@ LinkDataReceived::
 	ldh [rSC], a
 	ret
 
-SetBitsForTimeCapsuleRequestIfNotLinked:: ; unreferenced
-; Similar to SetBitsForTimeCapsuleRequest (see engine/link/link.asm).
-	ld a, [wLinkMode]
-	and a
-	ret nz
-	ld a, USING_INTERNAL_CLOCK
-	ldh [rSB], a
-	xor a
-	ldh [hSerialReceive], a
-	ld a, (0 << rSC_ON) | (0 << rSC_CLOCK)
-	ldh [rSC], a
-	ld a, (1 << rSC_ON) | (0 << rSC_CLOCK)
-	ldh [rSC], a
-	ret
+; SetBitsForTimeCapsuleRequestIfNotLinked:: ; unreferenced
+; ; Similar to SetBitsForTimeCapsuleRequest (see engine/link/link.asm).
+; 	ld a, [wLinkMode]
+; 	and a
+; 	ret nz
+; 	ld a, USING_INTERNAL_CLOCK
+; 	ldh [rSB], a
+; 	xor a
+; 	ldh [hSerialReceive], a
+; 	ld a, (0 << rSC_ON) | (0 << rSC_CLOCK)
+; 	ldh [rSC], a
+; 	ld a, (1 << rSC_ON) | (0 << rSC_CLOCK)
+; 	ldh [rSC], a
+; 	ret

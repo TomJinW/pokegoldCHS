@@ -19,6 +19,7 @@ MACRO tradeanim
 ENDM
 
 TradeAnimation:
+	farcall dfsClearCache
 	ld hl, wPlayerTrademonSenderName
 	ld de, wOTTrademonSenderName
 	call LinkTradeAnim_LoadTradePlayerNames
@@ -65,6 +66,7 @@ TradeAnimation:
 	tradeanim TradeAnim_End
 
 TradeAnimationPlayer2:
+	farcall dfsClearCache
 	ld hl, wOTTrademonSenderName
 	ld de, wPlayerTrademonSenderName
 	call LinkTradeAnim_LoadTradePlayerNames
@@ -119,10 +121,10 @@ RunTradeAnimScript:
 	push af
 	xor a
 	ldh [hMapAnims], a
-	ld hl, wStateFlags
+	ld hl, wVramState
 	ld a, [hl]
 	push af
-	res SPRITE_UPDATES_DISABLED_F, [hl]
+	res 0, [hl]
 	ld hl, wOptions
 	ld a, [hl]
 	push af
@@ -136,7 +138,7 @@ RunTradeAnimScript:
 	pop af
 	ld [wOptions], a
 	pop af
-	ld [wStateFlags], a
+	ld [wVramState], a
 	pop af
 	ldh [hMapAnims], a
 	ret
@@ -339,7 +341,7 @@ TradeAnim_InitTubeAnim:
 	call LoadTradeBubbleGFX
 
 	pop de
-	ld a, SPRITE_ANIM_OBJ_TRADEMON_ICON
+	ld a, SPRITE_ANIM_INDEX_TRADEMON_ICON
 	call InitSpriteAnimStruct
 
 	ld hl, SPRITEANIMSTRUCT_JUMPTABLE_INDEX
@@ -348,7 +350,7 @@ TradeAnim_InitTubeAnim:
 	ld [hl], b
 
 	pop de
-	ld a, SPRITE_ANIM_OBJ_TRADEMON_BUBBLE
+	ld a, SPRITE_ANIM_INDEX_TRADEMON_BUBBLE
 	call InitSpriteAnimStruct
 
 	ld hl, SPRITEANIMSTRUCT_JUMPTABLE_INDEX
@@ -579,21 +581,22 @@ TradeAnim_PlaceTrademonStatsOnTubeAnim:
 	ld bc, SCREEN_WIDTH
 	ld a, "─"
 	call ByteFill
-	hlcoord 0, 1
+	hlcoord 0, 2 ;hlcoord 0, 1
 	ld de, wLinkPlayer1Name
 	call PlaceString
-	ld hl, wLinkPlayer2Name
-	ld de, 0
-.find_name_end_loop
-	ld a, [hli]
-	cp "@"
-	jr z, .done
-	dec de
-	jr .find_name_end_loop
+; 	ld hl, wLinkPlayer2Name
+; 	ld de, 0
+; .find_name_end_loop
+; 	ld a, [hli]
+; 	cp "@"
+; 	jr z, .done
+; 	dec de
+; 	jr .find_name_end_loop
 
-.done
-	hlcoord 0, 4
-	add hl, de
+; .done
+; 	hlcoord 0, 4
+	; add hl, de
+	hlcoord 13, 2
 	ld de, wLinkPlayer2Name
 	call PlaceString
 	hlcoord 7, 2
@@ -890,7 +893,7 @@ TrademonStats_MonTemplate:
 	ret
 
 .OTMonData:
-	db   "─── №."
+	db_w   "─── №."
 	next ""
 	next "OT/"
 	next "<ID>№.@"
@@ -911,7 +914,7 @@ TrademonStats_Egg:
 	ret
 
 .EggData:
-	db   "EGG"
+	db_w   "EGG"
 	next "OT/?????"
 	next "<ID>№.?????@"
 
@@ -934,7 +937,7 @@ TrademonStats_PrintSpeciesName:
 	ret
 
 TrademonStats_PrintOTName:
-	hlcoord 7, 4
+	hlcoord 10, 4 ;hlcoord 7, 4
 	call PlaceString
 	ret
 
@@ -946,7 +949,7 @@ TrademonStats_PrintTrademonID:
 
 TradeAnim_RockingBall:
 	depixel 10, 11, 4, 0
-	ld a, SPRITE_ANIM_OBJ_TRADE_POKE_BALL
+	ld a, SPRITE_ANIM_INDEX_TRADE_POKE_BALL
 	call InitSpriteAnimStruct
 	call TradeAnim_AdvanceScriptPointer
 	ld a, 64
@@ -955,7 +958,7 @@ TradeAnim_RockingBall:
 
 TradeAnim_DropBall:
 	depixel 10, 11, 4, 0
-	ld a, SPRITE_ANIM_OBJ_TRADE_POKE_BALL
+	ld a, SPRITE_ANIM_INDEX_TRADE_POKE_BALL
 	call InitSpriteAnimStruct
 	ld hl, SPRITEANIMSTRUCT_JUMPTABLE_INDEX
 	add hl, bc
@@ -970,7 +973,7 @@ TradeAnim_DropBall:
 
 TradeAnim_Poof:
 	depixel 10, 11, 4, 0
-	ld a, SPRITE_ANIM_OBJ_TRADE_POOF
+	ld a, SPRITE_ANIM_INDEX_TRADE_POOF
 	call InitSpriteAnimStruct
 	call TradeAnim_AdvanceScriptPointer
 	ld a, 16
@@ -983,7 +986,7 @@ TradeAnim_BulgeThroughTube:
 	ld a, %11100100 ; 3,2,1,0
 	call DmgToCgbObjPal0
 	depixel 5, 11
-	ld a, SPRITE_ANIM_OBJ_TRADE_TUBE_BULGE
+	ld a, SPRITE_ANIM_INDEX_TRADE_TUBE_BULGE
 	call InitSpriteAnimStruct
 	call TradeAnim_AdvanceScriptPointer
 	ld a, 128
@@ -1323,34 +1326,35 @@ TradeAnim_WaitAnim:
 	call TradeAnim_AdvanceScriptPointer
 	ret
 
-DebugTrade: ; unreferenced
-; This function was meant for use in Japanese versions, so the
-; constant used for copy length was changed by accident.
+; DebugTrade: ; unreferenced
+; ; This function was meant for use in Japanese versions, so the
+; ; constant used for copy length was changed by accident.
 
-	ld hl, .DebugTradeData
+; 	ld hl, .DebugTradeData
 
-	ld a, [hli]
-	ld [wPlayerTrademonSpecies], a
-	ld de, wPlayerTrademonSenderName
-	ld c, NAME_LENGTH + 2 ; JP: NAME_LENGTH_JAPANESE + 2
-.loop1
-	ld a, [hli]
-	ld [de], a
-	inc de
-	dec c
-	jr nz, .loop1
+; 	ld a, [hli]
+; 	ld [wPlayerTrademonSpecies], a
+; 	ld de, wPlayerTrademonSenderName
+; 	ld c, NAME_LENGTH + 2 ; JP: NAME_LENGTH_JAPANESE + 2
+; .loop1
+; 	ld a, [hli]
+; 	ld [de], a
+; 	inc de
+; 	dec c
+; 	jr nz, .loop1
 
-	ld a, [hli]
-	ld [wOTTrademonSpecies], a
-	ld de, wOTTrademonSenderName
-	ld c, NAME_LENGTH + 2 ; JP: NAME_LENGTH_JAPANESE + 2
-.loop2
-	ld a, [hli]
-	ld [de], a
-	inc de
-	dec c
-	jr nz, .loop2
-	ret
+; 	ld a, [hli]
+; 	ld [wOTTrademonSpecies], a
+; 	ld de, wOTTrademonSenderName
+; 	ld c, NAME_LENGTH + 2 ; JP: NAME_LENGTH_JAPANESE + 2
+; .loop2
+; 	ld a, [hli]
+; 	ld [de], a
+; 	inc de
+; 	dec c
+; 	jr nz, .loop2
+; 	ret
+ds $b
 
 MACRO debugtrade
 ; species, ot name, ot id

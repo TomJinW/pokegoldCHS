@@ -10,7 +10,30 @@
 	const STARTMENUITEM_POKEGEAR ; 7
 	const STARTMENUITEM_QUIT     ; 8
 
+MenuDescFonts:
+	dw Menu0Desc
+	dw Menu1Desc
+	dw Menu2Desc
+	dw Menu3Desc
+	dw Menu4Desc
+	dw Menu5Desc
+	dw Menu6Desc
+	dw Menu7Desc
+	dw Menu8Desc
+
+
+
 StartMenu::
+IF DEF(_DEBUG) 
+	push af
+	call DebugPressedOrHeldB
+	jr z, .bIsNotPressed
+	ld a,[wWalkThroughWalls]
+	cpl
+	ld [wWalkThroughWalls],a
+.bIsNotPressed 
+	pop af
+ENDC
 	call ClearWindowData
 
 	ld de, SFX_MENU
@@ -33,7 +56,7 @@ StartMenu::
 	call DrawVariableLengthMenuBox
 	call .DrawBugContestStatusBox
 	call SafeUpdateSprites
-	call HDMATransferTilemapAndAttrmap_Menu
+	call _OpenAndCloseMenu_HDMATransferTilemapAndAttrmap
 	farcall LoadFonts_NoOAMUpdate
 	call .DrawBugContestStatus
 	call UpdateTimePals
@@ -82,7 +105,7 @@ StartMenu::
 	push af
 	ld a, 1
 	ldh [hOAMUpdate], a
-	call LoadFontsExtra
+	; call LoadFontsExtra
 	pop af
 	ldh [hOAMUpdate], a
 .ReturnEnd:
@@ -96,13 +119,18 @@ StartMenu::
 ; Return carry on exit, and no-carry on selection.
 	xor a
 	ldh [hBGMapMode], a
-	call ._DrawMenuAccount
+	ld b, a ; 初始化一个非$ff的值就行
+	; call ._DrawMenuAccount
 	call SetUpMenu
 	ld a, $ff
 	ld [wMenuSelection], a
 .loop
-	call .PrintMenuAccount
+	ld a, [wMenuSelection]
+	cp b
+	push af
+	call nz, .PrintMenuAccount
 	call GetScrollingMenuJoypad
+	pop bc
 	ld a, [wMenuJoypad]
 	cp B_BUTTON
 	jr z, .b
@@ -196,41 +224,75 @@ StartMenu::
 .PokegearString: db "<POKE>GEAR@"
 .QuitString:     db "QUIT@"
 
-.PokedexDesc:
-	db   "#MON"
-	next "database@"
 
+.PokedexDesc:
+	db   "@"
+	
 .PartyDesc:
-	db   "Party <PKMN>"
-	next "status@"
+	db   "@"
 
 .PackDesc:
-	db   "Contains"
-	next "items@"
+	db   "@"
 
 .PokegearDesc:
-	db   "Trainer's"
-	next "key device@"
+	db   "@"
 
 .StatusDesc:
-	db   "Your own"
-	next "status@"
+	db   "@"
 
 .SaveDesc:
-	db   "Save your"
-	next "progress@"
+	db   "@"
 
 .OptionDesc:
-	db   "Change"
-	next "settings@"
+	db   "@"
 
 .ExitDesc:
-	db   "Close this"
-	next "menu@"
+	db   "@"
 
 .QuitDesc:
-	db   "Quit and"
-	next "be judged.@"
+	db   "@"
+
+; .PokedexDesc:
+; 	db   "#MON"
+; 	next "database@"
+
+; .PartyDesc:
+; 	db   "Party <PKMN>"
+; 	next "status@"
+
+; .PackDesc:
+; 	db   "Contains"
+; 	next "items@"
+
+; .PokegearDesc:
+; 	db   "Trainer's"
+; 	next "key device@"
+
+; .StatusDesc:
+; 	db   "Your own"
+; 	next "status@"
+
+; .SaveDesc:
+; 	db   "Save your"
+; 	next "progress@"
+
+; .OptionDesc:
+; 	db   "Change"
+; 	next "settings@"
+
+; .ExitDesc:
+; 	db   "Close this"
+; 	next "menu@"
+
+; .QuitDesc:
+; 	db   "Quit and"
+; 	next "be judged.@"
+
+
+.MenuDescSmall:
+	db   $65,$66,$67,$68,$69,$6a
+	nextDirect $6b,$6c,$6d,$6e,$6f, -1
+
 
 .OpenMenu:
 	ld a, [wMenuSelection]
@@ -255,19 +317,61 @@ StartMenu::
 
 .MenuDesc:
 	push de
+
+
 	ld a, [wMenuSelection]
 	cp $ff
 	jr z, .none
-	call .GetMenuAccountTextPointer
-rept 4
-	inc hl
-endr
+
+
+	ld hl, MenuDescFonts
+	ld a, [wMenuSelection]
+	add a
+	ld b, 0
+	ld c, a
+	add hl, bc
+
 	ld a, [hli]
-	ld d, [hl]
 	ld e, a
+	ld a, [hl]
+	ld d, a
+	
+	; ld a, d
+	; ld h, a
+	; ld a, e
+	; ld l, a
+
+
+	; ld de, vTiles2 tile $65
+	; call Decompress
+
+	ld hl, vTiles2 tile $65
+	lb bc, BANK(Menu0Desc), 11
+	call Get1bpp
+
+	ld de, .MenuDescSmall
+
 	pop hl
-	call PlaceString
+	call PlaceStringDirect
+
 	ret
+
+; 	ld a, [wMenuSelection]
+; 	call .GetMenuAccountTextPointer
+; rept 4
+; 	inc hl
+; endr
+; 	ld a, [hli]
+; 	ld d, [hl]
+; 	ld e, a
+	; pop hl
+	; call PlaceString
+	; ret
+
+
+
+
+
 .none
 	pop de
 	ret
@@ -361,25 +465,42 @@ endr
 	ret
 
 .DrawMenuAccount:
-	jp ._DrawMenuAccount
+	call .IsMenuAccountOn
+	ret z
+	hlcoord 0, 14
+	lb bc, 4, 10
+	call ClearBox
+
+	hlcoord 0, 14
+	lb bc, 2, 8
+	jp TextboxPalette
+
+	; hlcoord 0, 14
+	; ld b, 2
+	; ld c, SCREEN_WIDTH - 2
+
+	; jp TextboxPalette
+	ret
 
 .PrintMenuAccount:
 	call .IsMenuAccountOn
 	ret z
-	call ._DrawMenuAccount
-	decoord 0, 14
+	; call ._DrawMenuAccount
+	decoord 1, 15
 	jp .MenuDesc
 
 ._DrawMenuAccount:
 	call .IsMenuAccountOn
 	ret z
-	hlcoord 0, 13
-	lb bc, 5, 10
+
+	hlcoord 0, 14
+	lb bc, 4, 10
 	call ClearBox
-	hlcoord 0, 13
-	ld b, 3
-	ld c, 8
-	jp TextboxPalette
+	ret
+	
+	; hlcoord 0, 14
+	; lb bc, 2, 8
+	; jp TextboxPalette
 
 .IsMenuAccountOn:
 	ld a, [wOptions2]
@@ -480,7 +601,30 @@ StartMenu_Pokegear:
 
 StartMenu_Pack:
 	call FadeToMenu
+
+	; CGB 超频模式启动
+	; ld a, [hCGB] ;
+	; and a ;
+	; jr z, .NOTCGB ;
+
+	; ld a, 1 ;
+	; ldh [rKEY1], a ;
+	; stop ;
+.NOTCGB
+
 	farcall Pack
+
+	; CGB 超频模式关闭
+	; ld a, [hCGB] ;
+	; and a ;
+	; jr z, .NOTCGB2 ;
+
+	; ld a, 1 ;
+	; ldh [rKEY1], a ;
+	; stop ;
+.NOTCGB2
+
+
 	ld a, [wPackUsedItem]
 	and a
 	jr nz, .used_item
@@ -512,9 +656,9 @@ StartMenu_Pokemon:
 
 .menunoreload
 	farcall WritePartyMenuTilemap
-	farcall PlacePartyMenuText
+	farcall PrintPartyMenuText
 	call WaitBGMap
-	call SetDefaultBGPAndOBP
+	call SetPalettes ; load regular palettes?
 	call DelayFrame
 	farcall PartyMenuSelect
 	jr c, .return ; if cancelled or pressed B

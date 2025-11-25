@@ -136,18 +136,18 @@ ForgetMove:
 	push hl
 	ld hl, MoveAskForgetText
 	call PrintText
-	hlcoord 5, 2
+	hlcoord 9, 2 + 6 ; Fix Move list
 	ld b, NUM_MOVES * 2
-	ld c, MOVE_NAME_LENGTH
+	ld c, MOVE_NAME_LENGTH - 4
 	call Textbox
-	hlcoord 5 + 2, 2 + 2
+	hlcoord 5 + 2 + 4, 2 + 2 + 6
 	ld a, SCREEN_WIDTH * 2
 	ld [wListMovesLineSpacing], a
 	predef ListMoves
 	; w2DMenuData
-	ld a, $4
+	ld a, $4 + 6
 	ld [w2DMenuCursorInitY], a
-	ld a, $6
+	ld a, $6 + 4
 	ld [w2DMenuCursorInitX], a
 	ld a, [wNumMoves]
 	inc a

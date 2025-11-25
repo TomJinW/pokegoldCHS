@@ -114,7 +114,7 @@ DoPlayerMovement::
 ; Tiles such as waterfalls and warps move the player
 ; in a given direction, overriding input.
 
-	ld a, [wPlayerTileCollision]
+	ld a, [wPlayerTile]
 	ld c, a
 	call CheckWhirlpoolTile
 	jr c, .not_whirlpool
@@ -270,7 +270,7 @@ DoPlayerMovement::
 	cp 2
 	jr z, .bump
 
-	ld a, [wPlayerTileCollision]
+	ld a, [wPlayerTile]
 	call CheckIceTile
 	jr nc, .ice
 
@@ -352,7 +352,7 @@ DoPlayerMovement::
 	ret
 
 .TryJump:
-	ld a, [wPlayerTileCollision]
+	ld a, [wPlayerTile]
 	ld e, a
 	and $f0
 	cp HI_NYBBLE_LEDGES
@@ -398,7 +398,7 @@ DoPlayerMovement::
 	ld d, 0
 	ld hl, .EdgeWarps
 	add hl, de
-	ld a, [wPlayerTileCollision]
+	ld a, [wPlayerTile]
 	cp [hl]
 	jr nz, .not_warp
 
@@ -592,7 +592,7 @@ DoPlayerMovement::
 	ld h, [hl]
 	ld l, a
 	ld a, [hl]
-	ld [wWalkingTileCollision], a
+	ld [wWalkingTile], a
 	ret
 
 MACRO player_action
@@ -603,7 +603,7 @@ ENDM
 
 .action_table:
 .action_table_1
-	player_action STANDING, FACE_CURRENT, 0,  0, wPlayerTileCollision
+	player_action STANDING, FACE_CURRENT, 0,  0, wPlayerTile
 .action_table_1_end
 	player_action RIGHT,    FACE_RIGHT,   1,  0, wTileRight
 	player_action LEFT,     FACE_LEFT,   -1,  0, wTileLeft
@@ -693,7 +693,7 @@ ENDM
 	and d
 	jr nz, .NotWalkable
 
-	ld a, [wWalkingTileCollision]
+	ld a, [wWalkingTile]
 	call .CheckWalkable
 	jr c, .NotWalkable
 
@@ -714,7 +714,7 @@ ENDM
 	and d
 	jr nz, .NotSurfable
 
-	ld a, [wWalkingTileCollision]
+	ld a, [wWalkingTile]
 	call .CheckSurfable
 	jr c, .NotSurfable
 
@@ -735,7 +735,7 @@ ENDM
 .CheckWalkable:
 ; Return 0 if tile a is land. Otherwise, return carry.
 
-	call GetTilePermission
+	call GetTileCollision
 	and a ; LAND_TILE
 	ret z
 	scf
@@ -745,7 +745,7 @@ ENDM
 ; Return 0 if tile a is water, or 1 if land.
 ; Otherwise, return carry.
 
-	call GetTilePermission
+	call GetTileCollision
 	cp WATER_TILE
 	jr z, .Water
 
@@ -789,7 +789,7 @@ CheckStandingOnIce::
 	jr z, .not_ice
 	cp $f0
 	jr z, .not_ice
-	ld a, [wPlayerTileCollision]
+	ld a, [wPlayerTile]
 	call CheckIceTile
 	jr nc, .yep
 	ld a, [wPlayerState]

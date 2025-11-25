@@ -23,13 +23,24 @@ BattleCommand_BatonPass:
 	call ClearPalettes
 	farcall _LoadBattleFontsHPBar
 	call CloseWindow
+	farcall GetEnemyMonFrontpic ; 接棒开宝可梦菜单后重新读取对方宝可梦图片
+	; farcall ReloadEnemyMonNickname
+	; farcall ReloadBattleMonNickname
 	call ClearSprites
-	hlcoord 1, 0
-	lb bc, 4, 10
+	
+	hlcoord 1, 13
+	lb bc, 4, 18
 	call ClearBox
+
+	hlcoord 0, 0
+	lb bc, 4, 11
+	call ClearBox
+	; hlcoord 1, 0
+	; lb bc, 4, 10
+	; call ClearBox
 	ld b, SCGB_BATTLE_COLORS
 	call GetSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	call BatonPass_LinkPlayerSwitch
 
 	ld hl, PassedBattleMonEntrance

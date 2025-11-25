@@ -29,7 +29,7 @@ MainMenu:
 	ld b, SCGB_DIPLOMA
 	call GetSGBLayout
 	ld hl, wGameTimerPaused
-	res GAME_TIMER_COUNTING_F, [hl]
+	res GAME_TIMER_PAUSED_F, [hl]
 	call MainMenu_GetWhichMenu
 	ld [wWhichIndexSet], a
 	call MainMenu_PrintCurrentTimeAndDay
@@ -207,17 +207,25 @@ MainMenu_PrintCurrentTimeAndDay:
 	ld b, a
 	decoord 1, 14
 	call PrintDayOfWeek
-	decoord 4, 16
+	decoord 2, 16 ;decoord 4, 16
 	ldh a, [hHours]
 	ld c, a
 	farcall PrintHour
-	ld [hl], ":"
-	inc hl
+	; ld [hl], $76  ;ld [hl], ":" ; CHS_Fix Time
+	; inc hl
+	ld de, .hourString
+	call PlaceString
+	ld l, c
+	ld h, b
 	ld de, hMinutes
 	lb bc, PRINTNUM_LEADINGZEROS | 1, 2
 	call PrintNum
+	ld de, .minString
+	call PlaceString
 	ret
 
+.hourString:
+	db "hr.@"
 .minString: ; unreferenced
 	db "min.@"
 
@@ -242,10 +250,12 @@ PrintDayOfWeek:
 	ld d, h
 	ld e, l
 	pop hl
+	push de
+	ld de, .Day
 	call PlaceString
 	ld h, b
 	ld l, c
-	ld de, .Day
+	pop de ;ld de, .Day
 	call PlaceString
 	ret
 

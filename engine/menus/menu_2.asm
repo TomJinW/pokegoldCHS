@@ -16,8 +16,10 @@ PlaceMenuItemQuantity:
 	pop hl
 	and a
 	jr nz, .done
-	ld de, $15
-	add hl, de
+	; ld de, $15
+	; add hl, de
+	inc hl
+	inc hl
 	ld [hl], "×"
 	inc hl
 	ld de, wMenuSelectionQuantity
@@ -39,7 +41,7 @@ PlaceMoneyBottomLeft:
 
 PlaceMoneyAtTopLeftOfTextbox:
 	ld hl, MoneyTopRightMenuHeader
-	lb de, 0, 11
+	lb de, 0, 0 ;lb de, 0, 11
 	call OffsetMenuHeader
 
 PlaceMoneyTextbox:
@@ -60,47 +62,50 @@ MoneyTopRightMenuHeader:
 
 MoneyBottomLeftMenuHeader:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 0, 11, 8, 13
+	menu_coords 0, 0, 8, 2 ;menu_coords 0, 11, 8, 13
 	dw NULL
 	db 1 ; default option
 
 DisplayCoinCaseBalance:
 	; Place a text box of size 1x7 at 11, 0.
-	hlcoord 11, 0
-	ld b, 1
-	ld c, 7
+	hlcoord 8, 0
+	ld b, 2
+	ld c, 10
 	call Textbox
-	hlcoord 12, 0
+	hlcoord 9, 2
 	ld de, CoinString
 	call PlaceString
-	hlcoord 17, 1
+	hlcoord 17, 2
 	ld de, ShowMoney_TerminatorString
 	call PlaceString
 	ld de, wCoins
 	lb bc, 2, 4
-	hlcoord 13, 1
+	hlcoord 13, 2
 	call PrintNum
 	ret
 
 DisplayMoneyAndCoinBalance:
-	hlcoord 5, 0
-	ld b, 3
-	ld c, 13
+	hlcoord 4, 0
+	ld b, 4
+	ld c, 14
 	call Textbox
-	hlcoord 6, 1
+	hlcoord 5, 2
 	ld de, MoneyString
 	call PlaceString
-	hlcoord 12, 1
+	hlcoord 10, 2
 	ld de, wMoney
-	lb bc, PRINTNUM_MONEY | 3, 6
+	lb bc,PRINTNUM_MONEY | 3, 6 ; PRINTNUM_MONEY | 3, 6
 	call PrintNum
-	hlcoord 6, 3
+	hlcoord 5, 4
 	ld de, CoinString
 	call PlaceString
-	hlcoord 15, 3
+	hlcoord 13, 4
 	ld de, wCoins
 	lb bc, 2, 4
 	call PrintNum
+	hlcoord 17, 4
+	ld de, ShowMoney_TerminatorString
+	call PlaceString
 	ret
 
 MoneyString:
@@ -140,16 +145,20 @@ StartMenu_PrintSafariGameStatus: ; unreferenced
 	ret
 
 .slash_500
-	db "／５００@"
+	db_w "<／><５><０><０>@"
 .booru_ko
-	db "ボール　　　こ@"
+	db_w "ボール<　><　><　>こ@"
 
 StartMenu_DrawBugContestStatusBox:
+	; hlcoord 0, 0
+	; ld b, 5
+	; ld c, 17
+	; call Textbox
+	; ret
 	hlcoord 0, 0
-	ld b, 5
-	ld c, 17
-	call Textbox
-	ret
+	ld b, 6
+	ld c, 9
+	jp Textbox
 
 StartMenu_PrintBugContestStatus:
 	ld hl, wOptions
@@ -157,14 +166,14 @@ StartMenu_PrintBugContestStatus:
 	push af
 	set NO_TEXT_SCROLL, [hl]
 	call StartMenu_DrawBugContestStatusBox
-	hlcoord 1, 5
+	hlcoord 1, 2
 	ld de, .BallsString
 	call PlaceString
-	hlcoord 8, 5
+	hlcoord 4, 2
 	ld de, wParkBallsRemaining
-	lb bc, PRINTNUM_LEFTALIGN | 1, 2
+	lb bc, 1, 2
 	call PrintNum
-	hlcoord 1, 1
+	hlcoord 1, 4
 	ld de, .CaughtString
 	call PlaceString
 	ld a, [wContestMon]
@@ -175,12 +184,12 @@ StartMenu_PrintBugContestStatus:
 	call GetPokemonName
 
 .no_contest_mon
-	hlcoord 8, 1
+	hlcoord 4, 4 ;hlcoord 8, 1
 	call PlaceString
 	ld a, [wContestMon]
 	and a
 	jr z, .skip_level
-	hlcoord 1, 3
+	hlcoord 1, 6 ;hlcoord 1, 3
 	ld de, .LevelString
 	call PlaceString
 	ld a, [wContestMonLevel]
@@ -196,7 +205,7 @@ StartMenu_PrintBugContestStatus:
 	ret
 
 .BallsJPString: ; unreferenced
-	db "ボール　　　こ@"
+	db_w "ボール<　><　><　>こ@"
 .CaughtString:
 	db "CAUGHT@"
 .BallsString:
@@ -226,7 +235,7 @@ Kurt_SelectApricorn:
 
 .MenuHeader:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 0, 0, 14, 17
+	menu_coords 0, 0, 10, 17 ;menu_coords 0, 0, 14, 17
 	dw .MenuData
 	db 1 ; default option
 

@@ -147,7 +147,10 @@ KantoGrassWildMons:
 	; morn
 	db 32, GRAVELER
 	db 32, GOLBAT
-	db 33, URSARING
+
+	; db 33, URSARING
+	db 33, DONPHAN
+
 	db 34, ONIX
 	db 36, ONIX
 	db 35, RHYHORN
@@ -155,7 +158,10 @@ KantoGrassWildMons:
 	; day
 	db 32, GRAVELER
 	db 32, GOLBAT
-	db 33, URSARING
+
+	; db 33, URSARING
+	db 33, DONPHAN
+
 	db 34, ONIX
 	db 36, ONIX
 	db 35, RHYHORN
@@ -163,7 +169,10 @@ KantoGrassWildMons:
 	; nite
 	db 32, GRAVELER
 	db 32, GOLBAT
-	db 33, URSARING
+
+	; db 33, URSARING
+	db 33, DONPHAN
+
 	db 34, ONIX
 	db 36, ONIX
 	db 35, RHYHORN
@@ -172,7 +181,10 @@ KantoGrassWildMons:
 	; morn
 	db 32, GRAVELER
 	db 32, GOLBAT
-	db 33, DONPHAN
+
+	; db 33, DONPHAN
+	db 33, URSARING
+
 	db 34, ONIX
 	db 36, ONIX
 	db 35, RHYHORN
@@ -180,7 +192,10 @@ KantoGrassWildMons:
 	; day
 	db 32, GRAVELER
 	db 32, GOLBAT
-	db 33, DONPHAN
+
+	; db 33, DONPHAN
+	db 33, URSARING
+
 	db 34, ONIX
 	db 36, ONIX
 	db 35, RHYHORN
@@ -188,7 +203,10 @@ KantoGrassWildMons:
 	; nite
 	db 32, GRAVELER
 	db 32, GOLBAT
-	db 33, DONPHAN
+
+	; db 33, DONPHAN
+	db 33, URSARING
+
 	db 34, ONIX
 	db 36, ONIX
 	db 35, RHYHORN
@@ -1230,7 +1248,10 @@ KantoGrassWildMons:
 	; morn
 	db 39, TANGELA
 	db 40, PONYTA
-	db 40, URSARING
+
+	; db 40, URSARING
+	db 40, DONPHAN
+
 	db 42, RAPIDASH
 	db 41, DODUO
 	db 43, DODRIO
@@ -1238,7 +1259,10 @@ KantoGrassWildMons:
 	; day
 	db 39, TANGELA
 	db 40, PONYTA
-	db 40, URSARING
+
+	; db 40, URSARING
+	db 40, DONPHAN
+
 	db 42, RAPIDASH
 	db 41, DODUO
 	db 43, DODRIO
@@ -1246,7 +1270,10 @@ KantoGrassWildMons:
 	; nite
 	db 39, TANGELA
 	db 40, PONYTA
-	db 40, URSARING
+
+	; db 40, URSARING
+	db 40, DONPHAN
+
 	db 40, SNEASEL
 	db 42, RAPIDASH
 	db 42, RAPIDASH
@@ -1255,7 +1282,10 @@ KantoGrassWildMons:
 	; morn
 	db 39, TANGELA
 	db 40, PONYTA
-	db 40, DONPHAN
+
+	; db 40, DONPHAN
+	db 40, URSARING
+
 	db 42, RAPIDASH
 	db 41, DODUO
 	db 43, DODRIO
@@ -1263,7 +1293,10 @@ KantoGrassWildMons:
 	; day
 	db 39, TANGELA
 	db 40, PONYTA
-	db 40, DONPHAN
+
+	; db 40, DONPHAN
+	db 40, URSARING
+
 	db 42, RAPIDASH
 	db 41, DODUO
 	db 43, DODRIO
@@ -1271,7 +1304,10 @@ KantoGrassWildMons:
 	; nite
 	db 39, TANGELA
 	db 40, PONYTA
-	db 40, DONPHAN
+
+	; db 40, DONPHAN
+	db 40, URSARING
+
 	db 40, SNEASEL
 	db 42, RAPIDASH
 	db 42, RAPIDASH

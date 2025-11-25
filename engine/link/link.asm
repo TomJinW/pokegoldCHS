@@ -473,8 +473,12 @@ endc
 	jp ExitLinkCommunications
 
 .ready_to_trade
-	ld de, MUSIC_ROUTE_30
-	call PlayMusic
+	; ld de, MUSIC_ROUTE_30
+	; call PlayMusic
+	nop
+	nop 
+	nop 
+	call CheckForPokeMoverForGBA
 	jp InitTradeMenuDisplay
 
 LinkTimeout:
@@ -488,7 +492,6 @@ LinkTimeout:
 	xor a
 	ld [hld], a
 	ld [hl], a
-	assert VBLANK_NORMAL == 0
 	ldh [hVBlank], a
 	push de
 	hlcoord 0, 12
@@ -497,7 +500,7 @@ LinkTimeout:
 	call LinkTextboxAtHL
 	pop hl
 	bccoord 1, 14
-	jp PrintTextboxTextAt
+	jp PlaceHLTextAtBC
 
 .LinkTimeoutText:
 	text_far _LinkTimeoutText
@@ -588,7 +591,7 @@ endr
 
 ; Loop through all the patchable link data
 	ld hl, wLinkData + SERIAL_PREAMBLE_LENGTH + NAME_LENGTH + (1 + PARTY_LENGTH + 1) - 1
-	ld de, wPlayerPatchLists + SERIAL_RNS_LENGTH
+	ld de, wPlayerPatchLists + SERIAL_RNS_LENGTH ; ???
 	lb bc, 0, 0
 .patch_loop
 ; Check if we've gone over the entire area
@@ -1174,19 +1177,19 @@ InitTradeMenuDisplay:
 LinkTrade_OTPartyMenu:
 	ld a, OTPARTYMON
 	ld [wMonType], a
-	ld a, A_BUTTON | D_UP | D_DOWN
+	ld a, A_BUTTON | D_UP | D_DOWN | D_LEFT
 	ld [wMenuJoypadFilter], a
 	ld a, [wOTPartyCount]
 	ld [w2DMenuNumRows], a
 	ld a, 1
 	ld [w2DMenuNumCols], a
-	ld a, 9
+	ld a, 3 ;ld a, 9
 	ld [w2DMenuCursorInitY], a
-	ld a, 6
+	ld a, 11 ;ld a, 6
 	ld [w2DMenuCursorInitX], a
 	ld a, 1
 	ld [wMenuCursorX], a
-	ln a, 1, 0
+	ln a, 2, 0 ;ln a, 1, 0
 	ld [w2DMenuCursorOffsets], a
 	ld a, MENU_UNUSED_3
 	ld [w2DMenuFlags1], a
@@ -1207,6 +1210,21 @@ LinkTradeOTPartymonMenuLoop:
 	jp LinkTradePartiesMenuMasterLoop
 
 .not_a_button
+	bit D_LEFT_F, a
+	jr z, .not_d_left
+	xor a
+	ld [wMonType], a
+	call HideCursor
+	ld a, [wMenuCursorY]
+	ld b, a
+	ld a, [wPartyCount]
+	cp b
+	jr nc, LinkTrade_PlayerPartyMenu
+	ld [wMenuCursorY], a
+.skip
+	jr LinkTrade_PlayerPartyMenu
+
+.not_d_left
 	bit D_UP_F, a
 	jr z, .not_d_up
 	ld a, [wMenuCursorY]
@@ -1214,34 +1232,40 @@ LinkTradeOTPartymonMenuLoop:
 	ld a, [wOTPartyCount]
 	cp b
 	jp nz, LinkTradePartiesMenuMasterLoop
-	xor a
-	ld [wMonType], a
+	; xor a
+	; ld [wMonType], a
 	call HideCursor
-	ld a, [wPartyCount]
-	ld [wMenuCursorY], a
-	jr LinkTrade_PlayerPartyMenu
+	; ld a, [wPartyCount]
+	; ld [wMenuCursorY], a
+	; jr LinkTrade_PlayerPartyMenu
+	jp LinkTradePartymonMenuCheckCancel
 
 .not_d_up
 	bit D_DOWN_F, a
 	jp z, LinkTradePartiesMenuMasterLoop
-	jp LinkTradeOTPartymonMenuCheckCancel
+	; jp LinkTradeOTPartymonMenuCheckCancel
+	ld a, [wMenuCursorY]
+	dec a
+	jp nz, LinkTradePartiesMenuMasterLoop
+	call HideCursor
+	jp LinkTradePartymonMenuCheckCancel
 
 LinkTrade_PlayerPartyMenu:
 	xor a
 	ld [wMonType], a
-	ld a, A_BUTTON | D_UP | D_DOWN
+	ld a, A_BUTTON | D_UP | D_DOWN | D_RIGHT
 	ld [wMenuJoypadFilter], a
 	ld a, [wPartyCount]
 	ld [w2DMenuNumRows], a
 	ld a, 1
 	ld [w2DMenuNumCols], a
-	ld a, 1
+	ld a, 3 ;ld a, 1
 	ld [w2DMenuCursorInitY], a
-	ld a, 6
+	ld a, 1 ;ld a, 6
 	ld [w2DMenuCursorInitX], a
 	ld a, 1
 	ld [wMenuCursorX], a
-	ln a, 1, 0
+	ln a, 2, 0 ;ln a, 1, 0
 	ld [w2DMenuCursorOffsets], a
 	ld a, MENU_UNUSED_3
 	ld [w2DMenuFlags1], a
@@ -1260,17 +1284,33 @@ LinkTradePartymonMenuLoop:
 	jp LinkTrade_TradeStatsMenu
 
 .not_a_button
+	bit D_RIGHT_F, a
+	jr z, .not_d_right
+	ld a,OTPARTYMON
+	ld [wMonType], a
+	call HideCursor
+	ld a, [wMenuCursorY]
+	ld b, a
+	ld a, [wOTPartyCount]
+	cp b
+	jp nc, LinkTrade_OTPartyMenu
+	ld [wMenuCursorY], a
+.skip
+	jp LinkTrade_OTPartyMenu
+
+.not_d_right
 	bit D_DOWN_F, a
 	jr z, .not_d_down
 	ld a, [wMenuCursorY]
 	dec a
 	jp nz, LinkTradePartiesMenuMasterLoop
-	ld a, OTPARTYMON
-	ld [wMonType], a
+	; ld a, OTPARTYMON
+	; ld [wMonType], a
 	call HideCursor
-	ld a, 1
-	ld [wMenuCursorY], a
-	jp LinkTrade_OTPartyMenu
+	; ld a, 1
+	; ld [wMenuCursorY], a
+	; jp LinkTrade_OTPartyMenu
+	jp LinkTradePartymonMenuCheckCancel
 
 .not_d_down
 	bit D_UP_F, a
@@ -1281,9 +1321,10 @@ LinkTradePartymonMenuLoop:
 	cp b
 	jr nz, LinkTradePartiesMenuMasterLoop
 	call HideCursor
-	ld a, 1
-	ld [wMenuCursorY], a
-	jp LinkTrade_PlayerPartyMenu
+	jp LinkTradePartymonMenuCheckCancel
+	; ld a, 1
+	; ld [wMenuCursorY], a
+	; jp LinkTrade_PlayerPartyMenu
 
 LinkTradePartiesMenuMasterLoop:
 	ld a, [wMonType]
@@ -1297,8 +1338,10 @@ LinkTrade_TradeStatsMenu:
 	call PlaceHollowCursor
 	ld a, [wMenuCursorY]
 	push af
-	hlcoord 0, 15
-	ld b, 1
+	hlcoord 0, 14
+	ld b, 2
+	; hlcoord 0, 15
+	; ld b, 1
 	ld c, 18
 	call LinkTextboxAtHL
 	hlcoord 2, 16
@@ -1372,7 +1415,7 @@ LinkTrade_TradeStatsMenu:
 	ld [wInitListType], a
 	callfar InitList
 	call LinkMonStatsScreen
-	call SafeLoadTempTilemapToTilemap
+	; call SafeLoadTempTilemapToTilemap
 	jp LinkTrade_PlayerPartyMenu
 
 .try_trade
@@ -1382,7 +1425,7 @@ LinkTrade_TradeStatsMenu:
 	dec a
 	ld [wCurTradePartyMon], a
 	ld [wPlayerLinkAction], a
-	call Serial_PlaceWaitingTextAndSyncAndExchangeNybble
+	call Serial_PrintWaitingTextAndSyncAndExchangeNybble
 	ld a, [wOtherPlayerLinkMode]
 	cp $f
 	jp z, InitTradeMenuDisplay
@@ -1403,7 +1446,7 @@ LinkTrade_TradeStatsMenu:
 	call LinkTextboxAtHL
 	ld hl, .LinkTradeCantBattleText
 	bccoord 1, 14
-	call PrintTextboxTextAt
+	call PlaceHLTextAtBC
 	jr .cancel_trade
 
 .abnormal
@@ -1424,7 +1467,7 @@ LinkTrade_TradeStatsMenu:
 	call LinkTextboxAtHL
 	ld hl, .LinkAbnormalMonText
 	bccoord 1, 14
-	call PrintTextboxTextAt
+	call PlaceHLTextAtBC
 
 .cancel_trade
 	hlcoord 0, 12
@@ -1436,7 +1479,7 @@ LinkTrade_TradeStatsMenu:
 	call PlaceString
 	ld a, $1
 	ld [wPlayerLinkAction], a
-	call Serial_PlaceWaitingTextAndSyncAndExchangeNybble
+	call Serial_PrintWaitingTextAndSyncAndExchangeNybble
 	ld c, 100
 	call DelayFrames
 	jp InitTradeMenuDisplay
@@ -1458,6 +1501,7 @@ LinkTradeOTPartymonMenuCheckCancel:
 	jp nz, LinkTradePartiesMenuMasterLoop
 	call HideCursor
 
+LinkTradePartymonMenuCheckCancel:
 .loop1
 	ld a, "▶"
 	ldcoord_a 1, 16
@@ -1472,16 +1516,19 @@ LinkTradeOTPartymonMenuCheckCancel:
 	jr z, .loop2
 	ld a, " "
 	ldcoord_a 1, 16
-	ld a, [wOTPartyCount]
+	; ld a, [wOTPartyCount]
+	; ld [wMenuCursorY], a
+	; jp LinkTrade_OTPartyMenu
+	ld a, [wPartyCount]
 	ld [wMenuCursorY], a
-	jp LinkTrade_OTPartyMenu
+	jp LinkTrade_PlayerPartyMenu
 
 .a_button
 	ld a, "▷"
 	ldcoord_a 1, 16
 	ld a, $f
 	ld [wPlayerLinkAction], a
-	call Serial_PlaceWaitingTextAndSyncAndExchangeNybble
+	call Serial_PrintWaitingTextAndSyncAndExchangeNybble
 	ld a, [wOtherPlayerLinkMode]
 	cp $f
 	jr nz, .loop1
@@ -1502,15 +1549,24 @@ ExitLinkCommunications:
 
 PlaceTradeScreenFooter:
 ; Fill the screen footer with pattern tile
-	hlcoord 0, 16
+	; hlcoord 0, 16
+	; ld a, $7e
+	; ld bc, 2 * SCREEN_WIDTH
+	hlcoord 11, 15
 	ld a, $7e
-	ld bc, 2 * SCREEN_WIDTH
+	ld bc, 2 * SCREEN_WIDTH + 9
 	call ByteFill
 ; Clear out area for cancel string
-	hlcoord 1, 16
-	ld a, " "
-	ld bc, SCREEN_WIDTH - 2
-	call ByteFill
+	; hlcoord 1, 16
+	; ld a, " "
+	; ld bc, SCREEN_WIDTH - 2
+	; call ByteFill
+	hlcoord 0, 14
+	; ld b, 1
+	; ld c, 9
+	ld b, 2
+	ld c, 9
+	call LinkTextboxAtHL
 ; Place the string
 	hlcoord 2, 16
 	ld de, .CancelString
@@ -1522,8 +1578,8 @@ PlaceTradeScreenFooter:
 LinkTradePlaceArrow:
 ; Indicates which pokemon the other player has selected to trade
 	ld a, [wOtherPlayerLinkMode]
-	hlcoord 6, 9
-	ld bc, SCREEN_WIDTH
+	hlcoord 11, 3
+	ld bc, SCREEN_WIDTH * 2
 	call AddNTimes
 	ld [hl], "▷"
 	ret
@@ -1576,18 +1632,21 @@ LinkTrade:
 	call GetPokemonName
 	ld hl, LinkAskTradeForText
 	bccoord 1, 14
-	call PrintTextboxTextAt
+	call PlaceHLTextAtBC
 	call LoadTilemapToTempTilemap
-	hlcoord 10, 7
-	ld b, 3
-	ld c, 7
+	; hlcoord 10, 7
+	; ld b, 3
+	; ld c, 7
+	hlcoord 12, 6
+	ld b, 4
+	ld c, 4
 	call LinkTextboxAtHL
 	ld de, String_TradeCancel
-	hlcoord 12, 8
+	hlcoord 14, 8 ;hlcoord 12, 8
 	call PlaceString
 	ld a, 8
 	ld [w2DMenuCursorInitY], a
-	ld a, 11
+	ld a, 13 ;ld a, 11
 	ld [w2DMenuCursorInitX], a
 	ld a, 1
 	ld [w2DMenuNumCols], a
@@ -1623,13 +1682,13 @@ LinkTrade:
 	hlcoord 1, 14
 	ld de, String_TooBadTheTradeWasCanceled
 	call PlaceString
-	call Serial_PlaceWaitingTextAndSyncAndExchangeNybble
+	call Serial_PrintWaitingTextAndSyncAndExchangeNybble
 	jp InitTradeMenuDisplay_Delay
 
 .try_trade
 	ld a, $2
 	ld [wPlayerLinkAction], a
-	call Serial_PlaceWaitingTextAndSyncAndExchangeNybble
+	call Serial_PrintWaitingTextAndSyncAndExchangeNybble
 	ld a, [wOtherPlayerLinkMode]
 	dec a
 	jr nz, .do_trade
@@ -1852,7 +1911,7 @@ LinkTrade:
 	ld a, b
 	ld [wPlayerLinkAction], a
 	push bc
-	call Serial_PlaceWaitingTextAndSyncAndExchangeNybble
+	call Serial_PrintWaitingTextAndSyncAndExchangeNybble
 	pop bc
 	ld a, [wLinkMode]
 	cp LINK_TIMECAPSULE
@@ -1951,16 +2010,22 @@ LoadTradeScreenBorderGFX:
 SetTradeRoomBGPals:
 	ld b, SCGB_DIPLOMA
 	call GetSGBLayout
-	jp SetDefaultBGPAndOBP
+	jp SetPalettes
 
 PlaceTradeScreenTextbox:
-	hlcoord 0, 0
-	ld b, 6
-	ld c, 18
+	; hlcoord 0, 0
+	; ld b, 6
+	; ld c, 18
+	hlcoord 0, 1
+	ld b, 12
+	ld c, 8
 	call LinkTextboxAtHL
-	hlcoord 0, 8
-	ld b, 6
-	ld c, 18
+	; hlcoord 0, 8
+	; ld b, 6
+	; ld c, 18
+	hlcoord 10, 1
+	ld b, 12
+	ld c, 8
 	call LinkTextboxAtHL
 	farcall PlaceTradePartnerNamesAndParty
 	ret
@@ -2078,8 +2143,7 @@ endc
 	vc_patch_end
 	xor a
 	ldh [hVBlank], a
-	assert LINK_TIMECAPSULE == 1
-	inc a
+	inc a ; LINK_TIMECAPSULE
 	ld [wLinkMode], a
 	ret
 
@@ -2144,7 +2208,7 @@ SetBitsForTimeCapsuleRequest:
 	ldh [rSC], a
 	ld a, (1 << rSC_ON) | (0 << rSC_CLOCK)
 	ldh [rSC], a
-	xor a ; LINK_NULL
+	xor a ; LINK_TIMECAPSULE - 1
 	ld [wPlayerLinkAction], a
 	ld [wChosenCableClubRoom], a
 	ret
@@ -2238,7 +2302,7 @@ CheckLinkTimeout_Receptionist:
 	xor a
 	ld [hl], a
 	call WaitBGMap
-	ld a, VBLANK_SOUND_ONLY
+	ld a, $2
 	ldh [hVBlank], a
 	call DelayFrame
 	call DelayFrame
@@ -2260,7 +2324,7 @@ CheckLinkTimeout_Gen2:
 	xor a
 	ld [hl], a
 	call WaitBGMap
-	ld a, VBLANK_SOUND_ONLY
+	ld a, $2
 	ldh [hVBlank], a
 	call DelayFrame
 	call DelayFrame
@@ -2457,7 +2521,7 @@ Link_EnsureSync:
 	add $d0
 	ld [wLinkPlayerSyncBuffer], a
 	ld [wLinkPlayerSyncBuffer + 1], a
-	ld a, VBLANK_SOUND_ONLY
+	ld a, $2
 	ldh [hVBlank], a
 	call DelayFrame
 	call DelayFrame

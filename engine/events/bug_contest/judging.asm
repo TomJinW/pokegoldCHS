@@ -6,14 +6,33 @@ _BugContestJudging:
 	ld a, [wBugContestThirdPlaceMon]
 	ld [wNamedObjectIndex], a
 	call GetPokemonName
+
+	push af
+	ld a, [wEngPKMNNameMark]
+	cp 1
 	ld hl, ContestJudging_ThirdPlaceText
+	jr nz, .CHS
+	ld hl, ContestJudging_ThirdPlaceTextENG
+.CHS
+	pop af
+
+
 	call PrintText
 	ld a, [wBugContestSecondPlaceWinnerID]
 	call LoadContestantName
 	ld a, [wBugContestSecondPlaceMon]
 	ld [wNamedObjectIndex], a
 	call GetPokemonName
+
+	push af
+	ld a, [wEngPKMNNameMark]
+	cp 1
 	ld hl, ContestJudging_SecondPlaceText
+	jr nz, .CHS2
+	ld hl, ContestJudging_SecondPlaceTextENG
+.CHS2
+	pop af
+
 	call PrintText
 	ld a, [wBugContestFirstPlaceWinnerID]
 	call LoadContestantName
@@ -47,6 +66,16 @@ ContestJudging_SecondPlaceText:
 	ld hl, ContestJudging_SecondPlaceScoreText
 	ret
 
+ContestJudging_SecondPlaceTextENG:
+; Placing second was @ , who caught a @ !@ @
+	text_far _ContestJudging_SecondPlaceTextENG
+	text_asm
+	ld de, SFX_2ND_PLACE
+	call PlaySFX
+	call WaitSFX
+	ld hl, ContestJudging_SecondPlaceScoreText
+	ret
+
 ContestJudging_SecondPlaceScoreText:
 	text_far _ContestJudging_SecondPlaceScoreText
 	text_end
@@ -54,6 +83,16 @@ ContestJudging_SecondPlaceScoreText:
 ContestJudging_ThirdPlaceText:
 	; Placing third was @ , who caught a @ !@ @
 	text_far _ContestJudging_ThirdPlaceText
+	text_asm
+	ld de, SFX_3RD_PLACE
+	call PlaySFX
+	call WaitSFX
+	ld hl, ContestJudging_ThirdPlaceScoreText
+	ret
+
+ContestJudging_ThirdPlaceTextENG:
+	; Placing third was @ , who caught a @ !@ @
+	text_far _ContestJudging_ThirdPlaceTextENG
 	text_asm
 	ld de, SFX_3RD_PLACE
 	call PlaySFX

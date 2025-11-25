@@ -69,8 +69,11 @@ wCryPitch:: dw
 wCryLength:: dw
 
 wLastVolume:: db
+UNION
 wUnusedMusicF9Flag:: db
+NEXTU
 
+ENDU
 wSFXPriority::
 ; if nonzero, turn off music when playing sfx
 	db
@@ -198,7 +201,7 @@ wSpriteAnimData::
 
 wSpriteAnimDict::
 ; wSpriteAnimDict pairs keys with values
-; keys: SPRITE_ANIM_DICT_* indexes (taken from SpriteAnimObjects)
+; keys: SPRITE_ANIM_DICT_* indexes (taken from SpriteAnimSeqData)
 ; values: vTiles0 offsets
 	ds NUM_SPRITEANIMDICT_ENTRIES * 2
 
@@ -206,7 +209,7 @@ wSpriteAnimationStructs::
 ; wSpriteAnim1 - wSpriteAnim10
 for n, 1, NUM_SPRITE_ANIM_STRUCTS + 1
 ; field  0:   index
-; fields 1-3: loaded from SpriteAnimObjects
+; fields 1-3: loaded from SpriteAnimSeqData
 wSpriteAnim{d:n}:: sprite_anim_struct wSpriteAnim{d:n}
 endr
 wSpriteAnimationStructsEnd::
@@ -396,8 +399,48 @@ SECTION "Unused Map Buffer", WRAM0
 
 ; This was a buffer for map-related pointers in the 1997 G/S prototype.
 ; See wMapBuffer in pokegold-spaceworld's wram.asm.
+UNION
 wUnusedMapBuffer:: ds 24
 wUnusedMapBufferEnd::
+NEXTU
+ds 1
+
+wDFSFontSytle:: ds 1
+wDFSStack:: ds 1
+
+wDFSCode:: ds 4
+wDFSCombineCode:: ds 2
+
+wDFSNoManagementCombineCode:: ds 2
+wDFSNoManagementEnabled:: db
+wDFSNoManagementCurrentTileNo:: db
+wDFSNoManagementStartTile:: db
+wDFSNoManagementEndTile:: db
+wDFSNoManagementPrintDelay:: db
+
+wBattleMonNicknameHL:: ds 2
+wBuffer:: db
+
+
+
+UNION	
+wEnemyMonNinckameRightAligned:: db
+NEXTU
+wPartyMonLearnMark:: db
+NEXTU
+
+ENDU
+
+wIfCurrentlyRestoringWindow:: db
+wIMEtmpBuffer:: db
+
+UNION
+wWalkThroughWalls:: db
+NEXTU
+wIfCurrentlyInBagScreen:: db
+ENDU
+wEngPKMNNameMark:: db
+ENDU
 
 
 SECTION UNION "Overworld Map", WRAM0
@@ -484,11 +527,18 @@ wDebugOriginalColors:: ds 256 * 4
 
 SECTION UNION "Overworld Map", WRAM0
 
+
 ; unused sprite anims
 	ds 4
+UNION
 wUnusedPikachuFrameset:: db
 	ds 18
+NEXTU
+
+
+ENDU
 wUnusedJigglypuffNoteXCoord:: db
+
 
 
 SECTION UNION "Overworld Map", WRAM0
@@ -663,13 +713,13 @@ NEXTU
 ; battle
 wBattleAnimTileDict::
 ; wBattleAnimTileDict pairs keys with values
-; keys: BATTLE_ANIM_GFX_* indexes (taken from anim_*gfx arguments)
+; keys: ANIM_GFX_* indexes (taken from anim_*gfx arguments)
 ; values: vTiles0 offsets
 	ds NUM_BATTLEANIMTILEDICT_ENTRIES * 2
 
 wActiveAnimObjects::
 ; wAnimObject1 - wAnimObject10
-for n, 1, NUM_BATTLE_ANIM_STRUCTS + 1
+for n, 1, NUM_ANIM_OBJECTS + 1
 wAnimObject{d:n}:: battle_anim_struct wAnimObject{d:n}
 endr
 
@@ -1054,9 +1104,9 @@ ENDC
 
 SECTION "Video", WRAM0
 
-; bg map
-wBGMapBuffer::    ds 2 * SCREEN_WIDTH
-wBGMapPalBuffer:: ds 2 * SCREEN_WIDTH
+; wBGMapBuffer
+wBGMapBuffer::     ds 40
+wBGMapPalBuffer::  ds 40
 wBGMapBufferPointers:: ds 20 * 2
 wBGMapBufferEnd::
 
@@ -1663,7 +1713,7 @@ wWalkingDirection:: db
 wFacingDirection:: db
 wWalkingX:: db
 wWalkingY:: db
-wWalkingTileCollision:: db
+wWalkingTile:: db
 	ds 6
 wPlayerTurningDirection:: db
 
@@ -1780,11 +1830,11 @@ wBattlePlayerAction::
 wSolvedUnownPuzzle::
 	db
 
-wStateFlags::
+wVramState::
 ; bit 0: overworld sprite updating on/off
-; bit 1: last 12 sprite OAM structs reserved
-; bit 6: in text state
-; bit 7: in scripted movement
+; bit 6: something to do with text
+; bit 7: on when surf initiates
+;        flickers when climbing waterfall
 	db
 
 	ds 3
@@ -2215,7 +2265,7 @@ wScriptFlags::
 ; bit 3: run deferred script
 	db
 	ds 1
-wEnabledPlayerEvents::
+wScriptFlags2::
 ; bit 0: count steps
 ; bit 1: coord events
 ; bit 2: warps and connections
@@ -2559,8 +2609,8 @@ wBikeFlags::
 wCurMapSceneScriptPointer:: dw
 
 wCurCaller:: dw
-wCurMapWarpEventCount:: db
-wCurMapWarpEventsPointer:: dw
+wCurMapWarpCount:: db
+wCurMapWarpsPointer:: dw
 wCurMapCoordEventCount:: db
 wCurMapCoordEventsPointer:: dw
 wCurMapBGEventCount:: db
@@ -2607,9 +2657,12 @@ wSpecialPhoneCallID:: db
 wBugContestStartTime:: ds 4 ; day, hour, min, sec
 wUnusedTwoDayTimerOn:: db
 wUnusedTwoDayTimer:: db
+UNION
 wUnusedTwoDayTimerStartDate:: db
-
 	ds 55
+NEXTU
+
+ENDU
 
 wStepCount:: db
 wPoisonStepCount:: db
@@ -2817,4 +2870,17 @@ SECTION "Stack", WRAMX
 wStackBottom::
 	ds $fc
 wStackTop::
+	ds 1
+
+SECTION	"NEW WRAM Window Stack", WRAMX
+
+wWindowStack::
+	ds $F00 - 1
+wWindowStackBottom::
+	ds 1
+
+SECTION	"NEW WRAM DFS Stack", WRAMX
+wDFSCodeStack:: 
+	ds $F00 - 1
+wDFSCodeStackBottom:: 
 	ds 1

@@ -38,6 +38,9 @@ _BillsPC:
 	text_far _PCWhatText
 	text_end
 
+; .PCWhatText2:
+; 	db_w "要做什么？@"
+
 .LogOut:
 	call CloseSubmenu
 	ret
@@ -48,7 +51,10 @@ _BillsPC:
 	ld a, $1
 .loop
 	ld [wMenuCursorPosition], a
-	call SetDefaultBGPAndOBP
+	call SetPalettes
+	; ld de, .PCWhatText2
+	; hlcoord 1,14
+	; call PlaceString
 	xor a
 	ld [wWhichIndexSet], a
 	ldh [hBGMapMode], a
@@ -111,7 +117,9 @@ BillsPC_MovePKMNMenu:
 	farcall IsAnyMonHoldingMail
 	jr nc, .no_mail
 	ld hl, .PCMonHoldingMailText
+	call SetupDFSNomanagement
 	call PrintText
+	call DisableDFSNoManagement
 	jr .quit
 
 .no_mail
@@ -224,6 +232,7 @@ PCCantTakeText:
 	text_end
 
 BillsPC_ChangeBoxMenu:
+	farcall _LoadFontsBattleExtra
 	farcall _ChangeBox
 	and a
 	ret
@@ -245,7 +254,7 @@ ClearPCItemScreen:
 	lb bc, 4, 18
 	call Textbox
 	call WaitBGMap2
-	call SetDefaultBGPAndOBP
+	call SetPalettes ; load regular palettes?
 	ret
 
 CopyBoxmonToTempMon:

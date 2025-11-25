@@ -111,7 +111,7 @@ PrintRadioLine:
 	cp 2
 	jr nz, .print
 	bccoord 1, 16
-	call PrintTextboxTextAt
+	call PlaceHLTextAtBC
 	jr .skip
 .print
 	call PrintTextboxText
@@ -624,6 +624,7 @@ PokedexShow1:
 	call Random
 	cp NUM_POKEMON
 	jr nc, .loop
+	; ld a, 102
 	ld c, a
 	push bc
 	ld a, c
@@ -659,13 +660,28 @@ PokedexShow2:
 	push hl
 	call CopyDexEntryPart1
 	dec hl
+	getchar_w "宝"
+	ld [hl] , HIGH(CHARMAP_W_CHAR)
+	inc hl
+	ld [hl] , LOW(CHARMAP_W_CHAR)
+	inc hl
+	getchar_w "可"
+	ld [hl] , HIGH(CHARMAP_W_CHAR)
+	inc hl
+	ld [hl] , LOW(CHARMAP_W_CHAR)
+	inc hl
+	getchar_w "梦"
+	ld [hl] , HIGH(CHARMAP_W_CHAR)
+	inc hl
+	ld [hl] , LOW(CHARMAP_W_CHAR)
+	inc hl
 	ld [hl], "<DONE>"
 	ld hl, wPokedexShowPointerAddr
 	call CopyRadioTextToRAM
 	pop hl
 	pop af
 	call CopyDexEntryPart2
-rept 4
+rept 3
 	inc hl
 endr
 	ld a, l
@@ -692,7 +708,7 @@ PokedexShow5:
 
 PokedexShow6:
 	call CopyDexEntry
-	ld a, POKEDEX_SHOW_7
+	ld a, POKEDEX_SHOW
 	jp PrintRadioLine
 
 PokedexShow7:
@@ -725,12 +741,13 @@ CopyDexEntry:
 
 CopyDexEntryPart1:
 	ld de, wPokedexShowPointerBank
-	ld bc, SCREEN_WIDTH - 1
+	ld bc, 14 * 2;SCREEN_WIDTH - 1
 	call FarCopyBytes
 	ld hl, wPokedexShowPointerAddr
 	ld [hl], TX_START
 	inc hl
 	ld [hl], "<LINE>"
+.loopdoublechar
 	inc hl
 .loop
 	ld a, [hli]
@@ -738,12 +755,25 @@ CopyDexEntryPart1:
 	ret z
 	cp "<NEXT>"
 	ret z
-	cp "<DEXEND>"
-	ret z
+	; cp "<DEXEND>"
+	; ret z
+	and a
+	jr z, .loop
+	cp DFS_CODE_CONTRL_0
+	jr c, .loopdoublechar
+	cp DFS_CODE_CONTRL_2
+	jr nc, .loop
+	bit 3, a
+	jr nz, .loopdoublechar
 	jr .loop
+
+
 
 CopyDexEntryPart2:
 	ld d, a
+	jr .loop
+.loopdoublechar
+	inc hl
 .loop
 	ld a, d
 	call GetFarByte
@@ -752,8 +782,17 @@ CopyDexEntryPart2:
 	jr z, .okay
 	cp "<NEXT>"
 	jr z, .okay
-	cp "<DEXEND>"
-	jr nz, .loop
+	; cp "<DEXEND>"
+	; jr .loop
+	and a
+	jr z, .loop
+	cp DFS_CODE_CONTRL_0
+	jr c, .loopdoublechar
+	cp DFS_CODE_CONTRL_2
+	jr nc, .loop
+	bit 3, a
+	jr nz, .loopdoublechar
+	jr .loop
 .okay
 	ld a, l
 	ld [wPokedexShowPointerAddr], a
@@ -948,9 +987,15 @@ LuckyNumberShow12:
 LuckyNumberShow13:
 	ld hl, LC_Text11
 	call Random
+	IF DEF(_DEBUG)
+	cp $80
+	ld a, LUCKY_CHANNEL
+	jr nc, .okay
+	ELSE
 	and a
 	ld a, LUCKY_CHANNEL
 	jr nz, .okay
+	ENDC
 	ld a, LUCKY_NUMBER_SHOW_14
 .okay
 	jp NextRadioLine

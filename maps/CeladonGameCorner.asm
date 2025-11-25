@@ -111,21 +111,21 @@ CeladonGameCornerPoster2Script:
 CeladonGameCornerLuckySlotMachineScript:
 	random 6
 	ifequal 0, CeladonGameCornerSlotMachineScript
-	reanchormap
+	refreshscreen
 	setval FALSE
 	special SlotMachine
 	closetext
 	end
 
 CeladonGameCornerSlotMachineScript:
-	reanchormap
+	refreshscreen
 	setval TRUE
 	special SlotMachine
 	closetext
 	end
 
 CeladonGameCornerCardFlipScript:
-	reanchormap
+	refreshscreen
 	special CardFlip
 	closetext
 	end

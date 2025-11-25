@@ -11,7 +11,7 @@ CheckMagikarpLength:
 	cp MAGIKARP
 	jr nz, .not_magikarp
 
-	; Now let's compute its length based on its DVs and Trainer ID.
+	; Now let's compute its length based on its DVs and ID.
 	ld a, [wCurPartyMon]
 	ld hl, wPartyMon1Species
 	ld bc, PARTYMON_STRUCT_LENGTH
@@ -22,7 +22,7 @@ CheckMagikarpLength:
 	ld d, h
 	ld e, l
 	pop hl
-	ld bc, MON_OT_ID
+	ld bc, MON_ID
 	add hl, bc
 	ld b, h
 	ld c, l
@@ -85,18 +85,27 @@ Magikarp_LoadFeetInchesChars:
 INCBIN "gfx/font/feet_inches.2bpp"
 
 PrintMagikarpLength:
-	call Magikarp_LoadFeetInchesChars
+	; call Magikarp_LoadFeetInchesChars
 	ld hl, wStringBuffer1
 	ld de, wMagikarpLength
-	lb bc, PRINTNUM_LEFTALIGN | 1, 2
+	lb bc, 2 | PRINTNUM_LEFTALIGN, 4 ; PRINTNUM_LEFTALIGN | 1, 2
 	call PrintNum
-	ld [hl], "′"
+	; ld [hl], "′"
+	; inc hl
+	; ld de, wMagikarpLength + 1
+	; lb bc, PRINTNUM_LEFTALIGN | 1, 2
+	; call PrintNum
+	; ld [hl], "″"
+	dec hl
+	ld a, [hl]
+	ld [hl], "."
 	inc hl
-	ld de, wMagikarpLength + 1
-	lb bc, PRINTNUM_LEFTALIGN | 1, 2
-	call PrintNum
-	ld [hl], "″"
+	ld [hl], a
 	inc hl
+	; ld [hl], "c"
+	; inc hl
+	; ld [hl], "m"
+	; inc hl
 	ld [hl], "@"
 	ret
 
@@ -244,31 +253,31 @@ CalcMagikarpLength:
 	; ft = in / 12
 
 	; hl = de × 10
-	ld h, d
-	ld l, e
-	add hl, hl
-	add hl, hl
-	add hl, de
-	add hl, hl
+; 	ld h, d
+; 	ld l, e
+; 	add hl, hl
+; 	add hl, hl
+; 	add hl, de
+; 	add hl, hl
 
-	; hl = hl / 254
-	ld de, -254
-	ld a, -1
-.div_254
-	inc a
-	add hl, de
-	jr c, .div_254
+; 	; hl = hl / 254
+; 	ld de, -254
+; 	ld a, -1
+; .div_254
+; 	inc a
+; 	add hl, de
+; 	jr c, .div_254
 
-	; d, e = hl / 12, hl % 12
-	ld d, 0
-.mod_12
-	cp 12
-	jr c, .ok
-	sub 12
-	inc d
-	jr .mod_12
-.ok
-	ld e, a
+; 	; d, e = hl / 12, hl % 12
+; 	ld d, 0
+; .mod_12
+; 	cp 12
+; 	jr c, .ok
+; 	sub 12
+; 	inc d
+; 	jr .mod_12
+; .ok
+; 	ld e, a
 
 	ld hl, wMagikarpLength
 	ld [hl], d ; ft
@@ -299,6 +308,16 @@ CalcMagikarpLength:
 INCLUDE "data/events/magikarp_lengths.asm"
 
 MagikarpHouseSign:
+	; IF DEF(_DEBUG)
+	; ld a, $4
+	; ld [wMagikarpLength], a
+	; ld a, $1D
+	; ld [wMagikarpLength + 1], a
+	; call PrintMagikarpLength
+	; ld hl, .KarpGuruRecordText
+	; call PrintText
+	; ret
+	; ELSE
 	ld a, [wBestMagikarpLengthFeet]
 	ld [wMagikarpLength], a
 	ld a, [wBestMagikarpLengthInches]
@@ -307,6 +326,7 @@ MagikarpHouseSign:
 	ld hl, .KarpGuruRecordText
 	call PrintText
 	ret
+	; ENDC
 
 .KarpGuruRecordText:
 	text_far _KarpGuruRecordText

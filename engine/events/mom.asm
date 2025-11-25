@@ -300,13 +300,13 @@ DSTChecks:
 	call .ClearBox
 	bccoord 1, 14
 	ld hl, .TimesetAskAdjustDSTText
-	call PrintTextboxTextAt
+	call PlaceHLTextAtBC
 	call YesNoBox
 	ret c
 	call .ClearBox
 	bccoord 1, 14
 	ld hl, .MomLostGearBookletText
-	call PrintTextboxTextAt
+	call PlaceHLTextAtBC
 	ret
 
 .loop
@@ -316,7 +316,7 @@ DSTChecks:
 	bit 7, a
 	jr z, .SetDST
 	ld hl, .TimesetAskNotDSTText
-	call PrintTextboxTextAt
+	call PlaceHLTextAtBC
 	call YesNoBox
 	ret c
 	ld a, [wDST]
@@ -327,12 +327,12 @@ DSTChecks:
 	call .ClearBox
 	bccoord 1, 14
 	ld hl, .TimesetNotDSTText
-	call PrintTextboxTextAt
+	call PlaceHLTextAtBC
 	ret
 
 .SetDST:
 	ld hl, .TimesetAskDSTText
-	call PrintTextboxTextAt
+	call PlaceHLTextAtBC
 	call YesNoBox
 	ret c
 	ld a, [wDST]
@@ -343,7 +343,7 @@ DSTChecks:
 	call .ClearBox
 	bccoord 1, 14
 	ld hl, .TimesetDSTText
-	call PrintTextboxTextAt
+	call PlaceHLTextAtBC
 	ret
 
 .SetClockForward:
@@ -376,8 +376,10 @@ DSTChecks:
 	ret
 
 .ClearBox:
-	hlcoord 1, 14
-	lb bc, 3, 18
+	; hlcoord 1, 14
+	; lb bc, 3, 18
+	hlcoord 1, 13
+	lb bc, 4, 18
 	call ClearBox
 	ret
 
@@ -653,7 +655,7 @@ Mom_HeldString:
 
 BankOfMom_MenuHeader:
 	db MENU_BACKUP_TILES ; flags
-	menu_coords 0, 0, 10, 10
+	menu_coords 0, 0, 5, 9 ; menu_coords 0, 0, 10, 10
 	dw .MenuData
 	db 1 ; default option
 

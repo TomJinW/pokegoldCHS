@@ -355,7 +355,7 @@ ScrollingMenu_UpdateDisplay:
 	ld a, [wMenuBorderRightCoord]
 	ld c, a
 	call Coord2Tile
-	ld [hl], "▲"
+	ld [hl], "ぉ" ;ld [hl], "▲" ;CHS_Fix
 
 .okay
 	call MenuBoxCoord2Tile

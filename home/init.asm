@@ -66,6 +66,7 @@ Init::
 	ld a, b
 	or c
 	jr nz, .ByteFill
+	; call ClearWRAM
 
 	ld sp, wStackTop
 
@@ -158,6 +159,29 @@ ClearVRAM::
 	xor a
 	call ByteFill
 	ret
+
+; ClearWRAM::
+; ; Wipe swappable WRAM banks (2-7)
+; ; Assumes CGB or AGB
+; ; BUG: ClearWRAM only clears WRAM bank 1 (see docs/bugs_and_glitches.md)
+; 	ldh a, [hCGB]
+; 	and a
+; 	ret z
+; 	ld a, 1
+; .bank_loop
+; 	push af
+; 	ldh [rSVBK], a
+; 	xor a
+; 	ld hl, STARTOF(WRAMX)
+; 	ld bc, SIZEOF(WRAMX)
+; 	call ByteFill
+; 	pop af
+; 	inc a
+; 	cp 8
+; 	jr c, .bank_loop
+; 	xor a
+; 	ldh [rSVBK], a
+; 	ret
 
 BlankBGMap::
 	ld a, " "

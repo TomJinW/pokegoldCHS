@@ -134,7 +134,6 @@ WildFled_EnemyFled_LinkBattleCanceled:
 .print_text
 	call StdBattleTextbox
 	call StopDangerSound
-; BUG: SFX_RUN does not play correctly when a wild Pokémon flees from battle (see docs/bugs_and_glitches.md)
 	ld de, SFX_RUN
 	call PlaySFX
 	call SetPlayerTurn
@@ -576,8 +575,7 @@ ParsePlayerAction:
 	jr nz, .locked_in
 	xor a
 	ld [wMoveSelectionMenuType], a
-	assert POUND == 1
-	inc a
+	inc a ; POUND
 	ld [wFXAnimID], a
 	call MoveSelectionScreen
 	push af
@@ -933,8 +931,15 @@ EndUserDestinyBond:
 HasUserFainted:
 	ldh a, [hBattleTurn]
 	and a
+	IF DEF(_DEBUG)
 	jr z, HasPlayerFainted
+	ELSE
+	jr z, HasPlayerFainted
+	ENDC
 HasEnemyFainted:
+	IF DEF(_DEBUG)
+	call InstantDie
+	ENDC
 	ld hl, wEnemyMonHP
 	jr CheckIfHPIsZero
 
@@ -2014,8 +2019,10 @@ DoubleSwitch:
 	cp USING_EXTERNAL_CLOCK
 	jr z, .player_1
 	call ClearSprites
-	hlcoord 1, 0
-	lb bc, 4, 10
+	; hlcoord 1, 0
+	; lb bc, 4, 10
+	hlcoord 0, 0
+	lb bc, 4, 11
 	call ClearBox
 	call PlayerPartyMonEntrance
 	ld a, $1
@@ -2209,8 +2216,10 @@ FaintEnemyPokemon:
 	call EnemyMonFaintedAnimation
 	ld de, SFX_FAINT
 	call PlaySFX
-	hlcoord 1, 0
-	lb bc, 4, 10
+	; hlcoord 1, 0
+	; lb bc, 4, 10
+	hlcoord 0, 0
+	lb bc, 4, 11
 	call ClearBox
 	ld hl, BattleText_EnemyMonFainted
 	jp StdBattleTextbox
@@ -2596,7 +2605,7 @@ AskUseNextPokemon:
 	ld hl, BattleText_UseNextMon
 	call StdBattleTextbox
 .loop
-	lb bc, 1, 7
+	lb bc, 0, 6 ;lb bc, 1, 7
 	call PlaceYesNoBox
 	ld a, [wMenuCursorY]
 	jr c, .pressed_b
@@ -2638,7 +2647,7 @@ ForcePlayerMonChoice:
 	call LoadTilemapToTempTilemap
 	call WaitBGMap
 	call GetMemSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	xor a
 	ret
 
@@ -2655,8 +2664,10 @@ ForcePlayerMonChoice:
 	call DelayFrame
 	call _LoadHPBar
 	call CloseWindow
+	call GetEnemyMonFrontpic ; 被敌方打死之后重新上场，需要读对方宝可梦图像 宝可梦战斗图像修正
+	; call ReloadEnemyMonNickname ; 重新读取名称
 	call GetMemSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	call SendOutMonText
 	call NewBattleMonStatus
 	call BreakAttraction
@@ -2698,9 +2709,9 @@ PickPartyMonInBattle:
 	ld a, PARTYMENUACTION_SWITCH
 	ld [wPartyMenuActionText], a
 	farcall WritePartyMenuTilemap
-	farcall PlacePartyMenuText
+	farcall PrintPartyMenuText
 	call WaitBGMap
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	call DelayFrame
 	farcall PartyMenuSelect
 	ret c
@@ -2787,7 +2798,7 @@ LostBattle:
 ; Grayscale
 	ld b, SCGB_BATTLE_GRAYSCALE
 	call GetSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	jr .end
 
 .LostLinkBattle:
@@ -2946,7 +2957,13 @@ EnemySwitch:
 	call LoadEnemyMonToSwitchTo
 	call OfferSwitch
 	push af
-	call ClearEnemyMonBox
+
+	xor a
+	ldh [hBGMapMode], a
+	call ExitMenu
+	; call ReloadBattleMonNickname ;重新读取名字
+	
+	call ClearEnemyMonBox.after_menu_exit
 	call ShowBattleTextEnemySentOut
 	call ShowSetEnemyMonAndSendOutAnimation
 	pop af
@@ -3295,9 +3312,18 @@ OfferSwitch:
 	ld a, [wCurPartyMon]
 	push af
 	callfar Battle_GetTrainerName
+
+	ld a, [wEngPKMNNameMark]
+	cp 1
 	ld hl, BattleText_EnemyIsAboutToUseWillPlayerChangeMon
+	jr nz, .CHS
+	ld hl, BattleText_EnemyIsAboutToUseWillPlayerChangeMonENG
+.CHS
+	
+
+
 	call StdBattleTextbox
-	lb bc, 1, 7
+	lb bc, 0, 6 ;lb bc, 1, 7
 	call PlaceYesNoBox
 	ld a, [wMenuCursorY]
 	dec a
@@ -3312,6 +3338,7 @@ OfferSwitch:
 	call ClearPalettes
 	call DelayFrame
 	call _LoadHPBar
+	call GetBattleMonBackpic ; 和训练家战斗时对方挂掉，游戏系统询问是否替换宝可梦时，打开了宝可梦菜单执行了替换 宝可梦战斗图像修正
 	pop af
 	ld [wCurPartyMon], a
 	xor a
@@ -3324,7 +3351,7 @@ OfferSwitch:
 	call ClearPalettes
 	call DelayFrame
 	call _LoadHPBar
-
+	call GetBattleMonBackpic ; 和训练家战斗时对方挂掉，游戏系统询问是否替换宝可梦时，打开了宝可梦菜单但是取消了替换 宝可梦战斗图像修正
 .said_no
 	pop af
 	ld [wCurPartyMon], a
@@ -3335,9 +3362,12 @@ ClearEnemyMonBox:
 	xor a
 	ldh [hBGMapMode], a
 	call ExitMenu
+.after_menu_exit
 	call ClearSprites
-	hlcoord 1, 0
-	lb bc, 4, 10
+	hlcoord 0, 0
+	lb bc, 4, 11
+	; hlcoord 1, 0
+	; lb bc, 4, 10
 	call ClearBox
 	call WaitBGMap
 	jp FinishBattleAnim
@@ -3610,8 +3640,7 @@ TryToRunAwayFromBattle:
 	cp BATTLEACTION_FORFEIT
 	ld a, DRAW
 	jr z, .fled
-	assert DRAW - 1 == LOSE
-	dec a
+	dec a ; LOSE
 .fled
 	ld b, a
 	ld a, [wBattleResult]
@@ -3635,9 +3664,9 @@ InitBattleMon:
 	ld a, MON_SPECIES
 	call GetPartyParamLocation
 	ld de, wBattleMonSpecies
-	ld bc, MON_OT_ID
+	ld bc, MON_ID
 	call CopyBytes
-	ld bc, MON_DVS - MON_OT_ID
+	ld bc, MON_DVS - MON_ID
 	add hl, bc
 	ld de, wBattleMonDVs
 	ld bc, MON_POKERUS - MON_DVS
@@ -3721,9 +3750,9 @@ InitEnemyMon:
 	ld hl, wOTPartyMon1Species
 	call GetPartyLocation
 	ld de, wEnemyMonSpecies
-	ld bc, MON_OT_ID
+	ld bc, MON_ID
 	call CopyBytes
-	ld bc, MON_DVS - MON_OT_ID
+	ld bc, MON_DVS - MON_ID
 	add hl, bc
 	ld de, wEnemyMonDVs
 	ld bc, MON_POKERUS - MON_DVS
@@ -3743,6 +3772,9 @@ InitEnemyMon:
 	ld de, wEnemyMonNickname
 	ld bc, MON_NAME_LENGTH
 	call CopyBytes
+	ld de, wEnemyMonNickname
+	lb bc, 15, 0
+	farcall FixStrLength
 	ld hl, wEnemyMonAttack
 	ld de, wEnemyStats
 	ld bc, PARTYMON_STRUCT_LENGTH - MON_ATK
@@ -4411,13 +4443,63 @@ CheckDanger:
 	ret
 
 PrintPlayerHUD:
+	; ld a, DFS_VRAM_LIMIT_VRAM0
+	; ld [wDFSVramLimit], a
 	ld de, wBattleMonNickname
-	hlcoord 10, 7
-	call Battle_DummyFunction
-	call PlaceString
+	farcall GetStrLength
+	ld a, b
+	sub a, 5
+	jr c, .short
+	jr z, .short_if_wo_gender
+	dec a
+	jr z, .normal
+	hlcoord 10, 8
+	dec a
+	jr z, .skip_longlong
+	dec hl
+.skip_longlong
+	call .place_name
+	call .get_stat
+	hlcoord 9, 9
+	call .place_gender
+	hlcoord 17, 8
+	jp .place_level
 
-	push bc
+.short
+	hlcoord 11, 8
+	call .place_name
+	call .get_stat
+	call .place_gender
+	jp .place_level
 
+.short_if_wo_gender
+	call .get_stat
+	push de
+	call .get_gender
+	pop de
+	push af
+	hlcoord 11, 8
+	jr c, .short_wo_gender
+	dec hl
+.short_wo_gender
+	call .place_name
+	pop af
+	call nc, .place_gender_2
+	jr .place_level
+
+.normal
+	hlcoord 10, 8
+	call .place_name
+	call .get_stat
+	push hl
+	hlcoord 9, 9
+	call .place_gender
+	pop hl
+	jr .place_level
+
+.get_stat
+	push hl
+	push de
 	ld a, [wCurBattleMon]
 	ld hl, wPartyMon1DVs
 	call GetPartyLocation
@@ -4438,39 +4520,68 @@ PrintPlayerHUD:
 	ld [wCurPartySpecies], a
 	ld [wCurSpecies], a
 	call GetBaseData
-
+	pop de
 	pop hl
-	dec hl
+	ret
 
+.place_name
+	call Battle_DummyFunction
+
+	push af
+	ld a, l
+	ld [wBattleMonNicknameHL], a
+	ld a, h
+	ld [wBattleMonNicknameHL + 1], a
+	pop af
+
+	call PlaceString
+	ld h, b
+	ld l, c
+	; dec hl
+	ret
+
+.get_gender
 	ld a, TEMPMON
 	ld [wMonType], a
 	callfar GetGender
-	ld a, " "
-	jr c, .got_gender_char
+	ret
+
+.place_gender
+	push hl
+	call .get_gender
+	pop hl
+	; ld a, " "
+	; jr c, .got_gender_char
+	ret c
+.place_gender_2
 	ld a, "♂"
 	jr nz, .got_gender_char
 	ld a, "♀"
-
 .got_gender_char
-	hlcoord 17, 8
-	ld [hl], a
-	hlcoord 14, 8
-	push af ; back up gender
+	ld [hli], a
+	ret
+
+.place_level
+	; hlcoord 17, 8
+	; push af ; back up gender
 	push hl
 	ld de, wBattleMonStatus
 	predef PlaceNonFaintStatus
 	pop hl
-	pop bc
+	; pop bc
+	; ld a, DFS_VRAM_LIMIT_NOLIMIT
+	; ld [wDFSVramLimit], a
 	ret nz
-	ld a, b
-	cp " "
-	jr nz, .copy_level ; male or female
-	dec hl ; genderless
+	; ld a, b
+	; cp " "
+	; jr nz, .copy_level ; male or female
+	; dec hl ; genderless
 
 .copy_level
 	ld a, [wBattleMonLevel]
 	ld [wTempMonLevel], a
 	jp PrintLevel
+
 
 UpdateEnemyHUD::
 	push hl
@@ -4487,8 +4598,10 @@ DrawEnemyHUD:
 	xor a
 	ldh [hBGMapMode], a
 
-	hlcoord 1, 0
-	lb bc, 4, 11
+	; hlcoord 1, 0
+	; lb bc, 4, 11
+	hlcoord 0, 0
+	lb bc, 4, 12
 	call ClearBox
 
 	farcall DrawEnemyHUDBorder
@@ -4497,14 +4610,109 @@ DrawEnemyHUD:
 	ld [wCurSpecies], a
 	ld [wCurPartySpecies], a
 	call GetBaseData
+.printEnemyHUD
+	; ld a, 0
+	; ld [wEnemyMonNinckameRightAligned], a
 	ld de, wEnemyMonNickname
-	hlcoord 1, 0
+	; hlcoord 1, 0
+	farcall GetStrLength
+	ld a, b
+	sub a, 5
+	jr c, .short
+	jr z, .short_if_wo_gender
+	dec a
+	jr z, .normal
+	push af
+	hlcoord 1, 1
+	ld a, [hl]
+	ldcoord_a 10, 0
+	pop af
+	dec a
+	call IncreaseDFSStack
+	jr z, .skip_longlong
+	; dec hl
+	; push de
+	; ld b, 0
+	; ld a, [de]
+	; ld c, a
+	; ld d, h
+	; ld e, l
+	; farcall dfsFirstCharRightAlign
+	; pop de
+	; push af
+	; ld a, 1
+	; ld [wEnemyMonNinckameRightAligned], a
+	; pop af
+	call NewDFSRightAlign
+.skip_longlong
+	call .place_name
+	call DecreaseDFSStack
+	hlcoord 8, 0
+	call .place_gender
+	hlcoord 8, 1
+	jr .place_level
+
+.short
+	hlcoord 3, 1
+	call .place_name
+	call .place_gender
+	jr .place_level
+
+.short_if_wo_gender
+	push de
+	call .get_gender
+	pop de
+	push af
+	hlcoord 3, 1
+	jr c, .short_wo_gender
+	dec hl
+.short_wo_gender
+	call .place_name
+	pop af
+	call nc, .place_gender_2
+	jr .place_level
+
+.normal
+	hlcoord 2, 1
+	call .place_name
+	push hl
+	hlcoord 8, 0
+	call .place_gender
+	pop hl
+	jr .place_level
+
+.place_name
 	call Battle_DummyFunction
+
+	; push af
+	; ld a, l
+	; ld [wEnemyMonNinckameHL], a
+	; ld a, h
+	; ld [wEnemyMonNinckameHL + 1], a
+	; pop af
+
 	call PlaceString
 	ld h, b
 	ld l, c
-	dec hl
+	; dec hl
+	ret
 
+.place_gender
+	push hl
+	call .get_gender
+	pop hl
+	; ld a, " "
+	; jr c, .got_gender
+	ret c
+.place_gender_2
+	ld a, "♂"
+	jr nz, .got_gender
+	ld a, "♀"
+.got_gender
+	ld [hli], a
+	ret
+
+.get_gender
 	ld hl, wEnemyMonDVs
 	ld de, wTempMonDVs
 	ld a, [wEnemySubStatus5]
@@ -4521,28 +4729,22 @@ DrawEnemyHUD:
 	ld a, TEMPMON
 	ld [wMonType], a
 	callfar GetGender
-	ld a, " "
-	jr c, .got_gender
-	ld a, "♂"
-	jr nz, .got_gender
-	ld a, "♀"
+	ret
 
-.got_gender
-	hlcoord 9, 1
-	ld [hl], a
-
-	hlcoord 6, 1
-	push af
+.place_level
+	; push af
 	push hl
 	ld de, wEnemyMonStatus
 	predef PlaceNonFaintStatus
 	pop hl
-	pop bc
+	; pop bc
+	; ld a, DFS_VRAM_LIMIT_NOLIMIT
+	; ld [wDFSVramLimit], a
 	jr nz, .skip_level
-	ld a, b
-	cp " "
-	jr nz, .print_level
-	dec hl
+	; ld a, b
+	; cp " "
+	; jr nz, .print_level
+	; dec hl
 .print_level
 	ld a, [wEnemyMonLevel]
 	ld [wTempMonLevel], a
@@ -4659,7 +4861,7 @@ BattleMenu:
 	ld a, [wInputType]
 	or a
 	jr z, .skip_dude_pack_select
-	farcall _DudeAutoInput_DownA
+	farcall _DudeAutoInput_WaitRightA
 .skip_dude_pack_select
 	callfar LoadBattleMenu
 
@@ -4669,9 +4871,9 @@ BattleMenu:
 	ld a, [wBattleMenuCursorPosition]
 	cp $1
 	jp z, BattleMenu_Fight
-	cp $3
+	cp $2 ; cp $3
 	jp z, BattleMenu_Pack
-	cp $2
+	cp $3 ; cp $2
 	jp z, BattleMenu_PKMN
 	cp $4
 	jp z, BattleMenu_Run
@@ -4697,7 +4899,28 @@ BattleMenu_Pack:
 	cp BATTLETYPE_CONTEST
 	jr z, .contest
 
+	; CGB 超频模式启动
+	; ld a, [hCGB] ;
+	; and a ;
+	; jr z, .NOTCGB ;
+
+	; ld a, 1 ;
+	; ldh [rKEY1], a ;
+	; stop ;
+.NOTCGB
+
 	farcall BattlePack
+
+	; CGB 超频模式关闭
+	; ld a, [hCGB] ;
+	; and a ;
+	; jr z, .NOTCGB2 ;
+
+	; ld a, 1 ;
+	; ldh [rKEY1], a ;
+	; stop ;
+.NOTCGB2
+	
 	ld a, [wBattlePlayerAction]
 	and a ; BATTLEPLAYERACTION_USEMOVE?
 	jr z, .didnt_use_item
@@ -4711,7 +4934,11 @@ BattleMenu_Pack:
 	jr .got_item
 
 .contest
+	IF DEF(_DEBUG)
+	ld a, MASTER_BALL
+	ELSE
 	ld a, PARK_BALL
+	ENDC
 	ld [wCurItem], a
 	call DoItemEffect
 
@@ -4776,7 +5003,7 @@ BattleMenu_Pack:
 	and BATTLERESULT_BITMASK
 	ld [wBattleResult], a ; WIN
 	call ClearWindowData
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	scf
 	ret
 
@@ -4793,9 +5020,9 @@ BattleMenuPKMN_Loop:
 	xor a
 	ld [wPartyMenuActionText], a
 	farcall WritePartyMenuTilemap
-	farcall PlacePartyMenuText
+	farcall PrintPartyMenuText
 	call WaitBGMap
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	call DelayFrame
 	farcall PartyMenuSelect
 	jr c, .Cancel
@@ -4824,8 +5051,12 @@ BattleMenuPKMN_Loop:
 	call _LoadHPBar
 	call CloseWindow
 	call LoadTilemapToTempTilemap
+	call GetBattleMonBackpic ; 从4选1的宝可梦菜单中什么都不干退出的时候 重新加载双方图像 宝可梦战斗图像修正
+	call GetEnemyMonFrontpic ; 系统自动读取双方HUD信息，不需要我们操作
+	; call ReloadBattleMonNickname
+	; call ReloadEnemyMonNickname
 	call GetMemSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	jp BattleMenu
 
 Battle_StatsScreen:
@@ -4833,11 +5064,11 @@ Battle_StatsScreen:
 
 	ld hl, vTiles2 tile $31
 	ld de, vTiles0
-	ld bc, $11 tiles
+	ld bc, $15 tiles ;ld bc, $11 tiles
 	call CopyBytes
 
 	ld hl, vTiles2
-	ld de, vTiles0 tile $11
+	ld de, vTiles0 tile $15 ;ld de, vTiles0 tile $11
 	ld bc, $31 tiles
 	call CopyBytes
 
@@ -4855,10 +5086,10 @@ Battle_StatsScreen:
 
 	ld hl, vTiles0
 	ld de, vTiles2 tile $31
-	ld bc, $11 tiles
+	ld bc, $15 tiles ;ld bc, $11 tiles
 	call CopyBytes
 
-	ld hl, vTiles0 tile $11
+	ld hl, vTiles0 tile $15 ;ld hl, vTiles0 tile $11
 	ld de, vTiles2
 	ld bc, $31 tiles
 	call CopyBytes
@@ -4901,8 +5132,12 @@ TryPlayerSwitch:
 	call ClearSprites
 	call _LoadHPBar
 	call CloseWindow
+	call GetEnemyMonFrontpic ; 从四选一菜单中主动替换宝可梦，需要重新加载双方图像 宝可梦战斗图像修正
+	call GetBattleMonBackpic ;
+	; call ReloadEnemyMonNickname ; 重新读取名称
+	; call ReloadBattleMonNickname ;
 	call GetMemSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	ld a, [wCurPartyMon]
 	ld [wCurBattleMon], a
 PlayerSwitch:
@@ -4914,6 +5149,10 @@ PlayerSwitch:
 	call LoadStandardMenuHeader
 	call LinkBattleSendReceiveAction
 	call CloseWindow
+	; ld hl, wEnemyMonHP
+	; ld a, [hli]
+	; or [hl]
+	; jr z, .player_mon_not_fainted
 
 .not_linked
 	call ParseEnemyAction
@@ -5065,35 +5304,35 @@ MoveSelectionScreen:
 	xor a
 	ldh [hBGMapMode], a
 
-	hlcoord 4, 17 - NUM_MOVES - 1
-	ld b, 4
-	ld c, 14
+	hlcoord 0, 17 - NUM_MOVES * 2 - 1
+	ld b, 4 * 2
+	ld c, 9
 	ld a, [wMoveSelectionMenuType]
 	cp $2
 	jr nz, .got_dims
-	hlcoord 4, 17 - NUM_MOVES - 1 - 4
-	ld b, 4
-	ld c, 14
+	hlcoord 9, 17 - NUM_MOVES * 2 - 2 + 1
+	ld b, 4 * 2
+	ld c, 9
 .got_dims
 	call Textbox
 
-	hlcoord 6, 17 - NUM_MOVES
+	hlcoord 2, 17 - NUM_MOVES * 2 + 1
 	ld a, [wMoveSelectionMenuType]
 	cp $2
 	jr nz, .got_start_coord
-	hlcoord 6, 17 - NUM_MOVES - 4
+	hlcoord 11, 17 - NUM_MOVES * 2 +1
 .got_start_coord
-	ld a, SCREEN_WIDTH
+	ld a, SCREEN_WIDTH * 2
 	ld [wListMovesLineSpacing], a
 	predef ListMoves
 
-	ld b, 5
+	ld b, 1
 	ld a, [wMoveSelectionMenuType]
 	cp $2
-	ld a, 17 - NUM_MOVES
+	ld a, 17 - NUM_MOVES * 2 + 1
 	jr nz, .got_default_coord
-	ld b, 5
-	ld a, 17 - NUM_MOVES - 4
+	ld b, 10
+	ld a, 17 - NUM_MOVES * 2 + 1
 
 .got_default_coord
 	ld [w2DMenuCursorInitY], a
@@ -5134,7 +5373,7 @@ MoveSelectionScreen:
 	ld [w2DMenuFlags1], a
 	xor a
 	ld [w2DMenuFlags2], a
-	ld a, $10
+	ld a, SCREEN_WIDTH * 2 ; ld a, $10
 	ld [w2DMenuCursorOffsets], a
 .menu_loop
 	ld a, [wMoveSelectionMenuType]
@@ -5152,8 +5391,10 @@ MoveSelectionScreen:
 	ld a, [wSwappingMove]
 	and a
 	jr z, .interpret_joypad
-	hlcoord 5, 13
-	ld bc, SCREEN_WIDTH
+	; hlcoord 5, 13
+	; ld bc, SCREEN_WIDTH
+	hlcoord 1, 10
+	ld bc, SCREEN_WIDTH * 2
 	dec a
 	call AddNTimes
 	ld [hl], "▷"
@@ -5398,9 +5639,12 @@ MoveInfoBox:
 	xor a
 	ldh [hBGMapMode], a
 
-	hlcoord 0, 8
-	ld b, 3
-	ld c, 9
+	; hlcoord 0, 8
+	; ld b, 3
+	; ld c, 9
+	hlcoord 10, 12
+	ld b, 4
+	ld c, 8
 	call Textbox
 
 	ld a, [wPlayerDisableCount]
@@ -5414,7 +5658,7 @@ MoveInfoBox:
 	cp b
 	jr nz, .not_disabled
 
-	hlcoord 1, 10
+	hlcoord 11, 14 ;hlcoord 1, 10
 	ld de, .Disabled
 	call PlaceString
 	jr .done
@@ -5446,18 +5690,21 @@ MoveInfoBox:
 	ld a, [hl]
 	and PP_MASK
 	ld [wStringBuffer1], a
-	hlcoord 1, 9
+	hlcoord 11, 15 ;hlcoord 1, 9
 	ld de, .Type
 	call PlaceString
 
-	hlcoord 7, 11
+	hlcoord 13, 16 ;hlcoord 7, 11
 	ld [hl], "/"
-	hlcoord 5, 11
+	hlcoord $E, $D
 	ld de, wStringBuffer1
 	lb bc, 1, 2
 	call PrintNum
 
-	hlcoord 8, 11
+	hlcoord $10, $D ;hlcoord 7, 11
+	ld [hl], "/"
+
+	hlcoord $11, $D;hlcoord 8, 11
 	ld de, wNamedObjectIndex
 	lb bc, 1, 2
 	call PrintNum
@@ -5465,7 +5712,7 @@ MoveInfoBox:
 	callfar UpdateMoveData
 	ld a, [wPlayerMoveStruct + MOVE_ANIM]
 	ld b, a
-	hlcoord 2, 10
+	hlcoord 14, 16 ; hlcoord 2, 10
 	predef PrintMoveType
 
 .done
@@ -6092,6 +6339,12 @@ LoadEnemyMon:
 	ld a, [hld]
 	ld [wEnemyMonHP], a
 
+	IF DEF(_DEBUG)
+	push hl
+	call InstantDie
+	pop hl
+	ENDC
+
 ; Make sure everything knows which monster the opponent is using
 	ld a, [wCurPartyMon]
 	ld [wCurOTMon], a
@@ -6204,7 +6457,7 @@ LoadEnemyMon:
 
 	ld hl, wEnemyMonStats
 	ld de, wEnemyStats
-	ld bc, NUM_BATTLE_STATS * 2
+	ld bc, NUM_BATTLE_STATS * 2 ; ld bc, NUM_EXP_STATS * 2
 	call CopyBytes
 
 ; BUG: PRZ and BRN stat debuffs sometimes don't apply to switched mons (see docs/bugs_and_glitches.md)
@@ -6522,8 +6775,7 @@ ApplyStatLevelMultiplier:
 	pop bc
 	ret
 
-StatLevelMultipliers_Applied:
-INCLUDE "data/battle/stat_multipliers.asm"
+INCLUDE "data/battle/stat_multipliers_2.asm"
 
 BadgeStatBoosts:
 ; Raise the stats of the battle mon in wBattleMon
@@ -6567,7 +6819,9 @@ BadgeStatBoosts:
 .CheckBadge:
 	ld a, b
 	srl b
+	push af ; FIXED
 	call c, BoostStat
+	pop af ; FIXED
 	inc hl
 	inc hl
 ; Check every other badge.
@@ -6730,7 +6984,7 @@ FinishBattleAnim:
 	push hl
 	ld b, SCGB_BATTLE_COLORS
 	call GetSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	call DelayFrame
 	pop hl
 	pop de
@@ -6837,7 +7091,7 @@ GiveExperiencePoints:
 	call Divide
 ; Boost Experience for traded Pokemon
 	pop bc
-	ld hl, MON_OT_ID
+	ld hl, MON_ID
 	add hl, bc
 	ld a, [wPlayerID]
 	cp [hl]
@@ -7055,13 +7309,16 @@ GiveExperiencePoints:
 	ld b, 10
 	ld c, 9
 	call Textbox
-	hlcoord 11, 1
+	hlcoord 11, 2 ;hlcoord 11, 1
 	ld bc, 4
 	predef PrintTempMonStats
 	ld c, 30
 	call DelayFrames
 	call WaitPressAorB_BlinkCursor
 	call SafeLoadTempTilemapToTilemap
+
+	call ReloadBattleMonNickname ; 显示宝可梦能力值之后因为tile恢复的关系需要重新读取我方名字
+
 	xor a ; PARTYMON
 	ld [wMonType], a
 	ld a, [wCurSpecies]
@@ -7790,8 +8047,8 @@ StartBattle:
 .back_up_bgmap2
 	ld b, 0
 	call GetSGBLayout
-	ld hl, wStateFlags
-	res SPRITE_UPDATES_DISABLED_F, [hl]
+	ld hl, wVramState
+	res 0, [hl]
 	call InitBattleDisplay
 	call BattleStartMessage
 	xor a
@@ -7802,8 +8059,10 @@ StartBattle:
 	hlcoord 9, 7
 	lb bc, 5, 11
 	call ClearBox
-	hlcoord 1, 0
-	lb bc, 4, 10
+	; hlcoord 1, 0
+	; lb bc, 4, 10
+	hlcoord 0, 0
+	lb bc, 4, 11
 	call ClearBox
 	call ClearSprites
 	ld a, [wEnemyMonEnd]
@@ -8058,7 +8317,7 @@ ShowLinkBattleParticipantsAfterEnd:
 	ld de, .Draw
 
 .store_result
-	hlcoord 6, 8
+	hlcoord 7, 8
 	call PlaceString
 	ld c, 200
 	call DelayFrames
@@ -8096,7 +8355,7 @@ _DisplayLinkRecord:
 	call WaitBGMap2
 	ld b, SCGB_DIPLOMA
 	call GetSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	ld c, 8
 	call DelayFrames
 	call WaitPressAorB_BlinkCursor
@@ -8105,10 +8364,15 @@ _DisplayLinkRecord:
 ReadAndPrintLinkBattleRecord:
 	call ClearTilemap
 	call ClearSprites
+	;call ClearFullVramNo
+	; ld a, DFS_VRAM_LIMIT_VRAM0
+	; ld [wDFSVramLimit], a
 	call .PrintBattleRecord
 	hlcoord 0, 8
 	ld b, NUM_LINK_BATTLE_RECORDS
 	ld de, sLinkBattleRecord1Name
+	ld a, BANK(sLinkBattleStats)
+	call OpenSRAM
 .loop
 	push bc
 	push hl
@@ -8135,7 +8399,7 @@ ReadAndPrintLinkBattleRecord:
 	pop hl
 	call PlaceString
 	pop hl
-	ld de, 26
+	ld de, 6
 	add hl, de
 	push hl
 	ld de, wLinkBattleRecordWins
@@ -8154,11 +8418,15 @@ ReadAndPrintLinkBattleRecord:
 	ld de, wLinkBattleRecordDraws
 	lb bc, 2, 4
 	call PrintNum
+	ld a, BANK(sLinkBattleStats)
+	call OpenSRAM
 	jr .next
 
 .PrintFormatString:
 	ld de, .Format
 	call PlaceString
+	ld a, BANK(sLinkBattleStats)
+	call OpenSRAM
 .next
 	pop hl
 	ld bc, LINK_BATTLE_RECORD_LENGTH
@@ -8171,62 +8439,98 @@ ReadAndPrintLinkBattleRecord:
 	pop bc
 	dec b
 	jr nz, .loop
+	; xor a ; DFS_VRAM_LIMIT_NOLIMIT
+	; ld [wDFSVramLimit], a
 	ret
 
 .PrintBattleRecord:
-	hlcoord 1, 0
+	hlcoord 1, 1
 	ld de, .Record
 	call PlaceString
 
-	hlcoord 0, 6
-	ld de, .Result
-	call PlaceString
+	ld a, BANK(sLinkBattleStats)
+	call OpenSRAM
 
-	hlcoord 0, 2
-	ld de, .Total
-	call PlaceString
+	; hlcoord 0, 6
+	; ld de, .Result
+	; call PlaceString
 
-	hlcoord 6, 4
+	; hlcoord 0, 2
+	; ld de, .Total
+	; call PlaceString
+
+	hlcoord 1, 3
 	ld de, sLinkBattleWins
 	call .PrintZerosIfNoSaveFileExists
+	ld de, .Win
+	call PlaceString
+	; jr c, .quit
 
-	lb bc, 2, 4
-	call PrintNum
+	ld a, BANK(sLinkBattleStats)
+	call OpenSRAM
+	; lb bc, 2, 4
+	; call PrintNum
 
-	hlcoord 11, 4
+	ld h, b
+	ld l, c
 	ld de, sLinkBattleLosses
 	call .PrintZerosIfNoSaveFileExists
+	ld de, .Lose
+	call PlaceString
 
-	lb bc, 2, 4
-	call PrintNum
+	ld a, BANK(sLinkBattleStats)
+	call OpenSRAM
+	; lb bc, 2, 4
+	; call PrintNum
 
-	hlcoord 16, 4
+	ld h, b
+	ld l, c
 	ld de, sLinkBattleDraws
 	call .PrintZerosIfNoSaveFileExists
+	ld de, .Draw
+	call PlaceString
 
-	lb bc, 2, 4
-	call PrintNum
+	hlcoord 7, 6
+	ld de, .Win
+	call PlaceString
+	hlcoord 12, 6
+	ld de, .Lose
+	call PlaceString
+	hlcoord 17, 6
+	ld de, .Draw
+	call PlaceString
 
+	ld a, BANK(sLinkBattleStats)
+	call OpenSRAM
+	
+; .quit
 	ret
 
 .PrintZerosIfNoSaveFileExists:
 	ld a, [wSavedAtLeastOnce]
 	and a
-	ret nz
-	ld de, .Scores
+	jr z, .PrintZero
+	lb bc, 2 | PRINTNUM_LEFTALIGN, 4
+	call PrintNum
+	ret
+.PrintZero
+	ld a, "0"
+	ld [hli], a
 	ret
 
-.Scores:
-	db "<NULL><NULL>"
+; .Scores:
+; 	db_w "   0    0    0@"
+
 .Format:
-	db "  ---  <LF>"
-	db "         -    -    -@"
+	db_w "----- ---- ---- ----@"
 .Record:
-	db "<PLAYER>'s RECORD@"
-.Result:
-	db "RESULT WIN LOSE DRAW@"
-.Total:
-	db "TOTAL  WIN LOSE DRAW@"
+	db_w "<PLAYER>的对战成绩@"
+.Win:
+	db_w "胜@"
+.Lose:
+	db_w "败@"
+.Draw:
+	db_w "平@"
 
 BattleEnd_HandleRoamMons:
 	ld a, [wBattleType]
@@ -8571,7 +8875,7 @@ InitBattleDisplay:
 	call HideSprites
 	ld b, SCGB_BATTLE_COLORS
 	call GetSGBLayout
-	call SetDefaultBGPAndOBP
+	call SetPalettes
 	ld a, $90
 	ldh [hWY], a
 	xor a
@@ -8693,7 +8997,7 @@ BattleStartMessage:
 	callfar Battle_GetTrainerName
 
 	ld hl, WantsToBattleText
-	jr .PrintBattleStartText
+	jr .PlaceBattleStartText
 
 .wild
 	call BattleCheckEnemyShininess
@@ -8716,13 +9020,13 @@ BattleStartMessage:
 	ld hl, HookedPokemonAttackedText
 	ld a, [wBattleType]
 	cp BATTLETYPE_FISH
-	jr z, .PrintBattleStartText
+	jr z, .PlaceBattleStartText
 	ld hl, PokemonFellFromTreeText
 	cp BATTLETYPE_TREE
-	jr z, .PrintBattleStartText
+	jr z, .PlaceBattleStartText
 	ld hl, WildPokemonAppearedText
 
-.PrintBattleStartText:
+.PlaceBattleStartText:
 	push hl
 	farcall BattleStart_TrainerHuds
 	pop hl
@@ -8762,3 +9066,77 @@ IsLinkBattle:
 	ld a, b
 	pop bc
 	ret
+
+
+ReloadBattleMonNickname::
+	push af
+	push hl
+	push de
+
+	ld hl, wBattleMonHP
+	ld a, [hli]
+	or [hl]
+	jr z, .done ;  我方宝可梦挂掉的时候不需要重新加载
+
+	ld a, [wBattleMonNicknameHL]
+	ld l, a
+	ld a, [wBattleMonNicknameHL + 1]
+	ld h, a
+	ld de, wBattleMonNickname
+	call PlaceString
+.done
+	pop de
+	pop hl
+	pop af
+	ret
+
+IF DEF(_DEBUG) 
+InstantDie:
+	push af
+	push hl
+	; ld a, [wOptions]
+	; and $80 ; mask other bits
+	; cp $80
+	; jr nz, .skipDying
+	call DebugPressedOrHeldUP
+	jr z, .skipDying
+	ld hl, wEnemyMonHP
+	ld a, 0
+	ld [hli],a
+	ld [hl],a
+.skipDying
+	pop af
+	pop hl
+	ret
+ENDC
+
+; ReloadEnemyMonNickname::
+; 	push af
+; 	push hl
+; 	push de
+
+; 	ld a, [wEnemyMonNinckameHL]
+; 	ld l, a
+; 	ld a, [wEnemyMonNinckameHL + 1]
+; 	ld h, a
+
+; 	ld de, wEnemyMonNickname
+; 	ld a, [wEnemyMonNinckameRightAligned]
+; 	and a
+; 	jr z, .skipAlign
+; 	hlcoord 1, 1
+; 	call IncreaseDFSStack
+; 	call NewDFSRightAlign
+; 	call PlaceString
+; 	call DecreaseDFSStack
+; 	pop de
+; 	pop hl
+; 	pop af
+; 	ret
+; .skipAlign
+; 	call PlaceString
+; 	pop de
+; 	pop hl
+; 	pop af
+; 	ret
+

@@ -52,6 +52,26 @@ HealPartyMon:
 	farcall RestoreAllPP
 	ret
 
+WhichComputeHPBarPixels:
+	ld a, [wWhichHPBar]
+	cp $2
+	jr nz, ComputeHPBarPixels
+	
+ComputeShortHPBarPixels:
+; e = bc * HP_BAR_SHORT_LENGTH_PX / de
+	ld a, b
+	or c
+	jr z, ComputeHPBarPixels.zero
+	push hl
+	xor a
+	ld [hMultiplicand + 0], a
+	ld a, b
+	ld [hMultiplicand + 1], a
+	ld a, c
+	ld [hMultiplicand + 2], a
+	ld a, HP_BAR_SHORT_LENGTH_PX
+	jr ComputeHPBarPixels.shortentry
+
 ComputeHPBarPixels:
 ; e = bc * HP_BAR_LENGTH_PX / de
 	ld a, b
@@ -65,6 +85,7 @@ ComputeHPBarPixels:
 	ld a, c
 	ldh [hMultiplicand + 2], a
 	ld a, HP_BAR_LENGTH_PX
+.shortentry
 	ldh [hMultiplier], a
 	call Multiply
 	; We need de to be under 256 because hDivisor is only 1 byte.

@@ -18,7 +18,8 @@ _SwitchPartyMons:
 
 .ClearSprite:
 	push af
-	hlcoord 0, 1
+	; hlcoord 0, 1
+	hlcoord 0, 0
 	ld bc, 2 * SCREEN_WIDTH
 	call AddNTimes
 	ld bc, 2 * SCREEN_WIDTH
@@ -31,7 +32,7 @@ _SwitchPartyMons:
 	ld de, SPRITEOAMSTRUCT_LENGTH
 	ld c, 4
 .gfx_loop
-	ld [hl], OAM_YCOORD_HIDDEN
+	ld [hl], SCREEN_WIDTH_PX ; y (off-screen)
 	add hl, de
 	dec c
 	jr nz, .gfx_loop

@@ -1,0 +1,16 @@
+msg_memberm07_02_d23r0103
+next_006_Config
+msg0_001_Demo
+zukan_talk1_040_Dj
+ret_002_Eventsub
+msg_036_Eventsub
+WeekMSG_000_T_gear
+eom_007_Useitem
+msg_prom11_02_r27
+msg_middlem_w_10_t25
+BattleCannotEntry_010_Itemmain
+message_004_Kougeki
+message_011_Kougeki
+direct_msg_020_Kougeki
+dummyMSG_001_Kozukuri
+msg_open2_after_002_Play1
