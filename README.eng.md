@@ -2,7 +2,7 @@
 
 ![alt text](__preview.jpg "Sample")
 
-[pret Original README.md](README.O.md)
+[pret Original README.md](README.o.md)
 
 [Translation Update History](VersionUpdate.md)
 

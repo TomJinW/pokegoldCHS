@@ -4,7 +4,7 @@
 
 [English Readme](README.eng.md)
 
-[pret 原始 README.md](README.O.md)
+[pret 原始 README.md](README.o.md)
 
 [汉化版更新历史](VersionUpdate.md)
 ## 总结
