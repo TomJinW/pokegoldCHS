@@ -9,7 +9,7 @@
 ## Summary
 
 - This game ROM uses a 2 MiB ROM + 64 KiB SRAM specification. The mapper is compatible with MBC30 (GB mode) or MBC3 (GBC mode).
-- Due to technical limitation, the localized ROMs have two versions, GB compatible and GBC only. Detailed explanations are provided in the following sections.
+- Due to technical limitations, the localized ROMs have two versions, GB compatible and GBC only. Detailed explanations are provided in the following sections.
 - On a monochrome Game Boy, including Super Game Boy, the cartridge must support MBC30 with 64 KiB of SRAM to run properly. On a Game Boy Color, the cartridge only needs to support MBC3 with 32 KiB of SRAM. If the game reports "卡带没有足够的内存" (insufficient cartridge) memory during startup, please refer to the troubleshooting section below.
 
 ## About the Localized Versions
@@ -58,8 +58,8 @@ Adjustments Restored to Be Closer to the Japanese Version Compared to the Origin
 	- In the battle interface, the “Pokémon” and “Bag” options have been swapped, restoring the Japanese layout.
 	- NPC portraits, as well as the sprites of certain Pokémon including Jynx, have been restored to the Japanese-style artwork.
 	- The animation for the move “Sonic Boom” has been restored to the Japanese version.
-	- “Teddiursa” and “Ursaring” have been changed back to being Silver-exclusive Pokémons, while “Phanpy” and “Donphan” have been changed back to being Gold-exclusive Pokémons, matching the Japanese version.
-	- US imperial system used in the game have been replaced with the metric system.
+	- “Teddiursa” and “Ursaring” have been changed back to being Silver-exclusive Pokémon, while “Phanpy” and “Donphan” have been changed back to being Gold-exclusive Pokémon, matching the Japanese version.
+	- US imperial system used in the game has been replaced with the metric system.
 - Not adjusted:
 	- The copyright year remains 2000, as in the English version.
 	- The Super Game Boy (SGB) border remains the English version style.
@@ -74,7 +74,7 @@ Adjustments Restored to Be Closer to the Japanese Version Compared to the Origin
 
 ### Compatibility
 
-- Due to technical limitation, the localized ROMs have two versions, GB compatible and GBC only.
+- Due to technical limitations, the localized ROMs have two versions, GB compatible and GBC only.
 
 	- The “GB compatible" ROM uses a 64KB SRAM header and must be used when playing on monochrome Game Boy hardware (DMG/MGB/SGB). When played on emulators, behavior may vary depending on emulator compatibility. 
 	- The “GBC(CGB) only” ROM uses a 32KB SRAM header to ensure maximum compatibility in emulator environments, but it does not support play on monochrome Game Boy hardware. Aside from this difference, the two versions are otherwise identical.
@@ -86,9 +86,9 @@ Adjustments Restored to Be Closer to the Japanese Version Compared to the Origin
 		|64KB MBC30 SRAM Catridges / Emulators| ❌No | ✅Yes | ✅Yes | ✅Yes |
 		|32KB MBC3 SRAM Catridges| ❌No | ✅Yes | ❌No | ✅Yes |
 		|Emulators that always emulate 32KB MBC3 SRAM|  ❌No | ✅Yes | ❌No | ✅Yes |
-		|Emulators that emulate 0KB SRAM<br>when MBC30 headers are deteced| ❌No | ✅Yes | ❌No | ❌No |
+		|Emulators that emulate 0KB SRAM<br>when MBC30 headers are detected| ❌No | ✅Yes | ❌No | ❌No |
 
-		- The term "DMG" refers to the OG Game Boy, Game Boy Pocket, Game Boy Light, Super Game Boy and Super Game Boy 2.
+		- The term "DMG" refers to the OG Game Boy, Game Boy Pocket, Game Boy Light, Super Game Boy, and Super Game Boy 2.
 		- When playing on real hardware using GB/GBC flash cartridges, or on FPGA-based systems such as Analogue Pocket, the “GB compatible” version is recommended. The game will automatically detect the cartridge environment and decide whether it can run.
 		- When playing on emulators, including emulators such as goombacolor used on GBA flash cartridges, the “GBC only” version is recommended. Only use the “GB compatible” version if you explicitly intend to play the game in monochrome or Super Game Boy mode.
 
@@ -116,7 +116,7 @@ Adjustments Restored to Be Closer to the Japanese Version Compared to the Origin
 		
 - Linking within Gen II:
 	
-	| Feature | With the same versions | With Internation Versions<sup>1</sup><sup>2</sup><sup>3</sup> |With CKN·群星 Pokémon Crystal Translation<sup>1</sup>| With Japanese versions<sup>5</sup> | 
+	| Feature | With the same versions | With International Versions<sup>1</sup><sup>2</sup><sup>3</sup> |With CKN·群星 Pokémon Crystal Translation<sup>1</sup>| With Japanese versions<sup>5</sup> | 
 	|:-----:|:----:|:----:|:----:|:----:|
 	| Pokémon trading | ✅ Supported| ✅ Supported | ✅ Supported |❌ Not supported|
 	| Link battles | ✅ Supported| ✅ Supported | ✅ Supported |❌ Not supported|
@@ -131,7 +131,7 @@ Adjustments Restored to Be Closer to the Japanese Version Compared to the Origin
 
 - Linking with Generation I (Time Capsule):
 	
-	|Feature| With Internation Versions<sup>1</sup> | With CKN·群星 Pokémon Yellow Translation v1.1<sup>1</sup> |With [TomJinW/pokeredCHS](https://github.com/TomJinW/pokeredCHS)<br>[TomJinW/pokeyellowCHS](https://github.com/TomJinW/pokeyellowCHS) Translation <sup>1</sup> |With Japanese versions<sup>2</sup> | 
+	|Feature| With International Versions<sup>1</sup> | With CKN·群星 Pokémon Yellow Translation v1.1<sup>1</sup> |With [TomJinW/pokeredCHS](https://github.com/TomJinW/pokeredCHS)<br>[TomJinW/pokeyellowCHS](https://github.com/TomJinW/pokeyellowCHS) Translation <sup>1</sup> |With Japanese versions<sup>2</sup> | 
 	|:-----:|:----:|:----:|:----:|:----:|
 	| Pokémon trading | ✅ Supported | ✅ Supported | ✅ Supported |❌ Not supported|
 	
@@ -172,7 +172,7 @@ Adjustments Restored to Be Closer to the Japanese Version Compared to the Origin
 <br>
 
 
-- Virtual Console supports Poké Transporter. In Poké Transporter, the language of transferred Pokémon is determined by the VC Title ID, and the 3DS region and country is determined by the region of the Poké Transporter. Since this translation is based on the English version, if you are using a 3DS that is not in EUR or USA region, you should configure Luma locale to launch Poké Transporter in either EUR or USA 3DS based on the language (Title ID) you use for the VC, to make the transferred Pokémon fully legal in Gen VII. Details are as follows:
+- Virtual Console supports Poké Transporter. In Poké Transporter, the language of transferred Pokémon is determined by the VC Title ID, and the 3DS region and country is determined by the region of the Poké Transporter. Since this translation is based on the English version, if you are using a 3DS that is not in the EUR or USA region, you should configure the Luma locale to launch Poké Transporter in either the EUR or USA 3DS based on the language (Title ID) you use for the VC, to make the transferred Pokémon fully legal in Gen VII. Details are as follows:
 
 	| Title ID Language<br> Pokémon Language<br>| JPN/KOR/CHT/iQue<br> 3DS | USA 3DS | EUR 3DS |
 	|:---:|:----:|:----:|:----:|
@@ -183,7 +183,7 @@ Adjustments Restored to Be Closer to the Japanese Version Compared to the Origin
 	|German|Set to EUR|Set to EUR|No action required|
 	|Italian|Set to EUR|Set to EUR|No action required|
 
-### ther Link Features: 
+### Other Link Features: 
 
 - Compatibility with the following peripherals:
 	|Feature| Status| 
@@ -252,7 +252,7 @@ Adjustments Restored to Be Closer to the Japanese Version Compared to the Origin
 	- 星夜之幻、TomJinW
 
 ## Special Thanks
-- [Nintendo](https://www.nintendo.co.jp)、[Game Freak](https://www.gamefreak.co.jp)、[Creatures](https://www.creatures.co.jp/)、[The Pokemon Company](https://corporate.pokemon.co.jp)
+- [Nintendo](https://www.nintendo.co.jp)、[Game Freak](https://www.gamefreak.co.jp)、[Creatures](https://www.creatures.co.jp/)、[The Pokémon Company](https://corporate.pokemon.co.jp)
 
 - [神奇宝贝百科](https://wiki.52poke.com/) [Bulbapedia](bulbapedia.bulbagarden.net) [tcrf.net](https://tcrf.net/Pokémon_Red_and_Blue)
 
