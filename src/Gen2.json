@@ -30601,7 +30601,7 @@
     },
     {
         "Sentence": {
-            "text": "text 就在刚才，\nline 我朋友跟我说，\npara 他看到@\ntext_ram wStringBuffer4\nline 有大量的@\ntext_ram wStringBuffer5\ntext 。\npara <PLAYER>\nline 要不要也去看看？\n",
+            "text": "text 就在刚才，\nline 我朋友跟我说，\npara 他看到@\ntext_ram wStringBuffer5\nline 有大量的@\ntext_ram wStringBuffer4\ntext 。\npara <PLAYER>\nline 要不要也去看看？\n",
             "note": "",
             "state": "Unmarked",
             "tag": "PhoneSwarmCaveText\ntrainers.asm"
