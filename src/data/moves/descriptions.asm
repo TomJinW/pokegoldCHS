@@ -267,5 +267,5 @@ MoveFFDescription:
 Move00Description:
 	db "?@"
 
-INCLUDE "data/moves/descriptions_cn.asm"
-INCLUDE "data/moves/descriptions_en.asm"
+INCLUDE "data/moves/descriptions-text.asm"
+; INCLUDE "data/moves/descriptions_cnfull.asm"

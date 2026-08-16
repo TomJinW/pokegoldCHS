@@ -1216,12 +1216,12 @@ UpdateBGMapColumn::
 	ldh [hBGMapTileCount], a
 	ret
 
-ClearBGMapBuffer:: ; unreferenced
-	ld hl, wBGMapBuffer
-	ld bc, wBGMapBufferEnd - wBGMapBuffer
-	xor a
-	call ByteFill
-	ret
+; ClearBGMapBuffer:: ; unreferenced
+; 	ld hl, wBGMapBuffer
+; 	ld bc, wBGMapBufferEnd - wBGMapBuffer
+; 	xor a
+; 	call ByteFill
+; 	ret
 
 LoadTilesetGFX::
 	ld hl, wTilesetAddress

@@ -340,6 +340,3 @@ OpenSDFSCodeStackSRAMOnlyDMG::
 	call OpenSRAM
 	ret
 
-SECTION "ROM0END", ROM0
-Rom0End::
-	db $0

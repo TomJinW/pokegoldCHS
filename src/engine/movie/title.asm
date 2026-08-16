@@ -8,6 +8,14 @@ TitleScreen:
 	call DisableLCD
 	call ClearSprites
 
+	di
+	ldh a, [rIE]
+	push af
+	call DoubleSpeed
+	pop af
+	ldh [rIE], a
+	ei
+
 ; Turn BG Map update off
 	xor a
 	ldh [hBGMapMode], a

@@ -129,6 +129,8 @@ Init::
 	ld [MBC3LatchClock], a
 	ld [MBC3SRamEnable], a
 
+	call DoubleSpeed
+	
 	ld a, LCDC_DEFAULT ; %11100011
 	; LCD on
 	; Win tilemap 1

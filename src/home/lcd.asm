@@ -28,8 +28,12 @@ LCD::
 	and a
 	jr z, .done
 
-	push hl
 	ldh a, [rLY]
+	cp a, SCREEN_HEIGHT_PX ; fix buffer overflow in double speed mode
+	jr nc, .done
+	
+	push hl
+	; ldh a, [rLY]
 	ld l, a
 	ld h, HIGH(wLYOverrides)
 	ld h, [hl]

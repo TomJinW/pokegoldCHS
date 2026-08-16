@@ -295,7 +295,7 @@ StatsScreen_InitLeftHalf:
 	ld e, l
 
 	lb bc, 15, 0 ; CHS_Fix TO DO
-	farcall FixStrLength
+	; farcall FixStrLength
 
 	hlcoord 0, 10 ;hlcoord 8, 2
 	call PlaceString

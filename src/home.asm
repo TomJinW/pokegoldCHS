@@ -58,3 +58,10 @@ INCLUDE "home/battle.asm"
 INCLUDE "home/sprite_anims.asm"
 INCLUDE "home/audio.asm"
 INCLUDE "home/dfs.asm"
+INCLUDE "home/double_speed.asm"
+
+SECTION "ROM0END", ROM0
+Rom0DoubleSpeedSwtich::
+	db $0
+Rom0End::
+	db $00

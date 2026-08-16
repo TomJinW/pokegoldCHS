@@ -1,0 +1,808 @@
+MasterBallDesc:
+	db_w "必定能捉到宝可梦的〇〇〇"
+	next "最好的球。〇〇〇〇〇〇〇@"
+
+UltraBallDesc:
+	db_w "有很高的几率可以〇〇〇〇"
+	next "捉到宝可梦的球。〇〇〇〇@"
+
+BrightpowderDesc:
+	db_w "携带后，光芒会迷惑对手，"
+	next "降低其命中率。〇〇〇〇〇@"
+
+GreatBallDesc:
+	db_w "用于捕捉宝可梦的道具。〇"
+	next "比精灵球的性能高。〇〇〇@"
+
+PokeBallDesc:
+	db_w "用于捕捉宝可梦的道具。〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama1Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+BicycleDesc:
+	db_w "可以用２倍速度移动的〇〇"
+	next "折叠式自行车。〇〇〇〇〇@"
+
+MoonStoneDesc:
+	db_w "能让某些特定的〇〇〇〇〇"
+	next "宝可梦进化。〇〇〇〇〇〇@"
+
+AntidoteDesc:
+	db_w "能治愈中毒状态。〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+BurnHealDesc:
+	db_w "能治愈灼伤状态。〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+IceHealDesc:
+	db_w "能治愈冰冻状态。〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+AwakeningDesc:
+	db_w "能治愈睡眠状态。〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+ParlyzHealDesc:
+	db_w "能治愈麻痹状态。〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+FullRestoreDesc:
+	db_w "能完全回复体力并〇〇〇〇"
+	next "治愈所有的异常状态。〇〇@"
+
+MaxPotionDesc:
+	db_w "能完全回复体力。〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+HyperPotionDesc:
+	db_w "能回复体力２００。〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+SuperPotionDesc:
+	db_w "能回复体力５０。〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+PotionDesc:
+	db_w "能回复体力２０。〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+EscapeRopeDesc:
+	db_w "可以从洞穴之类的〇〇〇〇"
+	next "地方中脱身。〇〇〇〇〇〇@"
+
+RepelDesc:
+	db_w "１００步之内，〇〇〇〇〇"
+	next "弱小的宝可梦将不会出现。@"
+
+MaxElixerDesc:
+	db_w "能让１只宝可梦的〇〇〇〇"
+	next "所有招式的点数完全回复。@"
+
+FireStoneDesc:
+	db_w "能让某些特定的〇〇〇〇〇"
+	next "宝可梦进化。〇〇〇〇〇〇@"
+
+ThunderStoneDesc:
+	db_w "能让某些特定的〇〇〇〇〇"
+	next "宝可梦进化。〇〇〇〇〇〇@"
+
+WaterStoneDesc:
+	db_w "能让某些特定的〇〇〇〇〇"
+	next "宝可梦进化。〇〇〇〇〇〇@"
+
+TeruSama2Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+HPUpDesc:
+	db_w "能提高体力的基础点数。〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+ProteinDesc:
+	db_w "能提高攻击的基础点数。〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+IronDesc:
+	db_w "能提高防御的基础点数。〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+CarbosDesc:
+	db_w "能提高速度的基础点数。〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+LuckyPunchDesc:
+	db_w "让吉利蛋携带后，〇〇〇〇"
+	next "会变得容易击中要害。〇〇@"
+
+CalciumDesc:
+	db_w "能提高特殊攻击与〇〇〇〇"
+	next "特殊防御的基础点数。〇〇@"
+
+RareCandyDesc:
+	db_w "能让宝可梦的等级提高１。"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+XAccuracyDesc:
+	db_w "招式会变得容易命中。〇〇"
+	next "仅在使用过的对战中生效。@"
+
+LeafStoneDesc:
+	db_w "能让某些特定的〇〇〇〇〇"
+	next "宝可梦进化。〇〇〇〇〇〇@"
+
+MetalPowderDesc:
+	db_w "让百变怪携带后，〇〇〇〇"
+	next "防御就会提高。〇〇〇〇〇@"
+
+NuggetDesc:
+	db_w "纯金制成。〇〇〇〇〇〇〇"
+	next "可以高价出售。〇〇〇〇〇@"
+
+PokeDollDesc:
+	db_w "绝对能从遇到的〇〇〇〇〇"
+	next "野生宝可梦面前逃走。〇〇@"
+
+FullHealDesc:
+	db_w "能治愈所有异常状态。〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+ReviveDesc:
+	db_w "能从濒死状态中〇〇〇〇〇"
+	next "回复至一半体力的状态。〇@"
+
+MaxReviveDesc:
+	db_w "能从濒死状态中〇〇〇〇〇"
+	next "回复至体力全满的状态。〇@"
+
+GuardSpecDesc:
+	db_w "能力不会被降低。〇〇〇〇"
+	next "仅在使用过的对战中生效。@"
+
+SuperRepelDesc:
+	db_w "２００步之内，〇〇〇〇〇"
+	next "弱小的宝可梦将不会出现。@"
+
+MaxRepelDesc:
+	db_w "２５０步之内，〇〇〇〇〇"
+	next "弱小的宝可梦将不会出现。@"
+
+DireHitDesc:
+	db_w "会变得容易击中要害。〇〇"
+	next "仅在使用过的对战中生效。@"
+
+TeruSama3Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+FreshWaterDesc:
+	db_w "采集自白银山，〇〇〇〇〇"
+	next "能回复体力５０。〇〇〇〇@"
+
+SodaPopDesc:
+	db_w "清凉爽快，〇〇〇〇〇〇〇"
+	next "能回复体力６０。〇〇〇〇@"
+
+LemonadeDesc:
+	db_w "非常甜，〇〇〇〇〇〇〇〇"
+	next "能回复体力８０。〇〇〇〇@"
+
+XAttackDesc:
+	db_w "攻击力会提高。〇〇〇〇〇"
+	next "仅在使用过的对战中生效。@"
+
+TeruSama4Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+XDefendDesc:
+	db_w "防御力会提高。〇〇〇〇〇"
+	next "仅在使用过的对战中生效。@"
+
+XSpeedDesc:
+	db_w "速度会提高。〇〇〇〇〇〇"
+	next "仅在使用过的对战中生效。@"
+
+XSpecialDesc:
+	db_w "特殊攻击力会提高。〇〇〇"
+	next "仅在使用过的对战中生效。@"
+
+CoinCaseDesc:
+	db_w "最多能放入９９９９枚〇〇"
+	next "获得的代币。〇〇〇〇〇〇@"
+
+ItemfinderDesc:
+	db_w "会对看不见的道具起反应，"
+	next "并发出声音提醒。〇〇〇〇@"
+
+TeruSama5Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+ExpShareDesc:
+	db_w "携带它就能分到经验值。〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+OldRodDesc:
+	db_w "在水边使用的话，〇〇〇〇"
+	next "可以钓到宝可梦。〇〇〇〇@"
+
+GoodRodDesc:
+	db_w "用于钓宝可梦的道具。〇〇"
+	next "不错的钓竿。〇〇〇〇〇〇@"
+
+SilverLeafDesc:
+	db_w "银色的神奇叶子。〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+SuperRodDesc:
+	db_w "用于钓宝可梦的道具。〇〇"
+	next "作为最好的钓竿而闻名。〇@"
+
+PPUpDesc:
+	db_w "招式点数的最大值会提高。"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+EtherDesc:
+	db_w "能让１个招式的招式点数〇"
+	next "回复１０。〇〇〇〇〇〇〇@"
+
+MaxEtherDesc:
+	db_w "能让１个招式的招式点数〇"
+	next "完全回复。〇〇〇〇〇〇〇@"
+
+ElixerDesc:
+	db_w "能让全部招式的招式点数〇"
+	next "回复１０。〇〇〇〇〇〇〇@"
+
+RedScaleDesc:
+	db_w "在愤怒之湖里出现的〇〇〇"
+	next "红色暴鲤龙的鳞片。〇〇〇@"
+
+SecretPotionDesc:
+	db_w "能让任何宝可梦〇〇〇〇〇"
+	next "变得精力充沛。〇〇〇〇〇@"
+
+SSTicketDesc:
+	db_w "乘坐水流号时需要用到。〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+MysteryEggDesc:
+	db_w "宝可梦爷爷寄放的东西。〇"
+	next "不知道是什么的蛋。〇〇〇@"
+
+ClearBellDesc:
+	db_w "能发出能静心宁神的音色。"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+SilverWingDesc:
+	db_w "散发着银色光辉的〇〇〇〇"
+	next "神奇羽毛。〇〇〇〇〇〇〇@"
+
+MoomooMilkDesc:
+	db_w "营养百分百的牛奶。〇〇〇"
+	next "能回复体力１００。〇〇〇@"
+
+QuickClawDesc:
+	db_w "携带后，〇〇〇〇〇〇〇〇"
+	next "有时能比对手先一步攻击。@"
+
+PsnCureBerryDesc:
+	db_w "携带后，〇〇〇〇〇〇〇〇"
+	next "可以自动治愈中毒状态。〇@"
+
+GoldLeafDesc:
+	db_w "金色的神奇叶子。〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+SoftSandDesc:
+	db_w "携带后，地面属性的〇〇〇"
+	next "招式威力就会提高。〇〇〇@"
+
+SharpBeakDesc:
+	db_w "携带后，飞行属性的〇〇〇"
+	next "招式威力就会提高。〇〇〇@"
+
+PrzCureBerryDesc:
+	db_w "携带后，〇〇〇〇〇〇〇〇"
+	next "可以自动治愈麻痹状态。〇@"
+
+BurntBerryDesc:
+	db_w "携带后，〇〇〇〇〇〇〇〇"
+	next "可以自动治愈冰冻状态。〇@"
+
+IceBerryDesc:
+	db_w "携带后，〇〇〇〇〇〇〇〇"
+	next "可以自动治愈灼伤状态。〇@"
+
+PoisonBarbDesc:
+	db_w "携带后，毒属性的〇〇〇〇"
+	next "招式威力就会提高。〇〇〇@"
+
+KingsRockDesc:
+	db_w "携带后，〇〇〇〇〇〇〇〇"
+	next "有时会让对手畏缩。〇〇〇@"
+
+BitterBerryDesc:
+	db_w "携带后，〇〇〇〇〇〇〇〇"
+	next "可以自动治愈混乱状态。〇@"
+
+MintBerryDesc:
+	db_w "携带后，〇〇〇〇〇〇〇〇"
+	next "可以自动治愈睡眠状态。〇@"
+
+RedApricornDesc:
+	db_w "红色的球果。〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TinyMushroomDesc:
+	db_w "普通的蘑菇。〇〇〇〇〇〇"
+	next "可以廉价出售。〇〇〇〇〇@"
+
+BigMushroomDesc:
+	db_w "珍稀的蘑菇。〇〇〇〇〇〇"
+	next "可以高价出售。〇〇〇〇〇@"
+
+SilverPowderDesc:
+	db_w "携带后，虫属性的〇〇〇〇"
+	next "招式威力就会提高。〇〇〇@"
+
+BluApricornDesc:
+	db_w "蓝色的球果。〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama6Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+AmuletCoinDesc:
+	db_w "携带的宝可梦在对战中出场"
+	next "过，就能获得２倍金钱。〇@"
+
+YlwApricornDesc:
+	db_w "黄色的球果。〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+GrnApricornDesc:
+	db_w "绿色的球果。〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+CleanseTagDesc:
+	db_w "携带后，野生宝可梦〇〇〇"
+	next "就会不容易出现。〇〇〇〇@"
+
+MysticWaterDesc:
+	db_w "携带后，水属性的〇〇〇〇"
+	next "招式威力就会提高。〇〇〇@"
+
+TwistedSpoonDesc:
+	db_w "携带后，超能力属性的〇〇"
+	next "招式威力就会提高。〇〇〇@"
+
+WhtApricornDesc:
+	db_w "白色的球果。〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+BlackbeltDesc:
+	db_w "携带后，格斗属性的〇〇〇"
+	next "招式威力就会提高。〇〇〇@"
+
+BlkApricornDesc:
+	db_w "黑色的球果。〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama7Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+PnkApricornDesc:
+	db_w "粉色的球果。〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+BlackGlassesDesc:
+	db_w "携带后，恶属性招式的〇〇"
+	next "威力就会提高。〇〇〇〇〇@"
+
+SlowpokeTailDesc:
+	db_w "非常美味，〇〇〇〇〇〇〇"
+	next "可以高价出售。〇〇〇〇〇@"
+
+PinkBowDesc:
+	db_w "携带后，一般属性招式的〇"
+	next "威力就会提高。〇〇〇〇〇@"
+
+StickDesc:
+	db_w "某种长葱，〇〇〇〇〇〇〇"
+	next "可以廉价出售。〇〇〇〇〇@"
+
+SmokeBallDesc:
+	db_w "绝对能从遇到的〇〇〇〇〇"
+	next "野生宝可梦面前逃走。〇〇@"
+
+NeverMeltIceDesc:
+	db_w "携带后，冰属性的〇〇〇〇"
+	next "招式威力就会提高。〇〇〇@"
+
+MagnetDesc:
+	db_w "携带后，电属性的〇〇〇〇"
+	next "招式威力就会提高。〇〇〇@"
+
+MiracleBerryDesc:
+	db_w "携带后，可以治愈自己〇〇"
+	next "所有的异常状态。〇〇〇〇@"
+
+PearlDesc:
+	db_w "美丽的珍珠，〇〇〇〇〇〇"
+	next "可以廉价出售。〇〇〇〇〇@"
+
+BigPearlDesc:
+	db_w "美丽且大颗的珍珠，〇〇〇"
+	next "可以高价出售。〇〇〇〇〇@"
+
+EverStoneDesc:
+	db_w "携带后，宝可梦〇〇〇〇〇"
+	next "不会进化的神奇石头。〇〇@"
+
+SpellTagDesc:
+	db_w "携带后，幽灵属性的〇〇〇"
+	next "招式威力就会提高。〇〇〇@"
+
+RageCandyBarDesc:
+	db_w "卡吉镇特产的馒头。〇〇〇"
+	next "能回复体力２０。〇〇〇〇@"
+
+GSBallDesc:
+	db_w "带着神奇气场的球。〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+BlueCardDesc:
+	db_w "可以将密语节目的点数〇〇"
+	next "积攒起来的卡片。〇〇〇〇@"
+
+MiracleSeedDesc:
+	db_w "携带后，草属性的〇〇〇〇"
+	next "招式威力就会提高。〇〇〇@"
+
+ThickClubDesc:
+	db_w "某种骨头，〇〇〇〇〇〇〇"
+	next "可以廉价出售。〇〇〇〇〇@"
+
+FocusBandDesc:
+	db_w "携带它的宝可梦〇〇〇〇〇"
+	next "有时不会倒下。〇〇〇〇〇@"
+
+TeruSama8Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+EnergyPowderDesc:
+	db_w "非常苦的粉。〇〇〇〇〇〇"
+	next "能回复体力５０。〇〇〇〇@"
+
+EnergyRootDesc:
+	db_w "非常苦的根。〇〇〇〇〇〇"
+	next "能回复体力２００。〇〇〇@"
+
+HealPowderDesc:
+	db_w "能治愈所有异常状态，〇〇"
+	next "但是很苦。〇〇〇〇〇〇〇@"
+
+RevivalHerbDesc:
+	db_w "能让濒死的宝可梦〇〇〇〇"
+	next "回复所有体力，但是很苦。@"
+
+HardStoneDesc:
+	db_w "携带后，岩石属性的〇〇〇"
+	next "招式威力就会提高。〇〇〇@"
+
+LuckyEggDesc:
+	db_w "携带的宝可梦获得的〇〇〇"
+	next "经验值会少量增加。〇〇〇@"
+
+CardKeyDesc:
+	db_w "可以打开电台的卷帘门。〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+MachinePartDesc:
+	db_w "发电厂的机器零件。〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+EggTicketDesc:
+	db_w "似乎可以在满金市〇〇〇〇"
+	next "交换柜台使用。〇〇〇〇〇@"
+
+LostItemDesc:
+	db_w "模仿少女丢失的皮皮玩偶。"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+StardustDesc:
+	db_w "美丽的红色沙子。〇〇〇〇"
+	next "可以高价出售。〇〇〇〇〇@"
+
+StarPieceDesc:
+	db_w "美丽的红色宝石碎片。〇〇"
+	next "可以用极高价格出售。〇〇@"
+
+BasementKeyDesc:
+	db_w "能打开门的钥匙。〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+PassDesc:
+	db_w "可以搭乘列车。〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama9Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama10Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama11Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+CharcoalDesc:
+	db_w "携带后，火属性的〇〇〇〇"
+	next "招式威力就会提高。〇〇〇@"
+
+BerryJuiceDesc:
+	db_w "用树果制成的果汁。〇〇〇"
+	next "能回复体力２０。〇〇〇〇@"
+
+ScopeLensDesc:
+	db_w "携带后，〇〇〇〇〇〇〇〇"
+	next "会变得容易击中要害。〇〇@"
+
+TeruSama12Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama13Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+MetalCoatDesc:
+	db_w "携带后，钢属性的〇〇〇〇"
+	next "招式威力就会提高。〇〇〇@"
+
+DragonFangDesc:
+	db_w "携带后，龙属性的〇〇〇〇"
+	next "招式威力就会提高。〇〇〇@"
+
+TeruSama14Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+LeftoversDesc:
+	db_w "携带后，在战斗期间〇〇〇"
+	next "体力会缓缓回复。〇〇〇〇@"
+
+TeruSama15Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama16Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama17Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+MysteryBerryDesc:
+	db_w "携带后，可以在战斗时〇〇"
+	next "回复自己的招式点数。〇〇@"
+
+DragonScaleDesc:
+	db_w "神奇的鳞片。龙属性宝可梦"
+	next "有时会携带它。〇〇〇〇〇@"
+
+BerserkGeneDesc:
+	db_w "能大幅提高攻击，〇〇〇〇"
+	next "但会造成混乱。〇〇〇〇〇@"
+
+TeruSama18Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama19Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama20Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+SacredAshDesc:
+	db_w "能让所有陷入濒死的宝可梦"
+	next "恢复到正常状态。〇〇〇〇@"
+
+HeavyBallDesc:
+	db_w "能很容易地捕捉〇〇〇〇〇"
+	next "身体沉重的宝可梦。〇〇〇@"
+
+FlowerMailDesc:
+	db_w "花朵图案的信纸。〇〇〇〇"
+	next "写好后能让宝可梦携带。〇@"
+
+LevelBallDesc:
+	db_w "比自己宝可梦的等级越低，"
+	next "就会越容易捕捉。〇〇〇〇@"
+
+LureBallDesc:
+	db_w "能很容易地捕捉〇〇〇〇〇"
+	next "钓上来的宝可梦。〇〇〇〇@"
+
+FastBallDesc:
+	db_w "能很容易地捕捉〇〇〇〇〇"
+	next "逃跑速度很快的宝可梦。〇@"
+
+TeruSama21Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+LightBallDesc:
+	db_w "电光闪烁的神奇之球。〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+FriendBallDesc:
+	db_w "捉到的宝可梦〇〇〇〇〇〇"
+	next "会变得和训练家亲密起来。@"
+
+MoonBallDesc:
+	db_w "能很容易地捕捉〇〇〇〇〇"
+	next "使用月之石进化的宝可梦。@"
+
+LoveBallDesc:
+	db_w "能很容易地捕捉和自己〇〇"
+	next "宝可梦性别不同的宝可梦。@"
+
+NormalBoxDesc:
+	db_w "打开看看。〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+GorgeousBoxDesc:
+	db_w "打开看看。〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+SunStoneDesc:
+	db_w "能让某些特定的〇〇〇〇〇"
+	next "宝可梦进化。〇〇〇〇〇〇@"
+
+PolkadotBowDesc:
+	db_w "携带后，一般属性的〇〇〇"
+	next "招式威力会提高。〇〇〇〇@"
+
+TeruSama22Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+UpGradeDesc:
+	db_w "神奇的盒子，〇〇〇〇〇〇"
+	next "西尔佛公司制造。〇〇〇〇@"
+
+BerryDesc:
+	db_w "携带后，〇〇〇〇〇〇〇〇"
+	next "可以自动回复体力１０。〇@"
+
+GoldBerryDesc:
+	db_w "携带后，〇〇〇〇〇〇〇〇"
+	next "可以自动回复体力３０。〇@"
+
+SquirtBottleDesc:
+	db_w "杰尼龟造型的洒水壶，〇〇"
+	next "用来给草木浇水的道具。〇@"
+
+TeruSama23Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+ParkBallDesc:
+	db_w "捕虫大赛上使用的球。〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+RainbowWingDesc:
+	db_w "散发着虹色光辉的〇〇〇〇"
+	next "神奇羽毛。〇〇〇〇〇〇〇@"
+
+TeruSama24Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+BrickPieceDesc:
+	db_w "破损砖块的碎片。〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+SurfMailDesc:
+	db_w "拉普拉斯图案的信纸。〇〇"
+	next "写好后能让宝可梦携带。〇@"
+
+LiteBlueMailDesc:
+	db_w "迷你龙图案的信纸。〇〇〇"
+	next "写好后能让宝可梦携带。〇@"
+
+PortraitMailDesc:
+	db_w "印有携带它的宝可梦。〇〇"
+	next "写好后能让宝可梦携带。〇@"
+
+LovelyMailDesc:
+	db_w "爱心标记十分可爱的信纸。"
+	next "写好后能让宝可梦携带。〇@"
+
+EonMailDesc:
+	db_w "伊布剪影图案的信纸。〇〇"
+	next "写好后能让宝可梦携带。〇@"
+
+MorphMailDesc:
+	db_w "百变怪剪影图案的信纸。〇"
+	next "写好后能让宝可梦携带。〇@"
+
+BlueSkyMailDesc:
+	db_w "美丽的蓝天图案的信纸。〇"
+	next "写好后能让宝可梦携带。〇@"
+
+MusicMailDesc:
+	db_w "天然雀图案的信纸。〇〇〇"
+	next "写好后能让宝可梦携带。〇@"
+
+MirageMailDesc:
+	db_w "梦幻图案的信纸。〇〇〇〇"
+	next "写好后能让宝可梦携带。〇@"
+
+TeruSama25Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama26Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama27Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama28Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama29Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama30Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama31Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama32Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama33Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama34Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama35Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama36Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+
+TeruSama37Desc:
+	db_w "？〇〇〇〇〇〇〇〇〇〇〇"
+	next "〇〇〇〇〇〇〇〇〇〇〇〇@"
+

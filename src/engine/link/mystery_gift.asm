@@ -32,6 +32,14 @@ DoMysteryGift:
 	call PlaceString
 	call WaitBGMap
 
+	di
+	ldh a, [rIE]
+	push af
+	call NormalSpeed
+	pop af
+	ldh [rIE], a
+	ei
+
 	; Prepare the first of two messages for wMysteryGiftPartnerData
 	farcall StageDataForMysteryGift
 	call ClearMysteryGiftTrainer
@@ -291,6 +299,7 @@ if DEF(_GOLD_VC) || DEF(_SILVER_VC)
 	ret
 	db LOW(hMGRole) ; unpatched byte left from 'ldh a, [hMGRole]'
 else
+	; call NormalSpeed
 	call InitializeIRCommunicationInterrupts
 
 .restart
@@ -533,6 +542,7 @@ EndOrContinueMysteryGiftIRCommunication:
 	jp SenderExchangeMysteryGiftDataPayloads
 
 .quit
+	call DoubleSpeed
 	xor a
 	ldh [rIF], a
 	ldh a, [rIE]

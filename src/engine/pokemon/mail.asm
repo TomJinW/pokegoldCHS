@@ -216,8 +216,19 @@ GivePokeMail::
 	ld hl, wPartyMonOTs
 	ld bc, NAME_LENGTH
 	call AddNTimes
+
 	ld bc, NAME_LENGTH - 1
+	; ld bc, NAME_LENGTH - 3
+	
 	call CopyBytes
+
+	; ld a, "C"
+	; ld [de], a
+	; inc de
+	; ld a, "N"
+	; ld [de], a
+	; inc de
+
 	pop af
 	ld hl, wPartyMon1ID
 	ld bc, PARTYMON_STRUCT_LENGTH

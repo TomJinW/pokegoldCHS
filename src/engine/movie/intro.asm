@@ -76,6 +76,14 @@ IntroScene1:
 	inc [hl] ; only run once
 	call DisableLCD
 
+	di
+	ldh a, [rIE]
+	push af
+	call NormalSpeed
+	pop af
+	ldh [rIE], a
+	ei
+
 	xor a
 	ldh [hBGMapMode], a
 	callfar ClearSpriteAnims

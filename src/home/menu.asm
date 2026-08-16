@@ -383,8 +383,8 @@ MenuTextbox::
 	pop hl
 	jp PrintText
 
-Menu_DummyFunction:: ; unreferenced
-	ret
+; Menu_DummyFunction:: ; unreferenced
+; 	ret
 
 LoadMenuTextbox::
 	ld hl, .MenuHeader

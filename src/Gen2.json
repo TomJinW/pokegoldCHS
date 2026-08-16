@@ -6025,7 +6025,7 @@
     },
     {
         "Sentence": {
-            "text": "text 交换宝可梦盒子时，\nline 会同时写入记录。\ncont 可以吗？\n",
+            "text": "text 更换宝可梦盒子时，\nline 会同时写入记录。\ncont 可以吗？\n",
             "note": "",
             "state": "Unmarked",
             "tag": "_ChangeBoxSaveText\ncommon_2.asm"
@@ -15729,7 +15729,7 @@
     },
     {
         "Sentence": {
-            "text": "text 雷钵山\nline 含有大瀑布的洞穴\n",
+            "text": "text 雷钵山\nline 里面有大瀑布的洞窟。\n",
             "note": "",
             "state": "Unmarked",
             "tag": "MtMortarSign1Text\nRoute42.asm"
@@ -15737,7 +15737,7 @@
     },
     {
         "Sentence": {
-            "text": "text 雷钵山\nline 内含大瀑布的洞窟\n",
+            "text": "text 雷钵山\nline 里面有大瀑布的洞窟。\n",
             "note": "",
             "state": "Unmarked",
             "tag": "MtMortarSign2Text\nRoute42.asm"
@@ -17521,7 +17521,7 @@
     },
     {
         "Sentence": {
-            "text": "text 我们要去紫苑镇播音塔\nline 进行社会实践！\n",
+            "text": "text 我们要去紫苑镇的播音塔\nline 进行社会实践！\n",
             "note": "",
             "state": "Unmarked",
             "tag": "SchoolboyJohnnySeenText\nRoute15.asm"
@@ -28617,7 +28617,7 @@
     },
     {
         "Sentence": {
-            "text": "text 我把我的\nline 电话号码告诉你，\ncont 有事情就联系我哦！\n",
+            "text": "text 哎呀，差点忘了，\nline 这是我的电话号码，\ncont 有事情就联系我哦！\n",
             "note": "",
             "state": "Unmarked",
             "tag": "ElmDirectionsText3\nElmsLab.asm"
@@ -29017,7 +29017,7 @@
     },
     {
         "Sentence": {
-            "text": "text 空木博士\nline 找你有什么事？\npara <……><……><……>\npara 听起来很了不得了啊。\nline 但是，别人有求于你，\ncont 你要放在心上哦！\n",
+            "text": "text 空木博士\nline 找你有什么事？\npara <……><……><……>\npara 听起来很了不得啊。\nline 但是，别人有求于你，\ncont 你要放在心上哦！\n",
             "note": "",
             "state": "Unmarked",
             "tag": "SoWhatWasProfElmsErrandText\nPlayersHouse1F.asm"
@@ -29257,7 +29257,7 @@
     },
     {
         "Sentence": {
-            "text": "text 再往前走几步，\nline 出现的宝可梦会略有不同。\npara 想要搜集各种宝可梦，\nline 就得探索各种地方！\n",
+            "text": "text 再往前走几步，\nline 出现的宝可梦会略有不同。\npara 想要收集各种宝可梦，\nline 就得探索各种地方！\n",
             "note": "",
             "state": "Unmarked",
             "tag": "Route29Route46GateYoungsterText\nRoute29Route46Gate.asm"
@@ -29977,7 +29977,7 @@
     },
     {
         "Sentence": {
-            "text": "text 我希望\nline 你能多与宝可梦相遇，\ncont 将这个图鉴彻底填满！\npara 哎呀！\nline 我的话好像太长了！\npara 接下来我必须得去\nline 满金市录制那个\ncont 我经常作客的广播节目！\npara 那么，<PLAY_G>！\nline 就拜托你了！\n",
+            "text": "text 我希望\nline 你能多与宝可梦相遇，\ncont 将这个图鉴彻底填满！\npara 哎呀！\nline 我的话好像太长了！\npara 接下来我必须得去\nline 满金市录制那个\ncont 我经常做客的广播节目！\npara 那么，<PLAY_G>！\nline 就拜托你了！\n",
             "note": "",
             "state": "Unmarked",
             "tag": "MrPokemonsHouse_OakText2\nMrPokemonsHouse.asm"

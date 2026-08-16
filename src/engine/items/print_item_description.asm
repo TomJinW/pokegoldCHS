@@ -17,6 +17,8 @@ PrintItemDescription:
 
 	push af
 	call SetupDFSNomanagementNoDelay
+	; ld a, $2E
+	; ld [wDFSNoManagementCurrentTileNo], a
 	pop af
 
 	call PrintMoveDescription
@@ -47,6 +49,8 @@ PrintItemDescription:
 	ld a, BANK(ItemDescriptions)
 	push af
 	call SetupDFSNomanagementNoDelay
+	; ld a, $2E
+	; ld [wDFSNoManagementCurrentTileNo], a
 	pop af
 	call PlaceFarString
 	call DisableDFSNoManagement
