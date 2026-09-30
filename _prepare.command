@@ -8,6 +8,9 @@ mkdir build
 cp -r src/* build
 cd build
 
+# The copied binary may be older than its updated RGBDS 1.0.4-compatible source.
+make -B -C tools make_patch || exit 1
+
 # echo 正在备份文件...
 # mkdir tmp
 mkdir __Hash
@@ -16,4 +19,3 @@ mkdir __Hash
 chmod +x ./_importBuild.sh
 xattr -d com.apple.quarantine ./_importBuild.sh
 ./_importBuild.sh
-
