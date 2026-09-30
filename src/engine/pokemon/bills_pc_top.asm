@@ -245,7 +245,7 @@ ClearPCItemScreen:
 	call ClearSprites
 	hlcoord 0, 0
 	ld bc, SCREEN_HEIGHT * SCREEN_WIDTH
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ByteFill
 	hlcoord 0, 0
 	lb bc, 10, 18

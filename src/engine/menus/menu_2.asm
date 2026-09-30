@@ -20,7 +20,7 @@ PlaceMenuItemQuantity:
 	; add hl, de
 	inc hl
 	inc hl
-	ld [hl], "×"
+	ld [hl], CHARVAL("×")
 	inc hl
 	ld de, wMenuSelectionQuantity
 	lb bc, 1, 2

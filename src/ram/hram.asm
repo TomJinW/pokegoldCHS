@@ -193,6 +193,6 @@ NEXTU
 hTmpTileBuffer:: ds 16
 ENDU
 
-hCurrentPrintMode :: db
-hCurrentPrintTileIDOffset :: db
+hCurrentPrintMode:: ds 1
+hCurrentPrintTileIDOffset:: ds 1
 hTmpSpace:: ds 1

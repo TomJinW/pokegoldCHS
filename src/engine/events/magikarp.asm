@@ -75,7 +75,7 @@ CheckMagikarpLength:
 	text_end
 
 Magikarp_LoadFeetInchesChars:
-	ld hl, vTiles2 tile "′" ; $6e
+	ld hl, vTiles2 tile CHARVAL("′") ; $6e
 	ld de, .feetinchchars
 	lb bc, BANK(.feetinchchars), 2
 	call Request2bpp
@@ -98,7 +98,7 @@ PrintMagikarpLength:
 	; ld [hl], "″"
 	dec hl
 	ld a, [hl]
-	ld [hl], "."
+	ld [hl], CHARVAL(".")
 	inc hl
 	ld [hl], a
 	inc hl
@@ -106,7 +106,7 @@ PrintMagikarpLength:
 	; inc hl
 	; ld [hl], "m"
 	; inc hl
-	ld [hl], "@"
+	ld [hl], CHARVAL("@")
 	ret
 
 CalcMagikarpLength:

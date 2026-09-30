@@ -33,7 +33,7 @@ LoadMapTimeOfDay::
 	ldh [hSCX], a
 	farcall ApplyBGMapAnchorToObjects
 
-	ld a, "■"
+	ld a, CHARVAL("■")
 	ld bc, vBGMap1 - vBGMap0
 	hlbgcoord 0, 0
 	call ByteFill

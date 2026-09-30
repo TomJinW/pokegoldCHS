@@ -496,7 +496,7 @@ PhoneCall::
 .CallerTextboxWithName:
 	call Phone_CallerTextbox
 	hlcoord 1, 2
-	ld [hl], "☎"
+	ld [hl], CHARVAL("☎")
 	inc hl
 	inc hl
 ; BUG: The unused phonecall script command may crash (see docs/bugs_and_glitches.md)
@@ -583,7 +583,7 @@ Phone_TextboxWithName:
 	push bc
 	call Phone_CallerTextbox
 	hlcoord 1, 2 ;hlcoord 1, 1
-	ld [hl], "☎"
+	ld [hl], CHARVAL("☎")
 	inc hl
 	inc hl
 	ld d, h

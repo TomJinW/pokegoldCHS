@@ -238,7 +238,7 @@ ParseCredits:
 	ldh [hBGMapMode], a
 	hlcoord 0, 5
 	ld bc, SCREEN_WIDTH * 8
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ByteFill
 
 ; Then read the script.

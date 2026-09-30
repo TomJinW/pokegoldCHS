@@ -27,7 +27,7 @@ MACRO list_start
 ENDM
 
 MACRO li
-	assert !STRIN(\1, "@"), STRCAT("String terminator \"@\" in list entry: ", \1)
+	assert STRFIND(\1, "@") == -1, STRCAT("String terminator \"@\" in list entry: ", \1)
 	db_w \1, "@"
 	DEF list_index += 1
 ENDM

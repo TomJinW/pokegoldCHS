@@ -104,7 +104,9 @@ int parse_number(const char *input, int base) {
 void parse_symbol_value(char *input, int *restrict bank, int *restrict address) {
 	char *colon = strchr(input, ':');
 	if (!colon) {
-		error_exit("Error: Cannot parse bank+address: \"%s\"\n", input);
+		// Newer rgblink also emits constant symbols without an address.
+		*bank = -1;
+		return;
 	}
 	*colon++ = '\0';
 	*bank = parse_number(input, 16);
@@ -122,7 +124,7 @@ void parse_symbols(const char *filename, struct Symbol **symbols) {
 	for (;;) {
 		int c = getc(file);
 		if (c == EOF || c == '\n' || c == '\r' || c == ';' || (state == SYM_NAME && (c == ' ' || c == '\t'))) {
-			if (state == SYM_NAME) {
+			if (state == SYM_NAME && bank >= 0) {
 				// The symbol name has ended; append the buffered symbol
 				buffer_append(buffer, &(char []){'\0'});
 				symbol_append(symbols, buffer->data, bank, address);

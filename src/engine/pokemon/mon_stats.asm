@@ -71,7 +71,7 @@ DrawHP:
 	lb bc, 2, 3
 	call PrintNum
 
-	ld a, "/"
+	ld a, CHARVAL("/")
 	ld [hli], a
 
 ; Print max HP
@@ -296,7 +296,7 @@ ListMovePP:
 	ld de, wStringBuffer1 + 4
 	lb bc, 1, 2
 	call PrintNum
-	ld a, "/"
+	ld a, CHARVAL("/")
 	ld [hli], a
 	ld de, wTempPP
 	lb bc, 1, 2

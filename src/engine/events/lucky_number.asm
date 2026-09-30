@@ -212,6 +212,6 @@ PrintTodaysLuckyNumber:
 	ld de, wLuckyIDNumber
 	lb bc, PRINTNUM_LEADINGZEROS | 2, 5
 	call PrintNum
-	ld a, "@"
+	ld a, CHARVAL("@")
 	ld [wStringBuffer3 + 5], a
 	ret

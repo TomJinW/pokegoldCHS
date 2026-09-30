@@ -151,6 +151,9 @@ MACRO charmap_w
 	elif _NARG > CHARMAP_W_MAX_LENGTH + 1
 		fail "charmap_w: The length of the charmap_w is greater than the charmap_w max legnth"
 	endc
+	; Wide maps intentionally replace entries in their backing charmaps.
+	PUSHO
+	OPT Wno-charmap-redef
 
 	; db-compatible
 	if CHARMAP_W_DB_COMPMODE == 2 || (CHARMAP_W_DB_COMPMODE == 1 && _NARG == 2 )
@@ -171,6 +174,7 @@ MACRO charmap_w
 		charmap \1, 0
 	endr
 	popc
+	POPO
 ENDM
 
 ; db_w value1/"string1", ..., valueN/"stringN"
@@ -196,24 +200,24 @@ MACRO db_w
 		setcharmap _CHARMAP_W_QUOTECMP
 		pusho
 		opt Wunmapped-char=0
-		if STRSUB("\1", 1, 1) == "\"" && STRSUB("\1", -1) == "\""
+		if !STRCMP(STRSLICE("\1", 0, 1), "\"") && !STRCMP(STRSLICE("\1", -1), "\"")
 			setcharmap CHARMAP_W_{CHARMAP_W_NAME}_LENGTH
 			for _CHARMAP_W_I, 1, CHARLEN(\1) + 1
-				if CHARSUB(\1, _CHARMAP_W_I) > CHARMAP_W_{CHARMAP_W_NAME}_MAX_LENGTH
-					fail STRCAT("db_w: Unmapped character '",  CHARSUB(\1, _CHARMAP_W_I), "'")
+				if CHARVAL(STRCHAR(\1, _CHARMAP_W_I - 1)) > CHARMAP_W_{CHARMAP_W_NAME}_MAX_LENGTH
+					fail STRCAT("db_w: Unmapped character '",  STRCHAR(\1, _CHARMAP_W_I - 1), "'")
 				endc
 			endr
 			popo
 			for _CHARMAP_W_I, 1, CHARLEN(\1) + 1
 				setcharmap CHARMAP_W_{CHARMAP_W_NAME}_LENGTH
-				for _CHARMAP_W_J, CHARSUB(\1, _CHARMAP_W_I)
+				for _CHARMAP_W_J, CHARVAL(STRCHAR(\1, _CHARMAP_W_I - 1))
 					setcharmap CHARMAP_W_{CHARMAP_W_NAME}_PLANE_{d:_CHARMAP_W_J}
-					db CHARSUB(\1, _CHARMAP_W_I)
+					db CHARVAL(STRCHAR(\1, _CHARMAP_W_I - 1))
 				endr
 			endr
 			popc
 		else
-			if STRIN("\1", "\"") != 0
+			if STRFIND("\1", "\"") != -1
 				warn "db_w: Parameter '\1' contains quotes that may not be parsed properly"
 			endc
 			popo
@@ -251,10 +255,10 @@ MACRO getchar_w
 	pushc
 	DEF CHARMAP_W_CHAR = 0
 	setcharmap CHARMAP_W_{CHARMAP_W_NAME}_LENGTH
-	DEF CHARMAP_W_CHARLEN = \1
+	DEF CHARMAP_W_CHARLEN = CHARVAL(\1)
 	for _CHARMAP_W_I, CHARMAP_W_CHARLEN
 		setcharmap CHARMAP_W_{CHARMAP_W_NAME}_PLANE_{d:_CHARMAP_W_I}
-		DEF CHARMAP_W_CHAR = (CHARMAP_W_CHAR << 8) | \1
+		DEF CHARMAP_W_CHAR = (CHARMAP_W_CHAR << 8) | CHARVAL(\1)
 	endr
 	if _NARG > 1
 		DEF \2 = CHARMAP_W_CHAR
@@ -275,7 +279,7 @@ MACRO charlen_w
 	DEF CHARMAP_W_CHARLEN = 0
 	setcharmap CHARMAP_W_{CHARMAP_W_NAME}_LENGTH
 	for _CHARMAP_W_I, 1, CHARLEN(\1) + 1
-		DEF CHARMAP_W_CHARLEN += CHARSUB(\1, _CHARMAP_W_I)
+		DEF CHARMAP_W_CHARLEN += CHARVAL(STRCHAR(\1, _CHARMAP_W_I - 1))
 	endr
 	if _NARG > 1
 		DEF \2 = CHARMAP_W_CHARLEN

@@ -14,7 +14,7 @@ GetGen1TrainerClassName: ; unreferenced
 	ld a, [hli]
 	ld [de], a
 	inc de
-	cp "@"
+	cp CHARVAL("@")
 	jr nz, .copy
 	ret
 

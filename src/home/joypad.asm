@@ -429,11 +429,11 @@ PromptButton::
 	ldh a, [hVBlankCounter]
 	and %00010000 ; bit 4, a
 	jr z, .cursor_off
-	ld a, "▼"
+	ld a, CHARVAL("▼")
 	jr .load_cursor_state
 
 .cursor_off
-	ld a, "─"
+	ld a, CHARVAL("─")
 
 .load_cursor_state
 	ldcoord_a 18, 17
@@ -443,7 +443,7 @@ BlinkCursor::
 	push bc
 	ld a, [hl]
 	ld b, a
-	ld a, "▼"
+	ld a, CHARVAL("▼")
 	cp b
 	pop bc
 	jr nz, .place_arrow
@@ -455,7 +455,7 @@ BlinkCursor::
 	dec a
 	ldh [hObjectStructIndex], a
 	ret nz
-	ld a, "─"
+	ld a, CHARVAL("─")
 	ld [hl], a
 	ld a, -1
 	ldh [hMapObjectIndex], a
@@ -478,6 +478,6 @@ BlinkCursor::
 	ret nz
 	ld a, 6
 	ldh [hObjectStructIndex], a
-	ld a, "▼"
+	ld a, CHARVAL("▼")
 	ld [hl], a
 	ret

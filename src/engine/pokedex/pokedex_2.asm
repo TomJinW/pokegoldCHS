@@ -269,7 +269,7 @@ GetDexEntryPagePointer:
 	ld a, b
 	call GetFarByte
 	inc hl
-	cp "@"
+	cp CHARVAL("@")
 	jr nz, .loop1
 ; skip height and weight
 rept 4;
@@ -283,7 +283,7 @@ endr
 	ld a, b
 	call GetFarByte
 	inc hl
-	cp "@"
+	cp CHARVAL("@")
 	jr nz, .loop2
 
 .done

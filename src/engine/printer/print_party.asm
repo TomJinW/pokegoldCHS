@@ -1,4 +1,4 @@
-DEF PRINTPARTY_HP EQU "◀" ; $71
+DEF PRINTPARTY_HP EQU CHARVAL("◀") ; $71
 
 ; PrintPage1:
 ; 	hlcoord 0, 0
@@ -60,22 +60,22 @@ PrintPage1:
 
 	hlcoord 1, 11, wPrinterTilemapBuffer
 	ld bc, SCREEN_WIDTH - 2
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ByteFill
 
 	hlcoord 1, 12, wPrinterTilemapBuffer
 	ld bc, SCREEN_WIDTH - 2
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ByteFill
 
 	hlcoord 1, 13, wPrinterTilemapBuffer
 	ld bc, SCREEN_WIDTH - 2
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ByteFill
 
 	hlcoord 1, 14, wPrinterTilemapBuffer
 	ld bc, SCREEN_WIDTH - 2
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ByteFill
 
 	hlcoord 9, 7, wPrinterTilemapBuffer
@@ -116,7 +116,7 @@ PrintPage1:
 	ld [hl], a
 
 	hlcoord 1, 9, wPrinterTilemapBuffer
-	ld a, " "
+	ld a, CHARVAL(" ")
 	ld [hli], a
 	ld [hl], a
 
@@ -167,7 +167,7 @@ PrintPage2:
 	farcall dfsClearCache
 	hlcoord 0, 0, wPrinterTilemapBuffer
 	ld bc, 8 * SCREEN_WIDTH
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ByteFill
 	hlcoord 0, 0, wPrinterTilemapBuffer
 	ld a, $36
@@ -350,7 +350,7 @@ PrintPartyMonPage1:
 	call Request1bpp
 
 	ld de, GBPrinterLvIcon
-	ld hl, vTiles2 tile "<LV>"
+	ld hl, vTiles2 tile CHARVAL("<LV>")
 	lb bc, BANK(GBPrinterLvIcon), 1
 	call Request1bpp
 
@@ -427,9 +427,9 @@ PrintPartyMonPage1:
 .CHS2
 	call PlaceString
 	hlcoord 1, 0
-	ld [hl], "№"
+	ld [hl], CHARVAL("№")
 	inc hl
-	ld [hl], "."
+	ld [hl], CHARVAL(".")
 	inc hl
 	ld de, wNamedObjectIndex
 	lb bc, PRINTNUM_LEADINGZEROS | 1, 3
@@ -608,11 +608,11 @@ PlaceMoveNameString:
 
 PlaceGenderAndShininess:
 	farcall GetGender
-	ld a, " "
+	ld a, CHARVAL(" ")
 	jr c, .got_gender
-	ld a, "♂"
+	ld a, CHARVAL("♂")
 	jr nz, .got_gender
-	ld a, "♀"
+	ld a, CHARVAL("♀")
 
 .got_gender
 	hlcoord 17, 1

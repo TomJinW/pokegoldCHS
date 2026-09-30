@@ -5,39 +5,44 @@ MACRO vc_const
 	println "00:{04x:x} \1" ; same format as rgblink's .sym file
 ENDM
 
+MACRO vc_char
+	DEF x = CHARVAL(\1)
+	println "00:{04x:x} \1" ; same format as rgblink's .sym file
+ENDM
+
 ; [FPA 001 Begin]
-	vc_const "F"
-	vc_const "I"
-	vc_const "S"
-	vc_const "U"
-	vc_const "R"
+	vc_char "F"
+	vc_char "I"
+	vc_char "S"
+	vc_char "U"
+	vc_char "R"
 
 ; [FPA 002 Begin]
-	vc_const "E"
-	vc_const "L"
-	vc_const "D"
+	vc_char "E"
+	vc_char "L"
+	vc_char "D"
 
 ; [FPA 003 Begin]
-	vc_const "T"
-	vc_const "H"
-	vc_const "N"
+	vc_char "T"
+	vc_char "H"
+	vc_char "N"
 
 ; [FPA 004 Begin]
-	vc_const "Y"
-	vc_const "P"
+	vc_char "Y"
+	vc_char "P"
 	; "<SPACE>" is necessary since spaces separate template command arguments
-	charmap "<SPACE>", " "
-	vc_const "<SPACE>"
+	charmap "<SPACE>", CHARVAL(" ")
+	vc_char "<SPACE>"
 
 ; [FPA 005 Begin]
-	vc_const "O"
+	vc_char "O"
 
 ; [FPA 006 Begin]
-	vc_const "X"
+	vc_char "X"
 
 ; [FPA 007 Begin]
-	vc_const "A"
-	vc_const "@"
+	vc_char "A"
+	vc_char "@"
 
 ; [FPA 042801 Begin]
 	vc_const ANIM_GFX_BUBBLE

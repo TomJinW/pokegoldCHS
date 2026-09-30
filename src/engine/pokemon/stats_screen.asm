@@ -274,7 +274,7 @@ StatsScreen_InitLeftHalf:
 	ld [wTextDecimalByte], a
 	ld [wCurSpecies], a
 	hlcoord 1, 0 ;hlcoord 8, 0
-	ld [hl], "№"
+	ld [hl], CHARVAL("№")
 	inc hl
 	ld de, .dotStr
 	call PlaceString
@@ -305,9 +305,9 @@ StatsScreen_InitLeftHalf:
 ; Gender character
 	call GetGender
 	jr c, .next
-	ld a, "♂"
+	ld a, CHARVAL("♂")
 	jr nz, .got_gender
-	ld a, "♀"
+	ld a, CHARVAL("♀")
 .got_gender
 	hlcoord 5, 8 ;hlcoord 18, 0
 	ld [hl], a
@@ -324,7 +324,7 @@ StatsScreen_InitLeftHalf:
 	cp a, 8
 	hlcoord 0, 12
 	jr nc, .skipdash
-	ld a, "/"
+	ld a, CHARVAL("/")
 	ld [hli], a
 .skipdash
 	call PlaceString
@@ -391,7 +391,7 @@ LoadPinkPage:
 	and $f0
 	jr z, .NotImmuneToPkrs
 	hlcoord 19, 9 ; hlcoord 8, 8
-	ld [hl], "<．>" ;ld [hl], "." ; Pokérus immunity dot
+	ld [hl], CHARVAL("<．>") ;ld [hl], "." ; Pokérus immunity dot
 .NotImmuneToPkrs:
 	ld a, [wMonType]
 	cp BOXMON
@@ -700,7 +700,7 @@ CombineLetterAndIndicator:
 	ld c, 1
 	call Get2bpp
 	; Clear the String Buffer
-	ld a, "@"
+	ld a, CHARVAL("@")
 	ld hl, hTmpTileBuffer ; hTmpTileBuffer
 	ld [hl], a
 	
@@ -817,7 +817,7 @@ StatsScreen_PlaceShinyIcon:
 	callfar CheckShininess
 	ret nc
 	hlcoord 6, 8 ;hlcoord 19, 0
-	ld [hl], "⁂"
+	ld [hl], CHARVAL("⁂")
 	ret
 
 LoadGreenPage:
@@ -867,7 +867,7 @@ LoadGreenPage:
 	hlcoord 18, 3
 	call PlaceString
 	pop hl
-	ld [hl], "@"
+	ld [hl], CHARVAL("@")
 	pop de
 .GPisItem
 	farcall GetStrLength
@@ -1008,7 +1008,7 @@ LoadBluePage:
 	inc c
 	ld a, [de]
 	inc de
-	cp "@"
+	cp CHARVAL("@")
 	jr nz, .loop
 ; remove left padding if name was 8-10 chars (somehow?)
 	ld a, NAME_LENGTH - 1

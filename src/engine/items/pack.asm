@@ -1490,7 +1490,7 @@ Pack_GetItemName:
 Pack_ClearTilemap: ; unreferenced
 	hlcoord 0, 0
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ByteFill
 	ret
 

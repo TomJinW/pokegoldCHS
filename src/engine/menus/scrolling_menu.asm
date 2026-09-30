@@ -201,7 +201,7 @@ ScrollingMenu_ClearLeftColumn:
 	ld de, 2 * SCREEN_WIDTH
 	ld a, [wMenuData_ScrollingMenuHeight]
 .loop
-	ld [hl], " "
+	ld [hl], CHARVAL(" ")
 	add hl, de
 	dec a
 	jr nz, .loop
@@ -355,7 +355,7 @@ ScrollingMenu_UpdateDisplay:
 	ld a, [wMenuBorderRightCoord]
 	ld c, a
 	call Coord2Tile
-	ld [hl], "ぉ" ;ld [hl], "▲" ;CHS_Fix
+	ld [hl], CHARVAL("ぉ") ;ld [hl], "▲" ;CHS_Fix
 
 .okay
 	call MenuBoxCoord2Tile
@@ -392,7 +392,7 @@ ScrollingMenu_UpdateDisplay:
 	ld a, [wMenuBorderRightCoord]
 	ld c, a
 	call Coord2Tile
-	ld [hl], "▼"
+	ld [hl], CHARVAL("▼")
 
 .done
 	ret
@@ -461,7 +461,7 @@ ScrollingMenu_PlaceCursor:
 	add $0
 	ld c, a
 	call Coord2Tile
-	ld [hl], "▷"
+	ld [hl], CHARVAL("▷")
 
 .done
 	ret

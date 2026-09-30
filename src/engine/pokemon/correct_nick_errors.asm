@@ -10,7 +10,7 @@ GetStrLength::
 .checkchar
 ; end of nick?
 	ld a, [hli]
-	cp "@" ; terminator
+	cp CHARVAL("@") ; terminator
 	jr z, .done
 	and a
 	jr z, .singlechar
@@ -48,7 +48,7 @@ FixStrLength::
 .checkchar
 ; end of nick?
 	ld a, [hli]
-	cp "@" ; terminator
+	cp CHARVAL("@") ; terminator
 	ret z
 	and a
 	jr z, .singlechar
@@ -82,7 +82,7 @@ endr
 	jr .checkchar
 .done
 	dec hl
-	ld [hl], "@"
+	ld [hl], CHARVAL("@")
 	ret
 
 CorrectNickErrors::
@@ -98,7 +98,7 @@ CorrectNickErrors::
 .checkchar
 ; end of nick?
 	ld a, [de]
-	cp "@" ; terminator
+	cp CHARVAL("@") ; terminator
 	jr z, .end
 	and a
 	jr z, .singlechar
@@ -121,7 +121,7 @@ CorrectNickErrors::
 	jr z, .overflow
 	inc de
 	ld a, [de]
-	cp "@"
+	cp CHARVAL("@")
 	jr z, .earlyend
 	ld c, 1
 	cp DFS_CODE_L_CONTRL_4_END
@@ -147,7 +147,7 @@ CorrectNickErrors::
 	jr nc, .loop
 .replace
 ; replace it with a "?"
-	ld a, "?"
+	ld a, CHARVAL("?")
 	ld [de], a
 	; jr .loop
 	dec c
@@ -168,10 +168,10 @@ CorrectNickErrors::
 ; change nick to "?@"
 	pop de
 	push de
-	ld a, "?"
+	ld a, CHARVAL("?")
 	ld [de], a
 	inc de
-	ld a, "@"
+	ld a, CHARVAL("@")
 	ld [de], a
 .end
 ; if the nick has any errors at this point it's out of our hands
@@ -181,7 +181,7 @@ CorrectNickErrors::
 
 .earlyend
 	dec de
-	ld a, "?"
+	ld a, CHARVAL("?")
 	ld [de], a
 	jr .end
 
@@ -190,12 +190,12 @@ CorrectNickErrors::
 ; format:
 	;      ≥           <
 	db "<NULL>",   "ガ"
-	db "<JP_14>",  "<JP_18>" + 1
-	db "<NI>",     "<NO>"    + 1
-	db "<ROUTE>",  "<GREEN>" + 1
-	db "<ENEMY>",  "<ENEMY>" + 1
-	db "<MOM>",    "<TM>"    + 1
-	db "<ROCKET>", "┘"       + 1
+	db CHARVAL("<JP_14>"),  CHARVAL("<JP_18>") + 1
+	db CHARVAL("<NI>"),     CHARVAL("<NO>")    + 1
+	db CHARVAL("<ROUTE>"),  CHARVAL("<GREEN>") + 1
+	db CHARVAL("<ENEMY>"),  CHARVAL("<ENEMY>") + 1
+	db CHARVAL("<MOM>"),    CHARVAL("<TM>")    + 1
+	db CHARVAL("<ROCKET>"), CHARVAL("┘")       + 1
 	db -1 ; end
 
 .textcommands_double

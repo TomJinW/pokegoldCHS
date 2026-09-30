@@ -58,7 +58,7 @@ imeInput::
 	ld a, l
 	ld [wIMEChar + 1], a
 	ld hl, wIMEPinyin
-	ld [hl], "@"
+	ld [hl], CHARVAL("@")
 	hlcoord 13, 10
 	ld de, SixUnderLine
 	ld a, [wIMEtmpBuffer]
@@ -151,7 +151,7 @@ InputPinyin:
 	ld c, 6
 .ccloop
 	ld a, [hl]
-	cp a, "@"
+	cp a, CHARVAL("@")
 	jr z, .ccend
 	inc hl
 	dec c
@@ -160,7 +160,7 @@ InputPinyin:
 .ccend
 	ld [hl], b
 	inc hl
-	ld [hl], "@"
+	ld [hl], CHARVAL("@")
 	call SetPinyin
 .full:
 	ld b, 0
@@ -197,7 +197,7 @@ GetPinyinNo:
 	ld de, wIMEPinyin
 .trynext
 	ld a, [de]
-	cp a, "@"
+	cp a, CHARVAL("@")
 	jr z, .succeed
 	cp a, [hl]
 	jr c, .failed
@@ -289,7 +289,7 @@ PrintIMELine_u108:
 	ld d, h
 	ld e, l
 	pop hl
-	ld a, "@"
+	ld a, CHARVAL("@")
 	ld [wDFSCode + 2], a
 	ld b, 8
 .loop
@@ -300,7 +300,7 @@ PrintIMELine_u108:
 	ld a, [wIMEBank]
 	call GetFarWord
 	ld a, l
-	cp a, "@"
+	cp a, CHARVAL("@")
 	jr z, .end
 	ld [wDFSCode], a
 	ld a, h
@@ -382,7 +382,7 @@ PrintIMELine_u109:
 	ld d, h
 	ld e, l
 	pop hl
-	ld a, "@"
+	ld a, CHARVAL("@")
 	ld [wDFSCode + 2], a
 	ld b, 8
 .loop
@@ -393,7 +393,7 @@ PrintIMELine_u109:
 	ld a, [wIMEBank]
 	call GetFarWord
 	ld a, l
-	cp a, "@"
+	cp a, CHARVAL("@")
 	jr z, .end
 	ld [wDFSCode], a
 	ld a, h

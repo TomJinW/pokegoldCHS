@@ -257,12 +257,12 @@ GetMartPrice:
 .CharToNybble:
 	ld a, [de]
 	inc de
-	cp " "
+	cp CHARVAL(" ")
 	jr nz, .not_space
-	ld a, "0"
+	ld a, CHARVAL("0")
 
 .not_space
-	sub "0"
+	sub CHARVAL("0")
 	ret
 
 ReadMart:

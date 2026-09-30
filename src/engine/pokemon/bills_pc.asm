@@ -1199,9 +1199,9 @@ PCMonInfo:
 	ld [wMonType], a
 	farcall GetGender
 	jr c, .skip_gender
-	ld a, "♂"
+	ld a, CHARVAL("♂")
 	jr nz, .printgender
-	ld a, "♀"
+	ld a, CHARVAL("♀")
 .printgender
 	hlcoord 6, 10 ;hlcoord 5, 12
 	ld [hl], a
@@ -2416,7 +2416,7 @@ BillsPC_ClearTilemap:
 	ldh [hBGMapMode], a
 	hlcoord 0, 0
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ByteFill
 	ret
 

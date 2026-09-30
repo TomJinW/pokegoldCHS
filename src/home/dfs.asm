@@ -195,10 +195,10 @@ NewDFSRightAlign::
 	dec hl
 	ld de, .FullSpaceText
 	call PlaceString
-	ld [hl], " "
+	ld [hl], CHARVAL(" ")
 	ld bc, -SCREEN_WIDTH
 	add hl, bc
-	ld [hl], " "
+	ld [hl], CHARVAL(" ")
 	pop de
 	pop hl
 	ret
@@ -339,4 +339,3 @@ OpenSDFSCodeStackSRAMOnlyDMG::
 	ld a, BANK(sDFSCodeStack)
 	call OpenSRAM
 	ret
-

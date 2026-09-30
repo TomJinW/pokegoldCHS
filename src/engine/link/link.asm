@@ -1349,7 +1349,7 @@ LinkTrade_TradeStatsMenu:
 	call PlaceString
 
 .joy_loop
-	ld a, " "
+	ld a, CHARVAL(" ")
 	ldcoord_a 11, 16
 	ld a, A_BUTTON | B_BUTTON | D_RIGHT
 	ld [wMenuJoypadFilter], a
@@ -1381,7 +1381,7 @@ LinkTrade_TradeStatsMenu:
 	jp LinkTrade_PlayerPartyMenu
 
 .d_right
-	ld a, " "
+	ld a, CHARVAL(" ")
 	ldcoord_a 1, 16
 	ld a, A_BUTTON | B_BUTTON | D_LEFT
 	ld [wMenuJoypadFilter], a
@@ -1503,7 +1503,7 @@ LinkTradeOTPartymonMenuCheckCancel:
 
 LinkTradePartymonMenuCheckCancel:
 .loop1
-	ld a, "▶"
+	ld a, CHARVAL("▶")
 	ldcoord_a 1, 16
 .loop2
 	call JoyTextDelay
@@ -1514,7 +1514,7 @@ LinkTradePartymonMenuCheckCancel:
 	jr nz, .a_button
 	bit D_UP_F, a
 	jr z, .loop2
-	ld a, " "
+	ld a, CHARVAL(" ")
 	ldcoord_a 1, 16
 	; ld a, [wOTPartyCount]
 	; ld [wMenuCursorY], a
@@ -1524,7 +1524,7 @@ LinkTradePartymonMenuCheckCancel:
 	jp LinkTrade_PlayerPartyMenu
 
 .a_button
-	ld a, "▷"
+	ld a, CHARVAL("▷")
 	ldcoord_a 1, 16
 	ld a, $f
 	ld [wPlayerLinkAction], a
@@ -1581,7 +1581,7 @@ LinkTradePlaceArrow:
 	hlcoord 11, 3
 	ld bc, SCREEN_WIDTH * 2
 	call AddNTimes
-	ld [hl], "▷"
+	ld [hl], CHARVAL("▷")
 	ret
 
 LinkMonStatsScreen:
@@ -1977,7 +1977,7 @@ LinkTextboxAtHL:
 	push hl
 	ld a, $7b
 	ld [hli], a
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call .PlaceRow
 	ld [hl], $77
 	pop hl

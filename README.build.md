@@ -10,8 +10,7 @@
 
 ### macOS (arm64, x86_64) 和 Linux (x86_64, arm64)：
 - git
-- RGBDS 0.7.0 - 0.8.0。
-	- 注意：RGBDS 0.9.0 rc 存在编译问题，当前无法正确编译 VC 补丁。
+- RGBDS 1.0.4（使用 `rgbasm --version` 核对）。
 - gcc
 - python3 和 pip3
 - openpyxl
@@ -37,26 +36,8 @@
 	sudo pip3 install openpyxl
 	```
 	
-- rgbds 安装选项
-	-  （仅限 x86_64）从 Github Release 上下载原版 RGBDS 0.8.0，文件名为：  [rgbds-0.8.0-linux-x86_64.tar.xz](https://github.com/gbdev/rgbds/releases/tag/v0.8.0)
-	- arm64 Linux 需要自行从源代码编译 RGBDS 并安装。[前往这里](https://rgbds.gbdev.io/install/source)查看官方教程。
+- 安装 [RGBDS 1.0.4](https://github.com/gbdev/rgbds/releases/tag/v1.0.4)。按[官方安装说明](https://rgbds.gbdev.io/install)选择适合架构的预编译包，或从源码编译。安装后用 `rgbasm --version` 确认版本为 1.0.4。
 
- 	
- 		```
-		# 创建解压目录
-		mkdir rgbds
-
-		# 解压下载好的文件到 rgbds 目录
-		tar -xvf rgbds-0.8.0-linux-x86_64.tar.xz -C rgbds
-
-		# 切换到目录
-		cd rgbds
-
-		# 使用管理员密码安装 rgbds
-		sudo ./install.sh
-		```
-
-		
 ### macOS：
 - 安装 Xcode Command Line Tools，如果安装了 Xcode ，可以跳过这个步骤。
 	
@@ -88,40 +69,7 @@
 	pip3 install openpyxl
 	```
 	
-- rgbds 安装选项
-	1. 通过 [Homebrew](https://brew.sh) 安装。目前 Homebrew 版 rgbds 暂未更新到 0.9.0，通过该方法安装的 rgbds 0.8.0 将原生支持 x86_64 或 arm64。如果将来 rgbds 0.9.0 正式版发布之后，此安装方法无法继续使用。
-
-		```
-		brew install rgbds
-		```
-
-	2.  从 Github Release 上下载原版 RGBDS 0.8.0，文件名为：  [rgbds-0.8.0-macos-x86_64.zip
-](https://github.com/gbdev/rgbds/releases/tag/v0.8.0) 目前 rgbds 0.8.0 预编译包仅有 x86_64 版，Apple Silicon Mac （arm64）通过 Rosetta 2 转译运行。 rgbds 0.9.0 RC 提供了 Universal Binary，但是 rgbds 0.9.0 RC 当前无法正确编译 Virtual Console 补丁。
-
-		- 如果需要原生 arm64 版 rgbds，你可以：
-
-			1. [前往这里下载](https://tomjinw.github.io/download/rgbds-0.7.0.macUniversal.zip) 本人编译的 arm64 Mac 版 rgbds，文件名为：rgbds-0.7.0.macUniversal.zip。
-			2. 使用源代码自行编译 rgbds，[前往这里](https://rgbds.gbdev.io/install/source)查看官方教程。
- 	
-	3. 下载好压缩包之后：
-
- 		```
-		# 双击 zip 文件自动解压，并切换到解压后目录：
-		cd rgbds-0.8.0-macos-x86_64
-
-		# 或者如果下载的是本人编译的 arm64 Mac 版 rgbds：
-		cd rgbds-0.8.0-macos-arm64
-
-		# 可恶的 macOS GateKeeper 会默认阻止来源不明的 App，需要删除 App 的 com.apple.quarantine 属性。
-		xattr -d com.apple.quarantine rgbasm
-		xattr -d com.apple.quarantine rgbgfx
-		xattr -d com.apple.quarantine rgblink
-		xattr -d com.apple.quarantine rgbfix
-
-		# 使用管理员密码安装 rgbds
-		sudo ./install.sh
-		```
-
+- 安装 [RGBDS 1.0.4](https://github.com/gbdev/rgbds/releases/tag/v1.0.4)。按[官方安装说明](https://rgbds.gbdev.io/install)选择 macOS 预编译包或从源码编译；Apple Silicon 请选 arm64 版本。安装后用 `rgbasm --version` 确认版本为 1.0.4。
 
 ## 步骤二：编译ROM
 
@@ -182,4 +130,3 @@ pokegoldCHS
 	
 	
 	
-

@@ -37,7 +37,7 @@ PrintHoursMins:
 	push hl
 	pop de
 	pop hl
-	ld [hl], " "
+	ld [hl], CHARVAL(" ")
 	lb bc, 1, 2
 	call PrintNum
 	ld [hl], $76 ;ld [hl], ":" ; CHS_Fix Time

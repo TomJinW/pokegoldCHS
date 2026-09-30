@@ -2,9 +2,9 @@ DEF NAMINGSCREEN_CURSOR     EQU $7e
 
 DEF NAMINGSCREEN_SELECTION  EQU $62
 
-DEF NAMINGSCREEN_BORDER     EQU "■" ; $60
+DEF NAMINGSCREEN_BORDER     EQU CHARVAL("■") ; $60
 DEF NAMINGSCREEN_MIDDLELINE EQU $6e ; $eb
-DEF NAMINGSCREEN_UNDERLINE  EQU "<DOT>" ; $f2
+DEF NAMINGSCREEN_UNDERLINE  EQU CHARVAL("<DOT>") ; $f2
 
 _NamingScreen:
 	call DisableSpriteUpdates
@@ -124,9 +124,9 @@ NamingScreen:
 	call DecreaseDFSStack
 	farcall GetGender
 	jr c, .genderless
-	ld a, "♂"
+	ld a, CHARVAL("♂")
 	jr nz, .place_gender
-	ld a, "♀"
+	ld a, CHARVAL("♀")
 .place_gender
 	hlcoord 1, 2
 	ld [hl], a
@@ -323,7 +323,7 @@ NamingScreen_ApplyTextInputMode:
 	xor c
 	ld [wIMEtmpBuffer], a
 ; .not_box
-	ld a, "@"
+	ld a, CHARVAL("@")
 	ld [wIMEPinyin], a
 	ld a, [hBGMapMode]
 	push af
@@ -937,7 +937,7 @@ MailComposition_TryAddCharacter:
 NamingScreen_LoadNextCharacter:
 	call NamingScreen_GetTextCursorPosition
 	ld [hli], a
-	ld [hl], "@"
+	ld [hl], CHARVAL("@")
 
 NamingScreen_AdvanceCursor_CheckEndOfString:
 	ld hl, wNamingScreenCurNameLength
@@ -971,7 +971,7 @@ IME_TryAddCharacter:
 	ld [hli], a
 	ld a, [wIMEChar + 1]
 	ld [hli], a
-	ld [hl] , "@"
+	ld [hl] , CHARVAL("@")
 	ld hl, wNamingScreenCurNameLength
 	inc [hl]
 	inc [hl]
@@ -1006,15 +1006,15 @@ INCLUDE "data/text/dakutens.asm"
 NamingScreen_TryDeletePinyin:
 	ld hl, wIMEPinyin
 	ld a, [hli]
-	cp a, "@"
+	cp a, CHARVAL("@")
 	ret z
 .pyloop
 	ld a, [hli]
-	cp a, "@"
+	cp a, CHARVAL("@")
 	jr nz, .pyloop
 	dec hl
 	dec hl
-	ld [hl], "@"
+	ld [hl], CHARVAL("@")
 	farcall SetPinyin
 	rlca ;ret nz
 	ret
@@ -1061,7 +1061,7 @@ NamingScreen_DeleteCharacter:
 	ld [wNamingScreenCurNameLength], a
 	call NamingScreen_GetTextCursorPosition
 	; ld [hl], NAMINGSCREEN_UNDERLINE
-	ld [hl], "@"
+	ld [hl], CHARVAL("@")
 	pop af
 	ret z
 	inc hl
@@ -1069,7 +1069,7 @@ NamingScreen_DeleteCharacter:
 	; cp NAMINGSCREEN_UNDERLINE
 	; ret nz
 	; ld [hl], NAMINGSCREEN_MIDDLELINE
-	ld [hl], "@"
+	ld [hl], CHARVAL("@")
 	ret
 
 NamingScreen_GetTextCursorPosition:
@@ -1098,7 +1098,7 @@ NamingScreen_InitNameEntry:
 	ld b, 0
 	ld c, a
 	inc c
-	ld a, "@"
+	ld a, CHARVAL("@")
 	call ByteFill
 	ret
 	; ld a, NAMINGSCREEN_MIDDLELINE
@@ -1129,7 +1129,7 @@ NamingScreen_StoreEntry:
 	; cp NAMINGSCREEN_UNDERLINE
 	; jr nz, .not_terminator
 ; .terminator
-	ld [hl], "@"
+	ld [hl], CHARVAL("@")
 ; .not_terminator
 	inc hl
 	; dec c
@@ -1188,7 +1188,7 @@ PlaceMailString:
 .loop
 	ld a, [de]
 	inc de
-	cp a, "@"
+	cp a, CHARVAL("@")
 	jr z, .strend
 	push hl
 	ld hl, wDFSCode
@@ -1202,14 +1202,14 @@ PlaceMailString:
 	jr nz, .doublechar
 .singlechar
 	ld [hli], a
-	ld [hl], "@"
+	ld [hl], CHARVAL("@")
 	jr .setchar
 .doublechar
 	ld [hli], a
 	ld a, [de]
 	inc de
 	ld [hli], a
-	ld [hl], "@"
+	ld [hl], CHARVAL("@")
 .setchar
 	pop hl
 	push de
@@ -1223,7 +1223,7 @@ PlaceNameString:
 .loop
 	ld a, [de]
 	inc de
-	cp a, "@"
+	cp a, CHARVAL("@")
 	jr z, .strend
 	push hl
 	ld hl, wDFSCode
@@ -1237,14 +1237,14 @@ PlaceNameString:
 	jr nz, .doublechar
 .singlechar
 	ld [hli], a
-	ld [hl], "@"
+	ld [hl], CHARVAL("@")
 	jr .setchar
 .doublechar
 	ld [hli], a
 	ld a, [de]
 	inc de
 	ld [hli], a
-	ld [hl], "@"
+	ld [hl], CHARVAL("@")
 .setchar
 	pop hl
 	push de
@@ -1415,7 +1415,7 @@ _ComposeMailMessage:
 	ld d, [hl]
 	ld hl, MAIL_LINE_LENGTH
 	add hl, de
-	ld [hl], "@" ; "<NEXT>"
+	ld [hl], CHARVAL("@") ; "<NEXT>"
 	ret
 
 .MailIcon:
@@ -1437,13 +1437,13 @@ INCBIN "gfx/naming_screen/mail.2bpp"
 	call ByteFill
 	hlcoord 0, 6
 	ld bc, 12 * SCREEN_WIDTH
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ByteFill
 	hlcoord 1, 1
 	lb bc, 4, SCREEN_WIDTH - 2
 	call ClearBox
 	; ld de, MailEntry_Uppercase
-	ld a, "@"
+	ld a, CHARVAL("@")
 	ld [wIMEPinyin], a
 	ld de, ChineseInput
 
@@ -1617,7 +1617,7 @@ INCBIN "gfx/naming_screen/mail.2bpp"
 	call NamingScreen_GetTextCursorPosition
 	; ld [hl], NAMINGSCREEN_UNDERLINE
 	dec hl
-	ld [hl], "@" ; "<NEXT>"
+	ld [hl], CHARVAL("@") ; "<NEXT>"
 	ret
 .addchi
 	cp $11
@@ -1626,10 +1626,10 @@ INCBIN "gfx/naming_screen/mail.2bpp"
 	dec hl
 	dec hl
 	ld a, [hl]
-	ld [hl], " "
+	ld [hl], CHARVAL(" ")
 	inc hl
 	ld b, [hl]
-	ld [hl], "@"
+	ld [hl], CHARVAL("@")
 	inc hl
 	ld [hli], a
 	ld [hl], b

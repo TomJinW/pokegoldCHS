@@ -186,7 +186,7 @@ ClearVRAM::
 ; 	ret
 
 BlankBGMap::
-	ld a, " "
+	ld a, CHARVAL(" ")
 	jr FillBGMap
 
 FillBGMap_l:: ; unreferenced

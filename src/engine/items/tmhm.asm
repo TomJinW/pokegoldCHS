@@ -357,7 +357,7 @@ TMHM_DisplayPocketItems:
 	; lb bc, 10, 15
 	hlcoord 6, 2
 	lb bc, 10, SCREEN_WIDTH - 6
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ClearBox
 	call TMHM_GetCurrentPocketPosition
 	ld d, $5
@@ -418,7 +418,7 @@ TMHM_DisplayPocketItems:
 	jr nc, .hm2
 	ld bc, 8 ; SCREEN_WIDTH + 9 ; ld bc, SCREEN_WIDTH + 9
 	add hl, bc
-	ld [hl], "×"
+	ld [hl], CHARVAL("×")
 	inc hl
 	; ld a, "0" ; why are we doing this?
 	pop bc

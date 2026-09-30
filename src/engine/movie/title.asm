@@ -262,7 +262,7 @@ LoadTitleScreenTilemap:
 	ld bc, BG_MAP_WIDTH
 	ld a, [Rom0End]
 	cp $A0
-	ld a, "@"
+	ld a, CHARVAL("@")
 	jr z, .BKMVer2
 	ld a, $0e
 .BKMVer2

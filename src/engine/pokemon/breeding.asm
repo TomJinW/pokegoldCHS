@@ -635,7 +635,7 @@ Hatch_UpdateFrontpicBGMapCenter:
 	push bc
 	hlcoord 0, 0
 	ld bc, SCREEN_HEIGHT * SCREEN_WIDTH
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ByteFill
 	pop bc
 	pop hl

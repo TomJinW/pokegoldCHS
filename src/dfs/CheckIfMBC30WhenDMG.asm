@@ -111,7 +111,7 @@ DetectGBModelMBC30:
 	call ClearTilemap
 	pop af
 	hlcoord 5, 0
-	add a, "0"
+	add a, CHARVAL("0")
 	ld [hl], a
 	call CloseSRAM
 

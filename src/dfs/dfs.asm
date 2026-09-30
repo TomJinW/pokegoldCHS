@@ -999,7 +999,7 @@ SendSram8FontToVram10b:
 	di ; 中断
 rept $10
 .loop\@
-	ld a, [c]
+	ldh a, [c]
 	and $2
 	jr nz, .loop\@
 	ld a, [de]
@@ -1382,9 +1382,9 @@ DEF DFS_CODE_CONTRL_1           EQU $20
 DEF DFS_CODE_DOUBLE_2           EQU $28
 DEF DFS_CODE_CONTRL_2           EQU $2F
 DEF DFS_CODE_SINGLE_STA_0       EQU $60
-DEF DFS_CODE_SINGLE_DYN_0       EQU "A" ; $80
-DEF DFS_CODE_SINGLE_STA_1       EQU "." ; $e8
-DEF DFS_CODE_END                EQU "9" ; $ff
+DEF DFS_CODE_SINGLE_DYN_0       EQU CHARVAL("A") ; $80
+DEF DFS_CODE_SINGLE_STA_1       EQU CHARVAL(".") ; $e8
+DEF DFS_CODE_END                EQU CHARVAL("9") ; $ff
 
 DEF DFS_CODE_DOUBLE_0_END       EQU DFS_CODE_CONTRL_0     - 1
 DEF DFS_CODE_CONTRL_0_END       EQU DFS_CODE_DOUBLE_1     - 1
@@ -1449,10 +1449,10 @@ dfsFirstCharRightAlign2::
 	dec hl
 	ld de, .FullSpaceText
 	call PlaceString
-	ld [hl], " "
+	ld [hl], CHARVAL(" ")
 	ld bc, -SCREEN_WIDTH
 	add hl, bc
-	ld [hl], " "
+	ld [hl], CHARVAL(" ")
 	ret 
 .FullSpaceText
 	db_w $01,$01,$50
@@ -1512,12 +1512,12 @@ _TextScroll::
 	ld bc, TEXTBOX_WIDTH * 3 - 1
 	call CopyBytes
 	hlcoord TEXTBOX_INNERX - 1, TEXTBOX_INNERY + 2
-	ld a, "│"
+	ld a, CHARVAL("│")
 	ld [hli], a
 	ld bc, TEXTBOX_INNERW
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ByteFill
-	ld [hl], "│"
+	ld [hl], CHARVAL("│")
 	hlcoord TEXTBOX_INNERX - 1, TEXTBOX_INNERY + 2, wAttrmap
 	ld bc, TEXTBOX_INNERW + 2
 	; call ClearVramNo

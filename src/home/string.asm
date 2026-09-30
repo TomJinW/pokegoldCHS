@@ -13,9 +13,9 @@ _InitString::
 	push bc
 .loop
 	ld a, [hli]
-	cp "@"
+	cp CHARVAL("@")
 	jr z, .blank
-	cp " "
+	cp CHARVAL(" ")
 	jr nz, .notblank
 	dec c
 	jr nz, .loop

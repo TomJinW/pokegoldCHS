@@ -777,7 +777,7 @@ HeavyBallMultiplier:
 	ld a, d
 	call GetFarByte
 	inc hl
-	cp "@"
+	cp CHARVAL("@")
 	jr nz, .SkipText
 
 	ld a, d
@@ -1766,7 +1766,7 @@ ItemActionTextWaitButton:
 	ldh [hBGMapMode], a
 	hlcoord 0, 0
 	ld bc, wTilemapEnd - wTilemap
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ByteFill
 	ld a, [wPartyMenuActionText]
 	call ItemActionText

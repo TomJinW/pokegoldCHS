@@ -49,7 +49,7 @@ WritePartyMenuTilemap:
 	ldh [hBGMapMode], a
 	hlcoord 0, 0
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ByteFill ; blank the tilemap
 	;call ClearFullVramNo
 	call GetPartyMenuQualityIndexes
@@ -292,7 +292,7 @@ PlacePartyMenuHPDigits:
 	lb bc, 2, 3
 	call PrintNum
 	pop de
-	ld a, "/"
+	ld a, CHARVAL("/")
 	ld [hli], a
 	inc de
 	inc de
@@ -332,7 +332,7 @@ PlacePartyMonLevel:
 	ld a, [de]
 	cp 100 ; This is distinct from MAX_LEVEL.
 	jr nc, .ThreeDigits
-	ld a, "<LV>"
+	ld a, CHARVAL("<LV>")
 	ld [hli], a
 	lb bc, PRINTNUM_LEFTALIGN | 1, 2
 	; jr .okay

@@ -1,5 +1,5 @@
-DEF UNOWNSTAMP_BOLD_A EQU "♂" ; $ef
-DEF UNOWNSTAMP_BOLD_B EQU "♀" ; $f5
+DEF UNOWNSTAMP_BOLD_A EQU CHARVAL("♂") ; $ef
+DEF UNOWNSTAMP_BOLD_B EQU CHARVAL("♀") ; $f5
 
 _UnownPrinter:
 	ld a, [wUnownDex]
@@ -215,7 +215,7 @@ INCBIN "gfx/printer/bold_b.1bpp"
 PlaceUnownPrinterFrontpic:
 	hlcoord 0, 0
 	ld bc, SCREEN_WIDTH * SCREEN_HEIGHT
-	ld a, " "
+	ld a, CHARVAL(" ")
 	call ByteFill
 	hlcoord 7, 11
 	ld a, $31
