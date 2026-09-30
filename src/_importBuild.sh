@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 filepath=$(cd "$(dirname "$0")"; pwd)
 cd "$filepath"
 

@@ -103,16 +103,16 @@ silver_vc:    pokesilver.patch
 
 
 gold_64: pokegold.gbc
-	cp $< pokegold_64KB.gbc && rgbfix -r 5 -fh pokegold_64KB.gbc
+	cp $< pokegold_64KB.gbc && rgbfix -Wno-overwrite -r 5 -fh pokegold_64KB.gbc
 	cp pokegold.sym pokegold_64KB.sym
 silver_64: pokesilver.gbc
-	cp $< pokesilver_64KB.gbc && rgbfix -r 5 -fh pokesilver_64KB.gbc
+	cp $< pokesilver_64KB.gbc && rgbfix -Wno-overwrite -r 5 -fh pokesilver_64KB.gbc
 	cp pokesilver.sym pokesilver_64KB.sym
 gold_debug_32: pokegold_debug.gbc
-	cp $< pokegold_debug_32KB.gbc && rgbfix -r 3 -fh pokegold_debug_32KB.gbc
+	cp $< pokegold_debug_32KB.gbc && rgbfix -Wno-overwrite -r 3 -fh pokegold_debug_32KB.gbc
 	cp pokegold_debug.sym pokegold_debug_32KB.sym
 silver_debug_32: pokesilver_debug.gbc
-	cp $< pokesilver_debug_32KB.gbc && rgbfix -r 3 -fh pokesilver_debug_32KB.gbc
+	cp $< pokesilver_debug_32KB.gbc && rgbfix -Wno-overwrite -r 3 -fh pokesilver_debug_32KB.gbc
 	cp pokesilver_debug.sym pokesilver_debug_32KB.sym
 
 

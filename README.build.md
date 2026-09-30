@@ -13,7 +13,7 @@
 - RGBDS 1.0.4（使用 `rgbasm --version` 核对）。
 - gcc
 - python3 和 pip3
-- openpyxl
+- openpyxl 和 beautifulsoup4
 
 
 ## 步骤一：安装环境
@@ -30,10 +30,10 @@
 	sudo apt install git gcc python3-pip
 	```
 	
-- 安装 openpyxl，用于读取汉化 Excel 文件。
+- 安装 Python 依赖，用于读取汉化 Excel 文件和导出 JSON。
 	
 	```
-	sudo pip3 install openpyxl
+	python3 -m pip install openpyxl beautifulsoup4
 	```
 	
 - 安装 [RGBDS 1.0.4](https://github.com/gbdev/rgbds/releases/tag/v1.0.4)。按[官方安装说明](https://rgbds.gbdev.io/install)选择适合架构的预编译包，或从源码编译。安装后用 `rgbasm --version` 确认版本为 1.0.4。
@@ -63,10 +63,10 @@
 	brew install python@3
 	```
 
-- 安装 openpyxl，用于读取汉化 Excel 文件。
+- 安装 Python 依赖，用于读取汉化 Excel 文件和导出 JSON。
 	
 	```
-	pip3 install openpyxl
+	python3 -m pip install openpyxl beautifulsoup4
 	```
 	
 - 安装 [RGBDS 1.0.4](https://github.com/gbdev/rgbds/releases/tag/v1.0.4)。按[官方安装说明](https://rgbds.gbdev.io/install)选择 macOS 预编译包或从源码编译；Apple Silicon 请选 arm64 版本。安装后用 `rgbasm --version` 确认版本为 1.0.4。
