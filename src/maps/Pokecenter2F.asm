@@ -56,6 +56,12 @@ Script_BattleRoomClosed:
 	closetext
 	end
 
+; 3DS Virtual Console (code.bin 0x19DFDC) hardcodes wScriptBank/wScriptPos
+; right after the yesorno in the three link receptionist scripts (5C:4D7D,
+; 5C:4DF0, 5C:4E72 in the English ROM) to pick the wireless room ID.
+; Keep these scripts at their original addresses so rooms match official VC.
+	ds $4D6F - $4B8A ; $1E5
+
 LinkReceptionistScript_Trade:
 	checkevent EVENT_GAVE_MYSTERY_EGG_TO_ELM
 	iffalse Script_TradeCenterClosed
@@ -591,3 +597,11 @@ Pokecenter2F_MapEvents:
 	object_event  9,  2, SPRITE_LINK_RECEPTIONIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, LinkReceptionistScript_Battle, -1
 	object_event 13,  3, SPRITE_LINK_RECEPTIONIST, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, PAL_NPC_GREEN, OBJECTTYPE_SCRIPT, 0, LinkReceptionistScript_TimeCapsule, -1
 	object_event  1,  1, SPRITE_OFFICER, SPRITEMOVEDATA_STANDING_DOWN, 0, 0, -1, -1, 0, OBJECTTYPE_SCRIPT, 0, Pokecenter2FOfficerScript, EVENT_MYSTERY_GIFT_DELIVERY_GUY
+
+; See the VC room ID note above LinkReceptionistScript_Trade.
+	assert BANK(LinkReceptionistScript_Trade) == $5C && LinkReceptionistScript_Trade == $4D6F, \
+		"VC room ID: LinkReceptionistScript_Trade must be at 5C:4D6F"
+	assert LinkReceptionistScript_Battle == $4DE2, \
+		"VC room ID: LinkReceptionistScript_Battle must be at 5C:4DE2"
+	assert LinkReceptionistScript_TimeCapsule == $4E5D, \
+		"VC room ID: LinkReceptionistScript_TimeCapsule must be at 5C:4E5D"
