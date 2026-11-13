@@ -25,7 +25,11 @@ NPCTrade::
 	ld a, [wCurPartySpecies]
 	cp [hl]
 	ld a, TRADE_DIALOG_WRONG
+	IF DEF(_DEBUG)
+	jr z, .done
+	ELSE
 	jr nz, .done
+	ENDC
 
 	call CheckTradeGender
 	ld a, TRADE_DIALOG_WRONG
@@ -168,7 +172,8 @@ DoNPCTrade:
 	predef TryAddMonToParty
 
 	ld e, NPCTRADE_NICKNAME
-	call GetTradeAttr
+	ld hl, NPCTradeNicknamesENG
+	call GetTradeNameAttr
 	ld de, wOTTrademonNickname
 	call CopyTradeName
 
@@ -179,7 +184,8 @@ DoNPCTrade:
 	call CopyTradeName
 
 	ld e, NPCTRADE_OT_NAME
-	call GetTradeAttr
+	ld hl, NPCTradeOTNamesENG
+	call GetTradeNameAttr
 	push hl
 	ld de, wOTTrademonOTName
 	call CopyTradeName
@@ -242,6 +248,17 @@ DoNPCTrade:
 	pop bc
 	pop af
 	ret
+
+; Select the imported name or the original English name at trade creation time.
+; e = NPCTrades attribute, hl = parallel English name table.
+GetTradeNameAttr:
+	ld a, [wEngPKMNNameMark]
+	cp 1
+	jp nz, GetTradeAttr
+	ld a, [wJumptableIndex]
+	and $f
+	ld bc, NAME_LENGTH
+	jp AddNTimes
 
 GetTradeAttr:
 	ld d, 0
@@ -356,6 +373,7 @@ GetTradeMonNames:
 	ret
 
 INCLUDE "data/events/npc_trades.asm"
+INCLUDE "data/events/npc_trade_names_eng.asm"
 
 PrintTradeText:
 	push af
